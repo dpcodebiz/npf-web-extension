@@ -1,0 +1,70 @@
+{
+  "plugins": ["@typescript-eslint", "react-hooks"],
+  "parser": "@typescript-eslint/parser",
+  "root": true,
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+    //"project": "./tsconfig.json"
+  },
+  "extends": ["plugin:@typescript-eslint/recommended", "plugin:jsx-a11y/recommended"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-angle-bracket-type-assertion": "off",
+    "no-throw-literal": "error",
+    "prefer-const": "error",
+    "no-var": "warn",
+    "jsx-a11y/href-no-hash": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/interactive-supports-focus": "warn",
+    "jsx-a11y/no-noninteractive-element-interactions": "warn",
+
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        // Add a list of react components names that should
+        // be considered as valid input for the rule.
+        "controlComponents": ["TextField"],
+        "assert": "either",
+        "depth": 2
+      }
+    ],
+    // relaxed for dev's that are just starting
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-use-before-define": "warn",
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.tsx"],
+      "rules": {}
+    },
+    {
+      "files": ["**/*.js"],
+      "parser": "espree",
+      "parserOptions": {
+        "ecmaVersion": 9
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    },
+    {
+      "files": ["*.d.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
+}
