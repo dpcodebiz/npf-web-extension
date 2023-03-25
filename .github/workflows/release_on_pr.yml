@@ -1,0 +1,36 @@
+name: Build and Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.pull_request.head.sha }}
+          release_name: Release ${{ github.event.pull_request.head.sha }}
+          body: Automated release from pull request ${{ github.event.pull_request.number }}
+          draft: false
+          prerelease: false
+          
+      - name: Upload Release Assets
+        uses: actions/upload-artifact@v2
+        with:
+          name: npf-web-extension-build
+          path: build/
+          if-no-files-found: error
