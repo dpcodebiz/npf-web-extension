@@ -40,7 +40,7 @@ jobs:
 
       # Uplading release
       - name: Upload Release Assets
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: npf-web-extension-build
           path: build/
