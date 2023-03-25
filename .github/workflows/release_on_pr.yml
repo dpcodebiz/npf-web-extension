@@ -25,6 +25,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Renaming build dir to release because otherwise the gh action won't take it into account due to the gitignore
+      - name: Renaming build dir
+        run: mv build release
+
       # Releasing
       - name: Create Release
         id: create_release
@@ -43,5 +47,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: npf-web-extension-build
-          path: build/
+          path: release/
           if-no-files-found: error
