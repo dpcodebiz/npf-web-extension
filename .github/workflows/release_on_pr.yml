@@ -25,9 +25,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Renaming build dir to release because otherwise the gh action won't take it into account due to the gitignore
-      - name: Renaming build dir
-        run: mv build release
+      # Zipping build dir
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r release-${{ steps.package-version.outputs.current-version }}.zip build
 
       # Releasing
       - name: Create Release
@@ -36,16 +37,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.package-version.outputs.current-version}}
-          release_name: Release ${{ steps.package-version.outputs.current-version}}
+          tag_name: v${{ steps.package-version.outputs.current-version }}
+          release_name: Release ${{ steps.package-version.outputs.current-version }}
           body: Automated release from pull request ${{ github.event.pull_request.number }}
           draft: false
           prerelease: false
+          artifacts: "release-${{ steps.package-version.outputs.current-version }}.zip"
+          allowUpdates: true
 
       # Uplading release
       - name: Upload Release Assets
         uses: actions/upload-artifact@v3
         with:
           name: npf-web-extension-build
-          path: release/
+          path: build/
           if-no-files-found: error
