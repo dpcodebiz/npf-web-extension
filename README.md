@@ -1,4 +1,4 @@
-# Network Performance Web Extension
+# Network Performance Framework Web Extension
 
 This repository is an extension to NPF (<https://github.com/tbarbette/npf>) and should therefore not be used as a standalone tool as the architecture has been built based on npf's internal architecture.
 
