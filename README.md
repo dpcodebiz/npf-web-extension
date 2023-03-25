@@ -12,8 +12,6 @@ where `configuration` follows the type specified inside `src/utils/data.ts`.
 
 ## Available Scripts
 
-In the project directory, you can run:
-
 ### `npm start`
 
 Runs the app in development mode available at address `http://localhost:3000`
@@ -30,6 +28,11 @@ Builds the app for production and optimizes it.
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 This will be removed in the near future
+
+## TODO
+
+- Fix build
+- Pack build output into one single file
 
 ## Releases
 
