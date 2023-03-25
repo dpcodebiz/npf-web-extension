@@ -29,6 +29,11 @@ Builds the app for production and optimizes it.
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 This will be removed in the near future
 
+## TODO
+
+- Fix build
+- Pack build output into one single file
+
 ## Releases
 
 - V0.1
