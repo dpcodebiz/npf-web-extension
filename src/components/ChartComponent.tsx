@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { getDatasets, getLabel } from "../utils/chart";
 import { Configuration } from "../utils/data";
-import { UpdateConfigurationEvent } from "../utils/events";
+import { Events, updateConfiguration, UpdateConfigurationEvent } from "../utils/events";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -26,20 +26,23 @@ export const ChartComponent = () => {
 
   // Mounting
   useEffect(() => {
+    // Exporting the update method
+    //@ts-expect-error because we are setting the window variable
+    window.updateConfiguration = updateConfiguration;
+
     const onUpdateConfiguration = (e: Event) => {
       // Cast
       const ev = e as UpdateConfigurationEvent;
-      console.log(e);
 
       setLoading(true);
       setConfiguration(ev.detail.configuration);
     };
 
     // Listening to
-    window.addEventListener("updateConfiguration", onUpdateConfiguration);
+    window.addEventListener(Events.UPDATE_CONFIGURATION, onUpdateConfiguration);
 
     // TODO fix this breaking the app when it shouldn't
-    //return window.removeEventListener("updateChartData", onUpdateChartData);
+    //return window.removeEventListener(Events.UPDATE_CONFIGURATION, onUpdateChartData);
   }, []);
 
   // Handling configuration update

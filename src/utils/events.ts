@@ -1,7 +1,21 @@
 import { Configuration } from "./data";
 
-// Main event used to trigger a rerendering of the whole app with fresh data from npf
-// This is used mainly to allow the app to be fed data easily
+export enum Events {
+  UPDATE_CONFIGURATION = "updateConfiguration",
+}
+
 export type UpdateConfigurationEvent = CustomEvent<{
   configuration: Configuration;
 }>;
+
+// This function allows to interact with the react app by providing the
+// app configuration
+export const updateConfiguration = (configuration: Configuration) => {
+  window.dispatchEvent(
+    new CustomEvent("updateConfiguration", {
+      detail: {
+        configuration,
+      },
+    })
+  );
+};
