@@ -12,87 +12,102 @@ import {
 } from "chart.js";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { getDatasets, getLabel } from "../utils/chart";
+import { Configuration } from "../utils/data";
+import { UpdateConfigurationEvent } from "../utils/events";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const getLabel = (rawData: any) => {
-  console.log(rawData);
-  return rawData ? Object.entries(rawData["01-iperf.npf"]).map(([k, pairs]) => Object.keys(pairs as any)) : null;
-};
-
-const getData = (rawData: any) => {
-  console.log(rawData);
-  return rawData
-    ? Object.entries(rawData["01-iperf.npf"]).map(([k, v]) => ({
-        label: k,
-        data: Object.values(v as any),
-        backgroundColor: "blue",
-        borderColor: "blue",
-      }))
-    : null;
-};
-
 export const ChartComponent = () => {
-  const [rawData, setRawData] = useState<any>();
+  // States
+  const [configuration, setConfiguration] = useState<Configuration>();
   const [data, setData] = useState<ChartData<"line", number[], string>>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
+  // Mounting
   useEffect(() => {
-    const onUpdateChartData = (e: any) => {
+    const onUpdateConfiguration = (e: Event) => {
+      // Cast
+      const ev = e as UpdateConfigurationEvent;
+      console.log(e);
+
       setLoading(true);
-      setRawData(e.detail.rawData);
-      console.log("yes", e.detail.rawData);
+      setConfiguration(ev.detail.configuration);
     };
 
-    window.addEventListener("updateChartData", onUpdateChartData);
-    console.log("test");
+    // Listening to
+    window.addEventListener("updateConfiguration", onUpdateConfiguration);
 
+    // TODO fix this breaking the app when it shouldn't
     //return window.removeEventListener("updateChartData", onUpdateChartData);
   }, []);
 
+  // Handling configuration update
   useEffect(() => {
-    const label = getLabel(rawData);
+    // Skip if no configuration
+    if (!configuration) return;
+
+    const label = getLabel(configuration);
+    const datasets = getDatasets(configuration);
+
+    // Typeguard -> this should never be triggered
+    if (!label || !datasets) return;
 
     setData({
-      labels: label ? label[0] : undefined,
-      datasets: getData(rawData) as any,
+      labels: label[0],
+      datasets: datasets,
     });
-  }, [rawData]);
+  }, [configuration]);
 
+  // This avoids rendering issues when data is still being updated but chartjs
+  // tries accessing it
   useEffect(() => {
+    if (!data) return;
+
     setLoading(false);
   }, [data]);
 
   // const raw_data = {
-  //   "01-iperf.npf": {
-  //     "('', 'without')": {
-  //       "1": 60501974220.8,
-  //       "2": 51092413440.0,
-  //       "3": 76334086963.2,
-  //       "4": 64968509849.6,
-  //       "5": 57515010252.8,
-  //       "6": 58613023744.0,
-  //       "7": 67958106112.0,
-  //       "8": 50650913177.6,
+  //   experiments: [
+  //     {
+  //       name: "01-iperf.npf",
+  //       runs: [
+  //         {
+  //           name: "('', 'without')",
+  //           results: {
+  //             "1": 60501974220.8,
+  //             "2": 51092413440.0,
+  //             "3": 76334086963.2,
+  //             "4": 64968509849.6,
+  //             "5": 57515010252.8,
+  //             "6": 58613023744.0,
+  //             "7": 67958106112.0,
+  //             "8": 50650913177.6,
+  //           },
+  //         },
+  //         {
+  //           name: "('-Z', 'with')",
+  //           results: {
+  //             "1": 92964336640.0,
+  //             "2": 93229826867.2,
+  //             "3": 100535490355.2,
+  //             "4": 98984001331.2,
+  //             "5": 98882097561.6,
+  //             "6": 98175769190.4,
+  //             "7": 99427311411.2,
+  //             "8": 94954852966.4,
+  //           },
+  //         },
+  //       ],
   //     },
-  //     "('-Z', 'with')": {
-  //       "1": 92964336640.0,
-  //       "2": 93229826867.2,
-  //       "3": 100535490355.2,
-  //       "4": 98984001331.2,
-  //       "5": 98882097561.6,
-  //       "6": 98175769190.4,
-  //       "7": 99427311411.2,
-  //       "8": 94954852966.4,
-  //     },
-  //   },
+  //   ],
   // };
 
-  return rawData == undefined || data == undefined || loading ? (
+  return loading ? (
     <>loading</>
   ) : (
     <Line
-      data={data}
+      data={data as ChartData<"line", number[], string>}
       options={{
         responsive: true,
         plugins: {
@@ -101,7 +116,7 @@ export const ChartComponent = () => {
           },
           title: {
             display: true,
-            text: Object.keys(rawData)[0],
+            text: configuration?.experiments[0].name, // TODO not only the first experiment
           },
         },
       }}
