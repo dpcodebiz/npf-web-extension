@@ -12,8 +12,6 @@ where `configuration` follows the type specified inside `src/utils/data.ts`.
 
 ## Available Scripts
 
-In the project directory, you can run:
-
 ### `npm start`
 
 Runs the app in development mode available at address `http://localhost:3000`
