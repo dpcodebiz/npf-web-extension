@@ -1,9 +1,13 @@
-name: NodeJS with Webpack
+name: Build NPF Web Extension app (CI)
 
+# Do not run this on main branch because we have another workflow for the release
 on:
+  pull_request:
+    branches:
+      - '!main'
   push:
     branches:
-      - '!main' # Do not run this on main branch because we have another workflow for the release
+      - '!main'
 
 jobs:
   build:
