@@ -11,24 +11,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
+      # Getting tag name for release
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      
+      # Dependencies
       - name: Install Dependencies
         run: npm install
         
+      # Building
       - name: Build
         run: npm run build
         
+      # Releasing
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.event.pull_request.head.sha }}
-          release_name: Release ${{ github.event.pull_request.head.sha }}
+          tag_name: v${{ env.RELEASE_VERSION }}
+          release_name: Release ${{ env.RELEASE_VERSION }}
           body: Automated release from pull request ${{ github.event.pull_request.number }}
           draft: false
           prerelease: false
-          
+        
+      # Uplading release
       - name: Upload Release Assets
         uses: actions/upload-artifact@v2
         with:
