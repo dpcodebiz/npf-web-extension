@@ -1,6 +1,10 @@
 name: NodeJS with Webpack
 
 on:
+  pull_request:
+    types: [opened]
+    branches:
+      - '!main'
   push:
     branches:
       - '!main' # Do not run this on main branch because we have another workflow for the release
