@@ -62,10 +62,25 @@ jobs:
           allowUpdates: true
           token: ${{ secrets.PAT }}
 
-      # Uplading release
+      # Uploading release
       - name: Upload Release Assets
         uses: actions/upload-artifact@v3
         with:
           name: release-${{ steps.package-version.outputs.current-version }}
           path: build/
           if-no-files-found: error
+      
+      # Checkout last version
+      - uses: actions/checkout@v3
+        with:
+          ref: v${{ steps.package-version.outputs.current-version }}
+
+      # Building package for pypi
+      - name: Building package
+        run: python3 -m pip install --upgrade build && python3 -m build
+
+      # Publishing to pypi
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
