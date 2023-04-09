@@ -54,7 +54,7 @@ jobs:
       # Building package for pypi
       - name: Building package
         working-directory: ./python/
-        run: python3 -m pip install --upgrade build && python3 -m build --outdir ../dist/
+        run: python3 -m pip install --upgrade build && python3 -m build
 
       # Publishing to pypi
       - name: Publish package
