@@ -26,3 +26,6 @@ yarn-error.log*
 # Python package
 dist/
 python_src/*.egg-info
+
+# Ignore build file being copied for the manifest
+index.html
