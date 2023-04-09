@@ -70,6 +70,11 @@ jobs:
           path: build/
           if-no-files-found: error
       
+      # Checkout last version
+      - uses: actions/checkout@v3
+        with:
+          ref: v${{ steps.package-version.outputs.current-version }}
+
       # Building package for pypi
       - name: Building package
         run: python3 -m pip install --upgrade build && python3 -m build
