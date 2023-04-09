@@ -31,6 +31,18 @@ module.exports = {
           )
         ), 'prepend'] // This config should always be kept up-to-date with the one provided by Create-React-App
       ],
+      configure: (webpackConfig, {}) => {
+
+        // Disabling chunks
+        webpackConfig.optimization.splitChunks = {
+          cacheGroups: {
+            default: false,
+          },
+        };
+        webpackConfig.optimization.runtimeChunk = false;
+
+        return webpackConfig;
+      },
     },
   },
 };

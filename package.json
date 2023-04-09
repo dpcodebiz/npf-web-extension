@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -17,18 +17,15 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "rewire": "^6.0.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "craco build",
-    "build-non-split": "node ./scripts/build-non-split.js",
-    "deploy": "npm run build-non-split && npx gulp",
-    "test": "craco test",
-    "eject": "react-scripts eject",
-    "singlepage": "react-app-singlehtml build/index.html build/singlepage.html"
+    "deploy": "npm run build && npx gulp",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
