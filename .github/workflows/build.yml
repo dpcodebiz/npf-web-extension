@@ -1,4 +1,4 @@
-name: Build NPF Web Extension app (CI)
+name: Check build NPF Web Extension app (CI)
 
 on:
   pull_request:
