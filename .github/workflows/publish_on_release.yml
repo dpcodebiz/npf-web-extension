@@ -1,7 +1,7 @@
 name: Publish python package after release
 on:
   release:
-    types: [published]
+    types: [published, created]
 jobs:
   pypi:
     runs-on: ubuntu-latest
@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          
+
       # Building package for pypi
       - name: Building package
         run: python3 -m pip install --upgrade build && python3 -m build
