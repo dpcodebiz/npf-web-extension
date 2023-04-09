@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from importlib.metadata import version
 
 
-def entry_point():
+def main():
     parser = ArgumentParser()
     parser.add_argument("-v", "--version", action="store_true")
 
@@ -12,3 +12,7 @@ def entry_point():
     if args.version:
         print(version("npf-web-extension"))
         sys.exit()
+
+
+def hydrate_app():
+    print("Hydrated")
