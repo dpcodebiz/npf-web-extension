@@ -50,3 +50,14 @@ jobs:
           name: release-${{ steps.package-version.outputs.current-version }}
           path: build/
           if-no-files-found: error
+      
+      # Building package for pypi
+      - name: Building package
+        working-directory: ./python/
+        run: python3 -m pip install --upgrade build && python3 -m build --sdist --sdist-dir ../dist/
+
+      # Publishing to pypi
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
