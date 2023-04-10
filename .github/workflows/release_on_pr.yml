@@ -78,11 +78,16 @@ jobs:
       # Building package for pypi
       - name: Building package
         run: python3 -m pip install --upgrade build && python3 -m build
+      
+      - name: Debug
+        run: ls -la build
+      - name: Debug
+        run: ls -la python_src/npf_web_extension/
 
       # Publishing to pypi
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          verbose: true
-          verify-metadata: false # The twine check version used is not updated and still uses the legacy which doesn't handle gh markdown properly 
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      # - name: Publish package
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     verbose: true
+      #     verify-metadata: false # The twine check version used is not updated and still uses the legacy which doesn't handle gh markdown properly 
+      #     password: ${{ secrets.PYPI_API_TOKEN }}
