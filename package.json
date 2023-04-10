@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -23,7 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "craco build",
-    "deploy": "npm run build && npx gulp && npx copyfiles build/index.html index.html",
+    "deploy": "npm run build && npx gulp",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -47,19 +47,9 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
-    "copy-files-from-to": "^3.8.0",
     "gulp": "^4.0.2",
     "gulp-inline-source": "^4.0.0",
     "gulp-replace": "^1.1.4",
     "tailwindcss": "^3.2.6"
-  },
-  "copyFiles": [
-    {
-      "from": "build/index.html",
-      "to": "index.html"
-    }
-  ],
-  "copyFilesSettings": {
-    "whenFileExists": "overwrite"
   }
 }
