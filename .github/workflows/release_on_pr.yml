@@ -50,11 +50,11 @@ jobs:
       #   with:
       #     args: zip -qq -r release-${{ steps.package-version.outputs.current-version }}.zip build
 
-      # Uploading template.py to repo
-      - name: Upload template.py to repo
+      # Uploading template.html to repo
+      - name: Upload template.html to repo
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'python_src/npf_web_extension/template.py'
+          add: 'python_src/npf_web_extension/template.html'
           commit: --signoff
           default_author: github_actions
           fetch: false
