@@ -12,6 +12,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "chart.js": "^4.2.1",
+    "copy-files-from-to": "^3.8.0",
     "eslint-config-prettier": "^8.6.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
@@ -23,7 +24,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "craco build",
-    "deploy": "npm run build && npx gulp",
+    "deploy": "npm run build && npx gulp && npx copy-files-from-to",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -51,5 +52,14 @@
     "gulp-inline-source": "^4.0.0",
     "gulp-replace": "^1.1.4",
     "tailwindcss": "^3.2.6"
+  },
+  "copyFiles": [
+    {
+      "from": "build/index.html",
+      "to": "python_src/npf_web_extension/template.py"
+    }
+  ],
+  "copyFilesSettings": {
+    "whenFileExists": "overwrite"
   }
 }
