@@ -68,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: index.html
-          path: build/
+          path: build/index.html
           if-no-files-found: error
       
       # Checkout last version

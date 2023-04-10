@@ -31,6 +31,8 @@ This will be removed in the near future
 
 ## Releases
 
+- V0.2.2
+  - Fixed checkout reset when building with github actions
 - V0.2.1
   - Fixed html file not being included properly. Added prebuild script.
 - V0.2
