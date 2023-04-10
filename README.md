@@ -31,5 +31,9 @@ This will be removed in the near future
 
 ## Releases
 
+- V0.2
+  - Inlining all app source codes into a single html file instead of external scripts
+- V0.1.1
+  - PyPi package creation and publishing
 - V0.1
   - Github actions automatic releases
