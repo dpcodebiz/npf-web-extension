@@ -26,7 +26,6 @@ yarn-error.log*
 # Python package
 dist/
 python_src/*.egg-info
-python_src/npf_web_extension/template.py
 
 # Ignore build file being copied for the manifest
 index.html
