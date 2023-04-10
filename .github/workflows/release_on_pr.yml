@@ -83,5 +83,7 @@ jobs:
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          verbose: true
+          verify-metadata: false # The twine check version used is not updated and still uses the legacy which doesn't handle gh markdown properly 
           repository-url: https://upload.pypi.org/
           password: ${{ secrets.PYPI_API_TOKEN }}
