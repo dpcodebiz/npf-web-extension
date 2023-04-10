@@ -1,9 +1,13 @@
 import json
-import shutil
 import sys
 from argparse import ArgumentParser
 from importlib.metadata import version
+import os
+import shutil
 
+# Getting package directory
+package_directory = os.path.dirname(os.path.abspath(__file__))
+template_path = os.path.join(package_directory, "template.py")
 
 def main():
     parser = ArgumentParser()
@@ -19,10 +23,10 @@ def main():
 def _prepare(outdir):
 
     # Configuration
-    file_path = "index.html"
+    output_path = f"{outdir}/index.html"
 
     # Copying app to outdir
-    shutil.copy(file_path, f"{outdir}/{file_path}")
+    shutil.copy(template_path, output_path)
 
     
 def _hydrate(configuration, outdir):
@@ -33,12 +37,12 @@ def _hydrate(configuration, outdir):
     js_snippet = f'\t<script type="text/javascript">setTimeout(() => window.updateConfiguration({json.dumps(configuration)}), 2500)</script>'
 
     # Replacing the insertion point with the js_snippet
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         file_contents = file.read()
 
     new_contents = file_contents.replace(insertion_point, js_snippet)
 
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w', encoding='utf-8') as file:
         # Write the modified contents to the file
         file.write(new_contents)
 

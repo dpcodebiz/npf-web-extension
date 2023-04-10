@@ -75,6 +75,10 @@ jobs:
         with:
           ref: v${{ steps.package-version.outputs.current-version }}
 
+      # Preparing package build for pypi
+      - name: Pre-build package
+        run: python3 pre_setup.py
+
       # Building package for pypi
       - name: Building package
         run: python3 -m pip install --upgrade build && python3 -m build
