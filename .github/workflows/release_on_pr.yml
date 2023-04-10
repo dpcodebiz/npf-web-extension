@@ -50,6 +50,16 @@ jobs:
       #   with:
       #     args: zip -qq -r release-${{ steps.package-version.outputs.current-version }}.zip build
 
+      # Uploading template.py to repo
+      - name: Upload template.py to repo
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'python_src/npf_web_extension/template.py'
+          commit: --signoff
+          default_author: github_actions
+          fetch: false
+          pathspec_error_handling: exitImmediately
+
       # Releasing
       - name: Create Release
         id: create_release
@@ -67,7 +77,7 @@ jobs:
       - name: Upload Release Assets
         uses: actions/upload-artifact@v3
         with:
-          name: index.html
+          name: template.html
           path: build/index.html
           if-no-files-found: error
       
@@ -77,10 +87,10 @@ jobs:
           ref: v${{ steps.package-version.outputs.current-version }}
       
       # Download release after checkout
-      - uses: actions/download-artifact@v3
-        with:
-          name: index.html
-          path: python_src/npf_web_extension/template.py
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: template.html
+      #     path: python_src/npf_web_extension/template.html
 
       # Building package for pypi
       - name: Building package
@@ -89,11 +99,19 @@ jobs:
       # Debug
       - name: Debug
         run: ls -la python_src/npf_web_extension/
+      
+      # Upload package artifact
+      - name: Upload PyPi Package artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist
+          if-no-files-found: error
 
       # Publishing to pypi
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          verbose: true
-          verify-metadata: false # The twine check version used is not updated and still uses the legacy which doesn't handle gh markdown properly 
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      # - name: Publish package
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     verbose: true
+      #     verify-metadata: false # The twine check version used is not updated and still uses the legacy which doesn't handle gh markdown properly 
+      #     password: ${{ secrets.PYPI_API_TOKEN }}

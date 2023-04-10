@@ -7,7 +7,7 @@ import shutil
 
 # Getting package directory
 package_directory = os.path.dirname(os.path.abspath(__file__))
-template_path = os.path.join(package_directory, "template.py")
+template_path = os.path.join(package_directory, "template.html")
 
 def main():
     parser = ArgumentParser()

@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -56,7 +56,7 @@
   "copyFiles": [
     {
       "from": "build/index.html",
-      "to": "python_src/npf_web_extension/template.py"
+      "to": "python_src/npf_web_extension/template.html"
     }
   ],
   "copyFilesSettings": {

@@ -31,6 +31,9 @@ This will be removed in the near future
 
 ## Releases
 
+- V0.2.3
+  - Added automatic build and commit to repo of template to fix it not being included properly.
+  - Renamed template.py to template.html
 - V0.2.2
   - Fixed checkout reset when building with github actions
 - V0.2.1
