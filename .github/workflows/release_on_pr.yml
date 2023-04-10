@@ -46,9 +46,9 @@ jobs:
         run: npm run deploy
 
       # Zipping build dir
-      - uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r release-${{ steps.package-version.outputs.current-version }}.zip build
+      # - uses: montudor/action-zip@v1
+      #   with:
+      #     args: zip -qq -r release-${{ steps.package-version.outputs.current-version }}.zip build
 
       # Releasing
       - name: Create Release
@@ -58,7 +58,8 @@ jobs:
           tag: v${{ steps.package-version.outputs.current-version }}
           name: Release ${{ steps.package-version.outputs.current-version }}
           body: Automated release from pull request ${{ github.event.pull_request.number }}
-          artifacts: "release-${{ steps.package-version.outputs.current-version }}.zip"
+          # artifacts: "release-${{ steps.package-version.outputs.current-version }}.zip"
+          artifacts: "build/index.html"
           allowUpdates: true
           token: ${{ secrets.PAT }}
 
@@ -66,7 +67,7 @@ jobs:
       - name: Upload Release Assets
         uses: actions/upload-artifact@v3
         with:
-          name: release-${{ steps.package-version.outputs.current-version }}
+          name: index.html
           path: build/
           if-no-files-found: error
       
@@ -74,13 +75,18 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: v${{ steps.package-version.outputs.current-version }}
+      
+      # Download release after checkout
+      - uses: actions/download-artifact@v3
+        with:
+          name: index.html
+          path: python_src/npf_web_extension/template.py
 
       # Building package for pypi
       - name: Building package
         run: python3 -m pip install --upgrade build && python3 -m build
       
-      - name: Debug
-        run: ls -la build
+      # Debug
       - name: Debug
         run: ls -la python_src/npf_web_extension/
 
