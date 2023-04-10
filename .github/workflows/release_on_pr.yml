@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.PAT }} # Enable branch protection bypass
 
       # Getting package version
       - name: get-npm-version
@@ -87,12 +87,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: v${{ steps.package-version.outputs.current-version }}
-      
-      # Download release after checkout
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: template.html
-      #     path: python_src/npf_web_extension/template.html
 
       # Building package for pypi
       - name: Building package
@@ -106,14 +100,14 @@ jobs:
       - name: Upload PyPi Package artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build
+          name: v${{ steps.package-version.outputs.current-version }}
           path: dist
           if-no-files-found: error
 
       # Publishing to pypi
-      # - name: Publish package
-      #   uses: pypa/gh-action-pypi-publish@release/v1
-      #   with:
-      #     verbose: true
-      #     verify-metadata: false # The twine check version used is not updated and still uses the legacy which doesn't handle gh markdown properly 
-      #     password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+          verify-metadata: false # TODO fix checking metadata, it should not throw an error
+          password: ${{ secrets.PYPI_API_TOKEN }}
