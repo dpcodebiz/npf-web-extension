@@ -1,16 +1,14 @@
 import { ChartDataset } from "chart.js";
-import { Configuration, Run } from "./data";
+import { Configuration, Experiment, Run } from "./data";
 
 /**
- * @param configuration
+ * @param experiment
  * @returns Labels for the chart
  */
-export const getLabel = (configuration: Configuration) => {
-  if (!configuration) return;
+export const getLabel = (experiment: Experiment) => {
+  if (!experiment) return [];
 
   // TODO iterate through each experiment
-  const experiment = configuration.experiments[0];
-
   return experiment.runs.map(({ results }) => Object.keys(results));
 };
 
@@ -29,14 +27,11 @@ const runToDataset = (run: Run) =>
 
 /**
  *
- * @param configuration
+ * @param experiment
  * @returns Datasets for the chart
  */
-export const getDatasets = (configuration: Configuration) => {
-  if (!configuration) return;
-
-  // TODO iterate through each experiment
-  const experiment = configuration.experiments[0];
+export const getDatasets = (experiment: Experiment) => {
+  if (!experiment) return [];
 
   return experiment.runs.map((run) => runToDataset(run));
 };

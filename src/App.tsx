@@ -1,7 +1,36 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 import { ChartComponent } from "./components/ChartComponent";
+import { Configuration } from "./utils/data";
+import { Events, UpdateConfigurationEvent, updateConfiguration } from "./utils/events";
 
 function App() {
+
+  // States
+  const [configuration, setConfiguration] = useState<Configuration>();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Mounting
+  useEffect(() => {
+    // Exporting the update method
+    //@ts-expect-error because we are setting the window variable
+    window.updateConfiguration = updateConfiguration;
+
+    const onUpdateConfiguration = (e: Event) => {
+      // Cast
+      const ev = e as UpdateConfigurationEvent;
+
+      setLoading(false);
+      setConfiguration(ev.detail.configuration);
+    };
+
+    // Listening to
+    window.addEventListener(Events.UPDATE_CONFIGURATION, onUpdateConfiguration);
+
+    // TODO fix this breaking the app when it shouldn't
+    //return window.removeEventListener(Events.UPDATE_CONFIGURATION, onUpdateChartData);
+  }, []);
+
   return (
     <div className="bg-gray-100 w-screen h-screen flex flex-row">
       <div className="bg-white w-[300px] p-6 space-y-6">
@@ -25,7 +54,18 @@ function App() {
           ))}
         </div>
         <div>
-          <ChartComponent></ChartComponent>
+          {
+            !loading && configuration && (
+              configuration.experiments.map((experiment) => (
+                <ChartComponent experiment={experiment}/>
+              ))
+            )
+          }
+          {
+            (loading || !configuration) && (
+              <>Loading...</>
+            )
+          }
         </div>
       </div>
       {/* Main page */}
