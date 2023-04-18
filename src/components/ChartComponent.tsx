@@ -19,28 +19,32 @@ import { Events, updateConfiguration, UpdateConfigurationEvent } from "../utils/
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 type Props = {
-  experiment:Experiment
-}
+  experiment: Experiment;
+};
 
-export const ChartComponent = (props:Props) => {
+export const ChartComponent = (props: Props) => {
   return (
-    <Line
-      data={{
-        labels: getLabel(props.experiment)[0],
-        datasets: getDatasets(props.experiment),
-      } as ChartData<"line", number[], string>}
-      options={{
-        responsive: true,
-        plugins: {
-          legend: {
-            position: "top" as const,
+    <div className="bg-white p-6 rounded-xl">
+      <Line
+        data={
+          {
+            labels: getLabel(props.experiment)[0],
+            datasets: getDatasets(props.experiment),
+          } as ChartData<"line", number[], string>
+        }
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "top" as const,
+            },
+            title: {
+              display: true,
+              text: props.experiment.name, // TODO not only the first experiment
+            },
           },
-          title: {
-            display: true,
-            text: props.experiment.name, // TODO not only the first experiment
-          },
-        },
-      }}
-    />
+        }}
+      />
+    </div>
   );
 };
