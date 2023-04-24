@@ -1,6 +1,7 @@
 import { ConfigurationData } from "../configuration/types";
 
 export const IPERF_DATA: ConfigurationData = {
+  name: "Example dataset with iperf",
   parameters: ["PARALLEL", "ZEROCOPY", "TIME"],
   measurements: ["THROUGHPUT"],
   data: `

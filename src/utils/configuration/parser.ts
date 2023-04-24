@@ -112,7 +112,8 @@ export function resultsToConfiguration(
 
   // Creating experiment
   const experiment: Experiment = {
-    name: "",
+    name: configurationData.name,
+    main_parameter: main_param,
     runs: getRunsFromGroupedData(main_param, measurements, grouped_data_by_other_params),
   };
 

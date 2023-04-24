@@ -5,10 +5,13 @@ import { Events, UpdateConfigurationEvent, updateConfiguration } from "./utils/e
 import { WebsiteLoader } from "./components/WebsiteLoader";
 import { useConfiguration } from "./utils/configuration";
 import { IPERF_DATA } from "./utils/examples/iperf";
+import { MATH_DATA } from "./utils/examples/math";
 
 function App() {
   // States
   const { loading, load, configuration } = useConfiguration();
+
+  const tabs = [IPERF_DATA, MATH_DATA];
 
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -38,12 +41,10 @@ function App() {
   }, [load, configuration]);
 
   // Set default tab on configuration update
-  useEffect(() => {
-    setSelectedTab(0); // Reset selected tab
-  }, [configuration]);
 
   const onTabClick = (index: number) => {
     setSelectedTab(index);
+    load(tabs[index]);
   };
 
   return (
@@ -55,8 +56,7 @@ function App() {
           <div className="text-lg">Results available</div>
           <div className="space-y-2 flex flex-col">
             {!loading &&
-              configuration &&
-              configuration.experiments.map((experiment, index) => (
+              tabs.map((configurationData, index) => (
                 <button
                   className={`p-4 text-lg text-left rounded transition-all duration-200 ${
                     selectedTab == index ? "bg-uclouvain-1 text-white" : "hover:bg-gray-200"
@@ -66,7 +66,7 @@ function App() {
                     selectedTab != index && onTabClick(index);
                   }}
                 >
-                  {experiment.name}
+                  {configurationData.name}
                 </button>
               ))}
           </div>
@@ -80,9 +80,7 @@ function App() {
               </div>
             ))}
           </div> */}
-          <div>
-            {!loading && configuration && <ChartComponent experiment={configuration.experiments[selectedTab]} />}
-          </div>
+          <div>{!loading && configuration && <ChartComponent experiment={configuration.experiments[0]} />}</div>
         </div>
       </div>
     </>

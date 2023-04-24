@@ -2,6 +2,7 @@
  * Configuration data that will be injected into the app
  */
 export type ConfigurationData = {
+  name: string;
   parameters: string[];
   measurements: string[];
   data: string;
@@ -16,6 +17,7 @@ export type Configuration = {
 
 export type Experiment = {
   name: string;
+  main_parameter: string;
   runs: ParameterizedRun[];
 };
 
