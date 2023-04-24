@@ -1,6 +1,6 @@
 import { ChartDataset } from "chart.js";
 import { Experiment, ParameterizedRun } from "./configuration/types";
-import { joinParams } from "./configuration";
+import { joinParams } from "./configuration/utils";
 
 /**
  * @param experiment
