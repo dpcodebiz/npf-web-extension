@@ -1,11 +1,11 @@
-import { Configuration } from "./data";
+import { Configuration } from "./configuration/types";
 
 export enum Events {
   UPDATE_CONFIGURATION = "updateConfiguration",
 }
 
 export type UpdateConfigurationEvent = CustomEvent<{
-  configuration: Configuration;
+  configuration: string;
 }>;
 
 // This function allows to interact with the react app by providing the

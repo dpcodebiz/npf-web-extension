@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { getDatasets, getLabel } from "../utils/chart";
-import { Configuration, Experiment } from "../utils/data";
+import { Configuration, Experiment } from "../utils/configuration/types";
 import { Events, updateConfiguration, UpdateConfigurationEvent } from "../utils/events";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -28,7 +28,7 @@ export const ChartComponent = (props: Props) => {
       <Line
         data={
           {
-            labels: getLabel(props.experiment)[0],
+            labels: getLabel(props.experiment),
             datasets: getDatasets(props.experiment),
           } as ChartData<"line", number[], string>
         }

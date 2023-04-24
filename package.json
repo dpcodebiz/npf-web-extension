@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -14,9 +14,11 @@
     "chart.js": "^4.2.1",
     "copy-files-from-to": "^3.8.0",
     "eslint-config-prettier": "^8.6.0",
+    "radash": "^10.8.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-papaparse": "^4.1.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"

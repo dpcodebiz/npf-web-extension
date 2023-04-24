@@ -1,5 +1,6 @@
 import { ChartDataset } from "chart.js";
-import { Configuration, Experiment, Run } from "./data";
+import { Configuration, Experiment, ParameterizedRun, Run } from "./configuration/types";
+import { joinParams } from "./configuration";
 
 /**
  * @param experiment
@@ -8,8 +9,9 @@ import { Configuration, Experiment, Run } from "./data";
 export const getLabel = (experiment: Experiment) => {
   if (!experiment) return [];
 
-  // TODO iterate through each experiment
-  return experiment.runs.map(({ results }) => Object.keys(results));
+  const results = experiment.runs[0].results;
+
+  return Object.keys(results[Object.keys(results)[0]]);
 };
 
 /**
@@ -17,13 +19,14 @@ export const getLabel = (experiment: Experiment) => {
  * @param run
  * @returns
  */
-const runToDataset = (run: Run) =>
-  ({
-    label: run.parameters,
-    data: Object.values(run.results),
-    backgroundColor: "blue",
-    borderColor: "blue",
-  } as ChartDataset<"line", number[]>);
+const runToDataset = (run: ParameterizedRun) => {
+  return {
+    label: joinParams(Object.keys(run.parameters), run.parameters),
+    data: Object.values(Object.values(run.results)[0]),
+    backgroundColor: "blue", // TODO
+    borderColor: "blue", // TODO
+  } as ChartDataset<"line", number[]>; // TODO
+};
 
 /**
  *

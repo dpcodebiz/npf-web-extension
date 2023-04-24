@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { ChartComponent } from "./components/ChartComponent";
-import { Configuration } from "./utils/data";
 import { Events, UpdateConfigurationEvent, updateConfiguration } from "./utils/events";
 import { WebsiteLoader } from "./components/WebsiteLoader";
+import { useConfiguration } from "./utils/configuration";
+import { IPERF_DATA } from "./utils/examples/iperf";
 
 function App() {
   // States
-  const [configuration, setConfiguration] = useState<Configuration>();
-  const [loading, setLoading] = useState<boolean>(true);
+  const { loading, load, configuration } = useConfiguration();
 
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -22,16 +22,20 @@ function App() {
       // Cast
       const ev = e as UpdateConfigurationEvent;
 
-      setLoading(false);
-      setConfiguration(ev.detail.configuration);
+      // load(ev.detail.configuration);
     };
 
     // Listening to
     window.addEventListener(Events.UPDATE_CONFIGURATION, onUpdateConfiguration);
 
+    if (!configuration) {
+      // DEBUG
+      load(IPERF_DATA);
+    }
+
     // TODO fix this breaking the app when it shouldn't
     //return window.removeEventListener(Events.UPDATE_CONFIGURATION, onUpdateChartData);
-  }, []);
+  }, [load]);
 
   // Set default tab on configuration update
   useEffect(() => {
