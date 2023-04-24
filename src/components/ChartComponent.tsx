@@ -1,6 +1,5 @@
 import {
   Chart as ChartJS,
-  ArcElement,
   Tooltip,
   Legend,
   CategoryScale,
@@ -10,11 +9,9 @@ import {
   Title,
   ChartData,
 } from "chart.js";
-import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { getDatasets, getLabel } from "../utils/chart";
-import { Configuration, Experiment } from "../utils/configuration/types";
-import { Events, updateConfiguration, UpdateConfigurationEvent } from "../utils/events";
+import { Experiment } from "../utils/configuration/types";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 

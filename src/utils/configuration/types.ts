@@ -19,10 +19,6 @@ export type Experiment = {
   runs: ParameterizedRun[];
 };
 
-export type Run = {
-  parameterized_runs: ParameterizedRun[];
-};
-
 export type ParameterizedRun = {
   parameters: RunParameters;
   results: ParameterizedResults;

@@ -1,7 +1,7 @@
 import { ParseResult } from "papaparse";
 import { readString } from "react-papaparse";
 import { useEffect, useState } from "react";
-import { Configuration, ConfigurationData, Experiment, ParameterizedRun, Run } from "./types";
+import { Configuration, ConfigurationData, Experiment, ParameterizedRun } from "./types";
 import { group, mapValues, objectify } from "radash";
 
 export const joinParams = (params_to_join: string[], params: { [index: string]: string }) => {

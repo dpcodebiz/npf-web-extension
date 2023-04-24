@@ -1,5 +1,5 @@
 import { ChartDataset } from "chart.js";
-import { Configuration, Experiment, ParameterizedRun, Run } from "./configuration/types";
+import { Experiment, ParameterizedRun } from "./configuration/types";
 import { joinParams } from "./configuration";
 
 /**
