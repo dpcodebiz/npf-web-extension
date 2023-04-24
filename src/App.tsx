@@ -53,7 +53,6 @@ function App() {
       <div className="bg-gray-100 w-screen h-screen flex flex-row">
         <div className="bg-white w-[400px] p-6 space-y-6">
           <div className="font-bold text-xl">Network Performance Framework</div>
-          <div className="text-lg">Results available</div>
           <div className="space-y-2 flex flex-col">
             {!loading &&
               tabs.map((configurationData, index) => (

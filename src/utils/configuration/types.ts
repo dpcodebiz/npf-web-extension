@@ -12,13 +12,22 @@ export type ConfigurationData = {
  * Main configuration input that is used to hydrate the app
  */
 export type Configuration = {
-  experiments: Experiment[];
+  experiments: Experiment[]; // TODO in the future each experiment will be tied to only one configuration
 };
 
 export type Experiment = {
+  metadata: Metadata;
   name: string;
   main_parameter: string;
   runs: ParameterizedRun[];
+};
+
+export enum GRAPH_TYPES {
+  LINE,
+}
+
+export type Metadata = {
+  type: GRAPH_TYPES;
 };
 
 export type ParameterizedRun = {
