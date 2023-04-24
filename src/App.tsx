@@ -35,7 +35,7 @@ function App() {
 
     // TODO fix this breaking the app when it shouldn't
     //return window.removeEventListener(Events.UPDATE_CONFIGURATION, onUpdateChartData);
-  }, [load]);
+  }, [load, configuration]);
 
   // Set default tab on configuration update
   useEffect(() => {
