@@ -42,5 +42,18 @@ const runToDataset = (run: ParameterizedRun, index: number) => {
 export const getDatasets = (experiment: Experiment) => {
   if (!experiment) return [];
 
+  // Starting to generate conditional graphs
+  if (Object.keys(experiment.runs[0].results).length > 1) {
+    return Object.entries(experiment.runs[0].results).map(
+      ([key, values], index) =>
+        ({
+          label: key,
+          data: Object.values(values),
+          backgroundColor: COLORS.LINE_CHART[index],
+          borderColor: COLORS.LINE_CHART[index],
+        } as ChartDataset<"line", number[]>)
+    );
+  }
+
   return experiment.runs.map((run, index) => runToDataset(run, index));
 };
