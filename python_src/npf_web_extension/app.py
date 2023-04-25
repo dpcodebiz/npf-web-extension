@@ -47,9 +47,9 @@ def _hydrate(configurationData, outdir):
         file.write(new_contents)
 
 
-def export(configuration, outdir):
+def export(configurationData, outdir):
     
     _prepare(outdir)
-    _hydrate(configuration, outdir)
+    _hydrate(configurationData, outdir)
 
     print("Web app has been exported properly")
