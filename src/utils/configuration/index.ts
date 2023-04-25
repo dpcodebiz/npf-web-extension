@@ -16,7 +16,6 @@ export const useConfiguration = () => {
 
   const load = useCallback(
     (configurationData: ConfigurationData) => {
-      setLoading(true);
       setConfigurationData(configurationData);
 
       readString(configurationData.data, {
@@ -42,9 +41,7 @@ export const useConfiguration = () => {
   useEffect(() => {
     if (!configurationData) return;
 
-    setLoading(true);
     load(configurationData);
-    console.log("testest");
   }, [configurationData, settings, load]);
 
   return { loading, load, configuration, settings, setSettings };

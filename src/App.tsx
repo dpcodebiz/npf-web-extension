@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { ChartComponent } from "./components/ChartComponent";
-import { Events, UpdateConfigurationEvent, updateConfiguration } from "./utils/events";
+import { Events } from "./utils/events";
 import { WebsiteLoader } from "./components/WebsiteLoader";
 import { useConfiguration } from "./utils/configuration";
 import { IPERF_DATA } from "./utils/examples/iperf";
 import { MATH_DATA } from "./utils/examples/math";
 import { WORLD_POPULATION_DATA } from "./utils/examples/world_population";
 import { ConfigurationData, GRAPH_TYPES } from "./utils/configuration/types";
-import { isEmpty } from "radash";
 
 function App() {
   // States
@@ -27,32 +26,29 @@ function App() {
 
   // Mounting
   useEffect(() => {
+    const updateConfiguration = (configurationData: ConfigurationData) => {
+      load(configurationData);
+      setExperiments({ [configurationData.id]: configurationData });
+    };
+
     // Exporting the update method
     //@ts-expect-error because we are setting the window variable
     window.updateConfiguration = updateConfiguration;
     //@ts-expect-error because we are setting the window variable
     window.demo = demo;
 
-    const onUpdateConfiguration = (e: Event) => {
-      // Cast
-      const ev = e as UpdateConfigurationEvent;
-
-      // load(ev.detail.configuration);
-    };
-
-    // Listening to
-    window.addEventListener(Events.UPDATE_CONFIGURATION, onUpdateConfiguration);
-
-    // TODO fix this breaking the app when it shouldn't
-    //return window.removeEventListener(Events.UPDATE_CONFIGURATION, onUpdateChartData);
-  }, [load, configuration]);
+    // Dispatching event
+    window.dispatchEvent(new Event(Events.APP_READY));
+  }, [load]);
 
   // Reset selected experiment and configuration loaded when experiments available change
   useEffect(() => {
-    if (!experiments || isEmpty(experiments)) return;
+    if (!experiments || Object.keys(experiments).length == 0) return;
+    if (Object.keys(experiments).includes(selectedExperiment)) return;
+
     setSelectedExperiment(Object.keys(experiments)[0]);
     load(experiments[Object.keys(experiments)[0]]);
-  }, [experiments, load]);
+  }, [experiments, load, selectedExperiment]);
 
   const onExperimentClick = (id: string) => {
     if (!experiments) return;

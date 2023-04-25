@@ -29,12 +29,12 @@ def _prepare(outdir):
     shutil.copy(template_path, output_path)
 
     
-def _hydrate(configuration, outdir):
+def _hydrate(configurationData, outdir):
 
     # Configuration
     file_path = f"{outdir}/index.html"
     insertion_point = "<!-- NPF_CONFIG_INSERTION -->"
-    js_snippet = f'\t<script type="text/javascript">setTimeout(() => window.updateConfiguration({json.dumps(configuration)}), 2500)</script>'
+    js_snippet = f'\t<script type="text/javascript">window.addEventListener("APP_READY", () => window.updateConfiguration({json.dumps(configurationData)}))</script>'
 
     # Replacing the insertion point with the js_snippet
     with open(file_path, 'r', encoding='utf-8') as file:

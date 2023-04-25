@@ -120,7 +120,7 @@ export const getLineChartConfiguration = (
   };
 
   // Debug
-  console.log(grouped_data_by_other_params, experiment);
+  // console.log(grouped_data_by_other_params, experiment);
 
   return experiment;
 };
