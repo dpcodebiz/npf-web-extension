@@ -1,50 +1,21 @@
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  ChartData,
-} from "chart.js";
-import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
-import { getDatasets, getLabel } from "../utils/chart";
-import { Configuration, Experiment } from "../utils/data";
-import { Events, updateConfiguration, UpdateConfigurationEvent } from "../utils/events";
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
+import { Experiment, GRAPH_TYPES } from "../utils/configuration/types";
+import { BarChart } from "./charts/bar/BarChart";
+import { LineChart } from "./charts/line/LineChart";
 type Props = {
   experiment: Experiment;
 };
 
-export const ChartComponent = (props: Props) => {
-  return (
-    <div className="bg-white p-6 rounded-xl">
-      <Line
-        data={
-          {
-            labels: getLabel(props.experiment)[0],
-            datasets: getDatasets(props.experiment),
-          } as ChartData<"line", number[], string>
-        }
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              position: "top" as const,
-            },
-            title: {
-              display: true,
-              text: props.experiment.name, // TODO not only the first experiment
-            },
-          },
-        }}
-      />
-    </div>
-  );
+export const ChartComponent = ({ experiment }: Props) => {
+  const renderGraph = (experiment: Experiment) => {
+    switch (experiment.metadata.type) {
+      case GRAPH_TYPES.LINE: {
+        return <LineChart experiment={experiment}></LineChart>;
+      }
+      case GRAPH_TYPES.BAR: {
+        return <BarChart experiment={experiment}></BarChart>;
+      }
+    }
+  };
+
+  return <div className="bg-white p-6 rounded-xl">{renderGraph(experiment)}</div>;
 };
