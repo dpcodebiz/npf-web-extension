@@ -1,6 +1,7 @@
 import { ConfigurationData } from "../configuration/types";
 
 export const MATH_DATA: ConfigurationData = {
+  id: "3cf52ba9-49e3-44f1-b515-7df70f23fa8b",
   name: "Example dataset with math functions",
   parameters: ["N"],
   measurements: ["N", "LOG", "EXP"],

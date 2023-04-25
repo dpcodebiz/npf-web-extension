@@ -1,7 +1,16 @@
+export type Settings = {
+  [index: string]: ConfigurationSettings;
+};
+
+export type ConfigurationSettings = {
+  type: GRAPH_TYPES;
+};
+
 /**
  * Configuration data that will be injected into the app
  */
 export type ConfigurationData = {
+  id: string; // Must be unique
   name: string;
   parameters: string[];
   measurements: string[];
@@ -24,10 +33,12 @@ export type Experiment = {
 
 export enum GRAPH_TYPES {
   LINE,
+  BAR,
 }
 
 export type Metadata = {
   type: GRAPH_TYPES;
+  recommended_type: GRAPH_TYPES;
 };
 
 export type ParameterizedRun = {

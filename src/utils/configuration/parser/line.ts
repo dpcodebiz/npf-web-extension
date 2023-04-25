@@ -112,6 +112,7 @@ export const getLineChartConfiguration = (
   const experiment: Experiment = {
     metadata: {
       type: GRAPH_TYPES.LINE,
+      recommended_type: GRAPH_TYPES.LINE,
     },
     name: configurationData.name,
     main_parameter: main_param,

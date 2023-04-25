@@ -1,7 +1,7 @@
 import { ParseResult } from "papaparse";
 import { readString } from "react-papaparse";
-import { useEffect, useState } from "react";
-import { Configuration, ConfigurationData } from "./types";
+import { useCallback, useEffect, useState } from "react";
+import { Configuration, ConfigurationData, Settings } from "./types";
 import { ParsedConfigurationData, resultsToConfiguration } from "./parser";
 
 /**
@@ -9,8 +9,27 @@ import { ParsedConfigurationData, resultsToConfiguration } from "./parser";
  */
 export const useConfiguration = () => {
   // States
+  const [settings, setSettings] = useState<Settings>({});
   const [loading, setLoading] = useState(true);
   const [configuration, setConfiguration] = useState<Configuration | undefined>(undefined);
+  const [configurationData, setConfigurationData] = useState<ConfigurationData | undefined>(undefined);
+
+  const load = useCallback(
+    (configurationData: ConfigurationData) => {
+      setLoading(true);
+      setConfigurationData(configurationData);
+
+      readString(configurationData.data, {
+        header: true,
+        skipEmptyLines: true,
+        worker: true,
+        complete: function (results: ParseResult<ParsedConfigurationData>): void {
+          setConfiguration(resultsToConfiguration(configurationData, results, settings));
+        },
+      });
+    },
+    [settings]
+  );
 
   // Set loading false when configuration is loaded
   useEffect(() => {
@@ -19,18 +38,14 @@ export const useConfiguration = () => {
     setLoading(false);
   }, [configuration]);
 
-  const load = (configurationData: ConfigurationData) => {
+  // Update configuration on settings changed
+  useEffect(() => {
+    if (!configurationData) return;
+
     setLoading(true);
+    load(configurationData);
+    console.log("testest");
+  }, [configurationData, settings, load]);
 
-    readString(configurationData.data, {
-      header: true,
-      skipEmptyLines: true,
-      worker: true,
-      complete: function (results: ParseResult<ParsedConfigurationData>): void {
-        setConfiguration(resultsToConfiguration(configurationData, results));
-      },
-    });
-  };
-
-  return { loading, load, configuration };
+  return { loading, load, configuration, settings, setSettings };
 };
