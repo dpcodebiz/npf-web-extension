@@ -16,40 +16,31 @@ export const ChartPanelComponent = (props: Props) => {
   const split_cols = split_parameters.x?.length ?? 0;
   const split_rows = split_parameters.y?.length ?? 0;
 
-  const getCols = () => {
-    const splitCols = configuration.experiments[0].split_parameters?.x?.values.length;
-
-    switch (splitCols) {
-      case 1:
-        return `grid grid-cols-1`;
-      case 2:
-        return `grid grid-cols-2`;
-      case 3:
-        return `grid grid-cols-3`;
-      case 4:
-        return `grid grid-cols-4`;
-    }
-
-    return `grid grid-cols-1`;
-  };
-
-  console.log(configuration);
+  console.log(configuration, split_cols, split_rows);
 
   return (
     <div className="bg-white p-6 rounded-xl">
-      <div className={getCols()}>
+      <div className="grid grid-custom">
         {configuration.experiments.map((experiment, index) => (
-          <div className="col-span-1">
-            {split && split_parameters?.x && (
-              <div>
-                <div className="text-center pb-4">
-                  {split_parameters.x[index % split_cols].name}={split_parameters.x[index % split_cols].value}
+          <>
+            <div className="col-span-1">
+              {split_parameters.x && Math.floor(index / split_cols) == 0 && (
+                <div className="text-center pb-4 border-b-2">
+                  {split_parameters.x && split_parameters.x[index % split_cols].name}=
+                  {split_parameters.x && split_parameters.x[index % split_cols].value}
                 </div>
-                <hr />
+              )}
+              <div className="p-4">
+                <ChartComponent experiment={experiment} />
+              </div>
+            </div>
+            {split_parameters.y && index % split_cols == split_cols - 1 && (
+              <div className="border-l-2 px-4 inline-grid place-content-center">
+                {split_parameters.y && split_parameters.y[Math.floor(index / split_cols)].name}=
+                {split_parameters.y && split_parameters.y[Math.floor(index / split_cols)].value}
               </div>
             )}
-            <ChartComponent experiment={experiment} />
-          </div>
+          </>
         ))}
       </div>
     </div>

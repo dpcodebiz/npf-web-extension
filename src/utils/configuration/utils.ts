@@ -166,7 +166,7 @@ export const getConfigurationDataByParameters = (
     });
 
     // Debug
-    console.log("multivariate!", splitParsedConfigurationData);
+    // console.log("multivariate!", splitParsedConfigurationData);
   } else {
     // No need to split the data so just pushing the data
     splitParsedConfigurationData.push({
