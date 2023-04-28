@@ -15,7 +15,7 @@ export const ChartComponent = (props: Props) => {
         return <LineChart split={split} experiment={experiment}></LineChart>;
       }
       case GRAPH_TYPES.BAR: {
-        return <BarChart experiment={experiment}></BarChart>;
+        return <BarChart split={split} experiment={experiment}></BarChart>;
       }
     }
   };

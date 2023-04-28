@@ -1,4 +1,3 @@
-import { ParseResult } from "papaparse";
 import { ParsedConfigurationData } from "./parser";
 import { ConfigurationData, GRAPH_TYPES } from "./types";
 

@@ -23,9 +23,9 @@ export const ChartPanelComponent = (props: Props) => {
       <div className="grid grid-custom">
         {configuration.experiments.map((experiment, index) => (
           <>
-            <div className="col-span-1">
+            <div>
               {split_parameters.x && Math.floor(index / split_cols) == 0 && (
-                <div className="text-center pb-4 border-b-2">
+                <div className="text-center pl-20 pr-5 pb-4 border-b-2">
                   {split_parameters.x && split_parameters.x[index % split_cols].name}=
                   {split_parameters.x && split_parameters.x[index % split_cols].value}
                 </div>

@@ -54,17 +54,11 @@ export const lineChartTitleStyles = (experiment: Experiment, split: boolean) =>
     color: "#000",
   } as _DeepPartialObject<TitleOptions>);
 
-export const lineChartLegendStyles = () =>
+export const lineChartLegendStyles = (split: boolean) =>
   ({
-    position: "right" as const,
-    title: {
-      display: true,
-      text: "Datasets",
-      font: {
-        size: 20,
-      },
-      color: "#000",
-    },
+    position: split ? "top" : ("right" as const),
+    align: split ? "end" : "center",
+    display: true,
     labels: {
       generateLabels: function (chart) {
         const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
@@ -87,7 +81,7 @@ export const lineChartOptions = (experiment: Experiment, split: boolean) =>
   ({
     responsive: true,
     plugins: {
-      legend: lineChartLegendStyles(),
+      legend: lineChartLegendStyles(split),
       title: lineChartTitleStyles(experiment, split),
       tooltip: {},
     },

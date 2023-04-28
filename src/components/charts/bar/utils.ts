@@ -44,9 +44,9 @@ export const barChartAxisStyles = (experiment: Experiment, axis: "x" | "y") =>
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
 
-export const barChartTitleStyles = (experiment: Experiment) =>
+export const barChartTitleStyles = (experiment: Experiment, split: boolean) =>
   ({
-    display: true,
+    display: !split,
     text: experiment.name,
     font: {
       size: 40,
@@ -54,17 +54,10 @@ export const barChartTitleStyles = (experiment: Experiment) =>
     color: "#000",
   } as _DeepPartialObject<TitleOptions>);
 
-export const barChartLegendStyles = () =>
+export const barChartLegendStyles = (split: boolean) =>
   ({
-    position: "right" as const,
-    title: {
-      display: true,
-      text: "Datasets",
-      font: {
-        size: 20,
-      },
-      color: "#000",
-    },
+    position: split ? "top" : ("right" as const),
+    align: split ? "end" : "center",
     labels: {
       generateLabels: function (chart) {
         const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
@@ -83,12 +76,12 @@ export const barChartLegendStyles = () =>
     },
   } as _DeepPartialObject<LegendOptions<"bar">>);
 
-export const barChartOptions = (experiment: Experiment) =>
+export const barChartOptions = (experiment: Experiment, split: boolean) =>
   ({
     responsive: true,
     plugins: {
-      legend: barChartLegendStyles(),
-      title: barChartTitleStyles(experiment),
+      legend: barChartLegendStyles(split),
+      title: barChartTitleStyles(experiment, split),
       tooltip: {},
     },
     scales: {

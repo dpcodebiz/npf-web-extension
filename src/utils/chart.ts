@@ -1,7 +1,6 @@
 import { ChartDataset } from "chart.js";
-import { Experiment, ParameterizedRun, RunParameters } from "./configuration/types";
+import { Experiment, ParameterizedRun } from "./configuration/types";
 import { getExperimentSplitParametersNames, joinParams } from "./configuration/utils";
-import { first, shake } from "radash";
 
 /**
  * @param experiment
@@ -32,7 +31,10 @@ const runToDataset = (run: ParameterizedRun, experiment: Experiment, index: numb
   );
 
   return {
-    label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", "\n"),
+    label:
+      parametersWithoutSplitParameters.length == 1
+        ? run.parameters[parametersWithoutSplitParameters[0]]
+        : joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", "\n"),
     data: Object.values(Object.values(run.results)[0]),
     backgroundColor: COLORS.LINE_CHART[index],
     borderColor: COLORS.LINE_CHART[index],

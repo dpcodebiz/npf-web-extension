@@ -1,5 +1,4 @@
-import { ParseResult } from "papaparse";
-import { Configuration, ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
+import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
 import { group, mapValues, objectify } from "radash";
 import { ExperimentData, ParsedConfigurationData } from "../parser";
 import { joinParams, splitParams } from "../utils";

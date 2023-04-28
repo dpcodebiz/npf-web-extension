@@ -7,10 +7,12 @@ import { getDatasets, getLabel } from "../../../utils/chart";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 type Props = {
+  split: boolean;
   experiment: Experiment;
 };
 
-export const BarChart = ({ experiment }: Props) => {
+export const BarChart = (props: Props) => {
+  const { experiment, split = false } = props;
   return (
     <div className="bg-white p-6 rounded-xl">
       <Bar
@@ -20,7 +22,7 @@ export const BarChart = ({ experiment }: Props) => {
             datasets: getDatasets(experiment),
           } as ChartData<"bar", number[], string>
         }
-        options={barChartOptions(experiment)}
+        options={barChartOptions(experiment, split)}
       />
     </div>
   );
