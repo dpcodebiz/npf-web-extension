@@ -28,7 +28,14 @@ export type Experiment = {
   metadata: Metadata;
   name: string;
   main_parameter: string;
+  split_parameters?: SplitParametersData;
   runs: ParameterizedRun[];
+};
+
+export type SplitParametersData = { x?: SplitParameter; y?: SplitParameter };
+export type SplitParameter = {
+  name: string;
+  values: string[];
 };
 
 export enum GRAPH_TYPES {

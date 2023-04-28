@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { ChartComponent } from "./components/ChartComponent";
+import { ChartComponent } from "./components/charts/ChartComponent";
 import { Events } from "./utils/events";
 import { WebsiteLoader } from "./components/WebsiteLoader";
 import { useConfiguration } from "./utils/configuration";
@@ -8,6 +8,8 @@ import { IPERF_DATA } from "./utils/examples/iperf";
 import { MATH_DATA } from "./utils/examples/math";
 import { WORLD_POPULATION_DATA } from "./utils/examples/world_population";
 import { ConfigurationData, GRAPH_TYPES } from "./utils/configuration/types";
+import { CPU_ALGORITHM_DATA } from "./utils/examples/cpu_algorithm";
+import { ChartPanelComponent } from "./components/charts/ChartPanelComponent";
 
 function App() {
   // States
@@ -18,6 +20,7 @@ function App() {
 
   const demo = () => {
     setExperiments({
+      [CPU_ALGORITHM_DATA.id]: CPU_ALGORITHM_DATA,
       [IPERF_DATA.id]: IPERF_DATA,
       [MATH_DATA.id]: MATH_DATA,
       [WORLD_POPULATION_DATA.id]: WORLD_POPULATION_DATA,
@@ -37,9 +40,13 @@ function App() {
     //@ts-expect-error because we are setting the window variable
     window.demo = demo;
 
+    if (!configuration) {
+      demo();
+    }
+
     // Dispatching event
     window.dispatchEvent(new Event(Events.APP_READY));
-  }, [load]);
+  }, [configuration, load]);
 
   // Reset selected experiment and configuration loaded when experiments available change
   useEffect(() => {
@@ -111,7 +118,7 @@ function App() {
               </div>
             )}
           </div>
-          <div>{!loading && configuration && <ChartComponent experiment={configuration.experiments[0]} />}</div>
+          <div>{!loading && configuration && <ChartPanelComponent configuration={configuration} />}</div>
         </div>
       </div>
     </>

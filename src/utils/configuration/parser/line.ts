@@ -19,13 +19,9 @@ export const groupDataByParameters = (
  * @param results Raw pandas dataframe parsed from csv
  * @returns
  */
-function aggregateAllResults(
-  parameters: string[],
-  measurements: string[],
-  results: ParseResult<ParsedConfigurationData>
-) {
+function aggregateAllResults(parameters: string[], measurements: string[], results: ParsedConfigurationData[]) {
   // Grouping all data by all params
-  const grouped_data_by_all_params = groupDataByParameters(parameters, results.data);
+  const grouped_data_by_all_params = groupDataByParameters(parameters, results);
 
   // Computing average of all results
   const aggregated_data = mapValues(grouped_data_by_all_params, (data) => {
@@ -87,10 +83,7 @@ export const unfoldAggregatedData = (aggregated_data: ReturnType<typeof aggregat
   });
 };
 
-export const getLineChartConfiguration = (
-  configurationData: ConfigurationData,
-  results: ParseResult<ParsedConfigurationData>
-) => {
+export const getLineChartConfiguration = (configurationData: ConfigurationData, results: ParsedConfigurationData[]) => {
   // Grouping all the data by parameter value
   const parameters = configurationData.parameters;
   const measurements = configurationData.measurements;

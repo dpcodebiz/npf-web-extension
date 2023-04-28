@@ -44,9 +44,9 @@ export const lineChartAxisStyles = (experiment: Experiment, axis: "x" | "y") =>
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
 
-export const lineChartTitleStyles = (experiment: Experiment) =>
+export const lineChartTitleStyles = (experiment: Experiment, split: boolean) =>
   ({
-    display: true,
+    display: !split,
     text: experiment.name,
     font: {
       size: 40,
@@ -83,12 +83,12 @@ export const lineChartLegendStyles = () =>
     },
   } as _DeepPartialObject<LegendOptions<"line">>);
 
-export const lineChartOptions = (experiment: Experiment) =>
+export const lineChartOptions = (experiment: Experiment, split: boolean) =>
   ({
     responsive: true,
     plugins: {
       legend: lineChartLegendStyles(),
-      title: lineChartTitleStyles(experiment),
+      title: lineChartTitleStyles(experiment, split),
       tooltip: {},
     },
     scales: {

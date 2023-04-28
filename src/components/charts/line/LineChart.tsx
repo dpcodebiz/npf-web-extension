@@ -18,20 +18,21 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 type Props = {
   experiment: Experiment;
+  split?: boolean;
 };
 
-export const LineChart = ({ experiment }: Props) => {
+export const LineChart = (props: Props) => {
+  const { experiment, split = false } = props;
+
   return (
-    <div className="bg-white p-6 rounded-xl">
-      <Line
-        data={
-          {
-            labels: getLabel(experiment),
-            datasets: getDatasets(experiment),
-          } as ChartData<"line", number[], string>
-        }
-        options={lineChartOptions(experiment)}
-      />
-    </div>
+    <Line
+      data={
+        {
+          labels: getLabel(experiment),
+          datasets: getDatasets(experiment),
+        } as ChartData<"line", number[], string>
+      }
+      options={lineChartOptions(experiment, split)}
+    />
   );
 };
