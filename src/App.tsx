@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import { ChartComponent } from "./components/charts/ChartComponent";
+import "./App.scss";
 import { Events } from "./utils/events";
 import { WebsiteLoader } from "./components/WebsiteLoader";
 import { useConfiguration } from "./utils/configuration";
 import { IPERF_DATA } from "./utils/examples/iperf";
 import { MATH_DATA } from "./utils/examples/math";
 import { WORLD_POPULATION_DATA } from "./utils/examples/world_population";
-import { ConfigurationData, GRAPH_TYPES } from "./utils/configuration/types";
+import { ConfigurationData } from "./utils/configuration/types";
 import { CPU_ALGORITHM_DATA } from "./utils/examples/cpu_algorithm";
 import { ChartPanelComponent } from "./components/charts/ChartPanelComponent";
+import { SettingsModal } from "./components/settings/SettingsModal";
 
 function App() {
   // States
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const { loading, load, configuration, settings, setSettings } = useConfiguration();
   const [experiments, setExperiments] = useState<{ [index: string]: ConfigurationData }>();
 
@@ -64,14 +65,17 @@ function App() {
     load(experiments[id]);
   };
 
-  const getCurrentRenderedBarType = () => {
-    if (!experiments || selectedExperiment == "") return;
-
-    return settings[experiments[selectedExperiment].id]?.type ?? configuration?.experiments[0].metadata.type;
-  };
-
   return (
     <>
+      {configuration && (
+        <SettingsModal
+          open={settingsModalOpen}
+          setOpen={(open: boolean) => setSettingsModalOpen(open)}
+          settings={settings}
+          configuration={configuration}
+          setSettings={setSettings}
+        />
+      )}
       <WebsiteLoader loading={loading || !configuration} />
       <div className="bg-gray-100 w-screen h-screen flex flex-row">
         <div className="bg-white w-[400px] p-6 space-y-6">
@@ -95,30 +99,15 @@ function App() {
           </div>
         </div>
         <div className="p-6 w-full space-y-6">
-          <div className="grid grid-cols-2 bg-white rounded-xl">
-            {experiments && (
-              <div className="flex flex-col gap-4 col-span-1 p-4">
-                <span className="text-2xl">Settings</span>
-                <span>
-                  The recommended graph type for this data is:{" "}
-                  {configuration?.experiments[0].metadata.recommended_type ? "Bar Chart" : "Line Chart"}
-                </span>
-                <button
-                  onClick={() => {
-                    setSettings({
-                      [experiments[selectedExperiment].id]: {
-                        type: getCurrentRenderedBarType() == GRAPH_TYPES.BAR ? GRAPH_TYPES.LINE : GRAPH_TYPES.BAR,
-                      },
-                    });
-                  }}
-                  className="bg-green-400 hover:bg-green-500 transition-all duration-100 px-4 py-2 w-max"
-                >
-                  Change to {getCurrentRenderedBarType() == GRAPH_TYPES.BAR ? "Line Chart" : "Bar Chart"}
-                </button>
-              </div>
-            )}
+          <div className="ml-auto w-max px-4">
+            <button
+              onClick={() => setSettingsModalOpen(!settingsModalOpen)}
+              className="bg-uclouvain-1 text-white px-4 py-2 rounded"
+            >
+              <i className="las la-cogs"></i>Settings
+            </button>
           </div>
-          <div>{!loading && configuration && <ChartPanelComponent configuration={configuration} />}</div>
+          {!loading && configuration && <ChartPanelComponent settings={settings} configuration={configuration} />}
         </div>
       </div>
     </>

@@ -1,17 +1,17 @@
-import { Configuration } from "../../utils/configuration/types";
+import { Configuration, Settings } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
+import { getSettingsGraphTitle, getSettingsSplitAxisFormat } from "../settings/utils";
 import { ChartComponent } from "./ChartComponent";
 
 type Props = {
+  settings: Settings;
   configuration: Configuration;
 };
 
 export const ChartPanelComponent = (props: Props) => {
-  const { configuration } = props;
+  const { settings, configuration } = props;
 
   // TODO add a multivariate metadata to configuration so no checking needed
-  const nExperiments = configuration.experiments.length;
-  const split = configuration.experiments[0].split_parameters != undefined;
   const split_parameters = getSplitParameters(configuration.experiments);
   const split_cols = split_parameters.x?.length ?? 0;
   const split_rows = split_parameters.y?.length ?? 0;
@@ -20,14 +20,14 @@ export const ChartPanelComponent = (props: Props) => {
 
   return (
     <div className="bg-white p-6 rounded-xl">
+      <span className="text-2xl block text-center pb-6">{getSettingsGraphTitle(settings, configuration)}</span>
       <div className="grid grid-custom">
         {configuration.experiments.map((experiment, index) => (
           <>
             <div>
               {split_parameters.x && Math.floor(index / split_cols) == 0 && (
                 <div className="text-center pl-20 pr-5 pb-4 border-b-2">
-                  {split_parameters.x && split_parameters.x[index % split_cols].name}=
-                  {split_parameters.x && split_parameters.x[index % split_cols].value}
+                  {getSettingsSplitAxisFormat("x", index, settings, configuration)}
                 </div>
               )}
               <div className="p-4">
@@ -36,8 +36,7 @@ export const ChartPanelComponent = (props: Props) => {
             </div>
             {split_parameters.y && index % split_cols == split_cols - 1 && (
               <div className="border-l-2 px-4 inline-grid place-content-center">
-                {split_parameters.y && split_parameters.y[Math.floor(index / split_cols)].name}=
-                {split_parameters.y && split_parameters.y[Math.floor(index / split_cols)].value}
+                {getSettingsSplitAxisFormat("y", index, settings, configuration)}
               </div>
             )}
           </>

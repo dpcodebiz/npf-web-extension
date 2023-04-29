@@ -3,6 +3,9 @@ export type Settings = {
 };
 
 export type ConfigurationSettings = {
+  title: string;
+  x_format?: string;
+  y_format?: string;
   type: GRAPH_TYPES;
 };
 
@@ -21,6 +24,8 @@ export type ConfigurationData = {
  * Main configuration input that is used to hydrate the app
  */
 export type Configuration = {
+  id: string;
+  name: string;
   experiments: Experiment[]; // TODO in the future each experiment will be tied to only one configuration
 };
 

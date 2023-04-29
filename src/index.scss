@@ -5,3 +5,7 @@
 .grid-custom {
   grid-template-columns: repeat(3, 1fr) min-content;
 }
+
+.grid-settings-xl {
+  grid-template-columns: max-content 1fr;
+}

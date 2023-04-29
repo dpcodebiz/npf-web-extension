@@ -17,6 +17,8 @@ export function resultsToConfiguration(
 
   // Preparing configuration
   const configuration: Configuration = {
+    name: configurationData.name,
+    id: configurationData.id,
     experiments: [],
   };
 

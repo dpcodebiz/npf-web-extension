@@ -1,0 +1,7 @@
+$parameters: ("1", "2", "3", "4");
+
+@each $parameter in $parameters {
+  .grid-#{$parameter} {
+    grid-template-columns: repeat(#{$parameter}, 1fr) min-content;
+  }
+}
