@@ -48,6 +48,14 @@ export const SettingsForm = (props: Props) => {
       },
     },
   });
+  const splitParametersOptions = {
+    x: getSettingsSplitParametersOptions("x", settings, configuration),
+    y: getSettingsSplitParametersOptions("y", settings, configuration),
+  };
+  const parametersOptions = {
+    x: getSettingsParametersOptions("x", settings, configuration),
+    y: getSettingsParametersOptions("y", settings, configuration),
+  };
 
   const onSubmit = useCallback(
     (data: FormData) => {
@@ -115,13 +123,11 @@ export const SettingsForm = (props: Props) => {
               render={({ field: { value, onChange } }) => (
                 <Select
                   value={
-                    getSettingsParametersOptions("x", settings, configuration).find((c) => c.value === value) ??
+                    parametersOptions.x.find((c) => c.value === value) ??
                     getSettingsDefaultParametersOptions("x", settings, configuration)
                   }
-                  options={getSettingsParametersOptions("x", settings, configuration)}
-                  onChange={(val) =>
-                    onChange((val ?? getSettingsParametersOptions("x", settings, configuration)[0]).value)
-                  }
+                  options={parametersOptions.x}
+                  onChange={(val) => onChange((val ?? parametersOptions.x[0]).value)}
                 />
               )}
             />
@@ -139,13 +145,11 @@ export const SettingsForm = (props: Props) => {
               render={({ field: { value, onChange } }) => (
                 <Select
                   value={
-                    getSettingsParametersOptions("y", settings, configuration).find((c) => c.value === value) ??
+                    parametersOptions.y.find((c) => c.value === value) ??
                     getSettingsDefaultParametersOptions("y", settings, configuration)
                   }
-                  options={getSettingsParametersOptions("y", settings, configuration)}
-                  onChange={(val) =>
-                    onChange((val ?? getSettingsParametersOptions("y", settings, configuration)[0]).value)
-                  }
+                  options={parametersOptions.y}
+                  onChange={(val) => onChange((val ?? parametersOptions.y[0]).value)}
                 />
               )}
             />
@@ -165,13 +169,11 @@ export const SettingsForm = (props: Props) => {
               render={({ field: { value, onChange } }) => (
                 <Select
                   value={
-                    getSettingsSplitParametersOptions("x", settings, configuration).find((c) => c.value === value) ??
-                    getSettingsSplitParametersOptions("x", settings, configuration)[0]
+                    splitParametersOptions.x.find((c) => c.value === value) ??
+                    getSettingsDefaultSplitParametersOptions("x", settings, configuration)
                   }
-                  options={getSettingsSplitParametersOptions("x", settings, configuration)}
-                  onChange={(val) =>
-                    onChange((val ?? getSettingsSplitParametersOptions("x", settings, configuration)[0]).value)
-                  }
+                  options={splitParametersOptions.x}
+                  onChange={(val) => onChange((val ?? splitParametersOptions.x[0]).value)}
                 />
               )}
             />
@@ -192,13 +194,11 @@ export const SettingsForm = (props: Props) => {
               render={({ field: { value, onChange } }) => (
                 <Select
                   value={
-                    getSettingsSplitParametersOptions("y", settings, configuration).find((c) => c.value === value) ??
-                    getSettingsSplitParametersOptions("y", settings, configuration)[0]
+                    splitParametersOptions.y.find((c) => c.value === value) ??
+                    getSettingsDefaultSplitParametersOptions("y", settings, configuration)
                   }
-                  options={getSettingsSplitParametersOptions("y", settings, configuration)}
-                  onChange={(val) =>
-                    onChange((val ?? getSettingsSplitParametersOptions("y", settings, configuration)[0]).value)
-                  }
+                  options={splitParametersOptions.y}
+                  onChange={(val) => onChange((val ?? splitParametersOptions.y[0]).value)}
                 />
               )}
             />
