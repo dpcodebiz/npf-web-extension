@@ -6,15 +6,18 @@ import { Settings } from "../../utils/settings/types";
 import { ChartSplitterComponent } from "./ChartSplitterComponent";
 
 type Props = {
+  fullScreen: boolean;
   settings: Settings;
   configuration: Configuration;
 };
 
 export const ChartPanelComponent = (props: Props) => {
-  const { settings, configuration } = props;
+  const { fullScreen, settings, configuration } = props;
 
   return (
-    <div className="bg-white p-6 rounded-xl">
+    <div
+      className={fullScreen ? "absolute top-0 left-0 right-0 bottom-0 bg-white p-6 z-10" : "bg-white p-6 rounded-xl"}
+    >
       <span className="text-5xl font-semibold block text-center pb-12">
         {getSettingsGraphTitle(settings, configuration)}
       </span>

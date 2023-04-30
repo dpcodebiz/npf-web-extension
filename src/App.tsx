@@ -14,6 +14,7 @@ import { SettingsModal } from "./components/settings/SettingsModal";
 function App() {
   // States
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [fullScreen, setFullScreen] = useState(false);
   const { loading, load, configuration, settings, setSettings } = useConfiguration();
   const [experiments, setExperiments] = useState<{ [index: string]: ConfigurationData }>();
 
@@ -77,7 +78,12 @@ function App() {
         />
       )}
       <WebsiteLoader loading={loading || !configuration} />
-      <div className="bg-gray-100 w-screen h-screen flex flex-row">
+      <div
+        onKeyDown={(event) => {
+          event.key == "Escape" && setFullScreen(false);
+        }}
+        className="bg-gray-100 w-screen h-screen flex flex-row"
+      >
         <div className="bg-white w-[400px] p-6 space-y-6">
           <div className="font-bold text-xl">Network Performance Framework</div>
           <div className="space-y-2 flex flex-col">
@@ -98,16 +104,24 @@ function App() {
               ))}
           </div>
         </div>
+        {!loading && configuration && fullScreen && (
+          <ChartPanelComponent fullScreen={true} settings={settings} configuration={configuration} />
+        )}
         <div className="p-6 w-full space-y-6">
-          <div className="ml-auto w-max px-4">
+          <div className="ml-auto w-max px-4 space-x-4">
             <button
               onClick={() => setSettingsModalOpen(!settingsModalOpen)}
               className="bg-uclouvain-1 text-white px-4 py-2 rounded"
             >
-              <i className="las la-cogs"></i>Settings
+              Settings
+            </button>
+            <button onClick={() => setFullScreen(true)} className="bg-uclouvain-1 text-white px-4 py-2 rounded">
+              Full Screen
             </button>
           </div>
-          {!loading && configuration && <ChartPanelComponent settings={settings} configuration={configuration} />}
+          {!loading && configuration && !fullScreen && (
+            <ChartPanelComponent fullScreen={false} settings={settings} configuration={configuration} />
+          )}
         </div>
       </div>
     </>
