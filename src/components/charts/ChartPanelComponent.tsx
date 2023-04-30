@@ -1,7 +1,9 @@
 import { Configuration, Settings } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
+import { _clsx } from "../../utils/misc";
 import { getSettingsGraphTitle, getSettingsSplitAxisFormat } from "../settings/utils";
 import { ChartComponent } from "./ChartComponent";
+import styles from "../../styles/grid.module.scss";
 
 type Props = {
   settings: Settings;
@@ -16,12 +18,12 @@ export const ChartPanelComponent = (props: Props) => {
   const split_cols = split_parameters.x?.length ?? 0;
   const split_rows = split_parameters.y?.length ?? 0;
 
-  console.log(configuration, split_cols, split_rows);
+  // console.log(configuration, split_cols, split_rows);
 
   return (
     <div className="bg-white p-6 rounded-xl">
       <span className="text-2xl block text-center pb-6">{getSettingsGraphTitle(settings, configuration)}</span>
-      <div className="grid grid-custom">
+      <div className={_clsx("grid", styles["grid-" + split_cols])}>
         {configuration.experiments.map((experiment, index) => (
           <>
             <div>
