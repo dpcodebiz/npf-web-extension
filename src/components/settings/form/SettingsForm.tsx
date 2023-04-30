@@ -3,10 +3,12 @@ import { Configuration } from "../../../utils/configuration/types";
 import Select from "react-select";
 import {
   getGraphAxisTitle,
+  getSettingsDefaultParametersOptions,
   getSettingsDefaultSplitParametersOptions,
   getSettingsGraphOptions,
   getSettingsGraphTitle,
   getSettingsGraphType,
+  getSettingsParametersOptions,
   getSettingsSplitAxis,
   getSettingsSplitAxisFormat,
   getSettingsSplitParametersOptions,
@@ -105,8 +107,48 @@ export const SettingsForm = (props: Props) => {
             <input className={styles.input} {...register("x.title")} id="x.title" type="text" />
           </div>
           <div className={_clsx(styles.group)}>
+            <label htmlFor="x.parameter">Variable</label>
+            <Controller
+              name="x.parameter"
+              defaultValue={getSettingsDefaultParametersOptions("x", settings, configuration)?.value}
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  value={
+                    getSettingsParametersOptions("x", settings, configuration).find((c) => c.value === value) ??
+                    getSettingsDefaultParametersOptions("x", settings, configuration)
+                  }
+                  options={getSettingsParametersOptions("x", settings, configuration)}
+                  onChange={(val) =>
+                    onChange((val ?? getSettingsParametersOptions("x", settings, configuration)[0]).value)
+                  }
+                />
+              )}
+            />
+          </div>
+          <div className={_clsx(styles.group)}>
             <label htmlFor="y.title">Y axis label</label>
             <input className={styles.input} {...register("y.title")} id="y.title" type="text" />
+          </div>
+          <div className={_clsx(styles.group)}>
+            <label htmlFor="y.parameter">Variable</label>
+            <Controller
+              name="y.parameter"
+              defaultValue={getSettingsDefaultParametersOptions("y", settings, configuration)?.value}
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  value={
+                    getSettingsParametersOptions("y", settings, configuration).find((c) => c.value === value) ??
+                    getSettingsDefaultParametersOptions("y", settings, configuration)
+                  }
+                  options={getSettingsParametersOptions("y", settings, configuration)}
+                  onChange={(val) =>
+                    onChange((val ?? getSettingsParametersOptions("y", settings, configuration)[0]).value)
+                  }
+                />
+              )}
+            />
           </div>
         </div>
         <SplitGraphsSettingsComponent setSettings={setSettings} settings={settings} configuration={configuration} />

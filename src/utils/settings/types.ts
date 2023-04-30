@@ -23,4 +23,5 @@ export type AxisSplitSettings = {
 
 export type AxisSettings = {
   title: string;
+  parameter: string;
 };

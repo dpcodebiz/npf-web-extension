@@ -114,3 +114,31 @@ export const getSettingsDefaultSplitParametersOptions = (
 
   return parametersOptions.find((option) => option.value === value);
 };
+
+export const getParameter = (
+  axis: Axis,
+  settings: Settings,
+  configuration: { id: string; parameters: string[]; measurements: string[] }
+) => {
+  const value = settings[configuration.id]?.[axis].parameter;
+  const default_value = axis == "x" ? configuration.parameters[0] : configuration.measurements[0];
+
+  return value ?? default_value;
+};
+
+export const getSettingsParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  return axis == "x"
+    ? Object.keys(configuration.parameters).map((parameter) => ({ label: parameter, value: parameter }))
+    : configuration.measurements.map((measurement) => ({ label: measurement, value: measurement }));
+};
+
+export const getSettingsDefaultParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  const parametersOptions = getSettingsParametersOptions(axis, settings, configuration);
+  const value = getParameter(axis, settings, {
+    id: configuration.id,
+    parameters: Object.keys(configuration.parameters),
+    measurements: configuration.measurements,
+  });
+
+  return parametersOptions.find((option) => option.value === value);
+};

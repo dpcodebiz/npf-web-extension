@@ -2,6 +2,8 @@ import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "..
 import { group, mapValues, objectify } from "radash";
 import { ExperimentData, ParsedConfigurationData } from "../parser";
 import { joinParams, splitParams } from "../utils";
+import { getParameter } from "../../../components/settings/utils";
+import { Settings } from "../../settings/types";
 
 export const groupDataByParameters = (
   parameters: string[],
@@ -82,11 +84,15 @@ export const unfoldAggregatedData = (aggregated_data: ReturnType<typeof aggregat
   });
 };
 
-export const getLineChartConfiguration = (configurationData: ConfigurationData, results: ParsedConfigurationData[]) => {
+export const getLineChartConfiguration = (
+  settings: Settings,
+  configurationData: ConfigurationData,
+  results: ParsedConfigurationData[]
+) => {
   // Grouping all the data by parameter value
   const parameters = configurationData.parameters;
   const measurements = configurationData.measurements;
-  const main_param = configurationData.parameters[0];
+  const main_param = getParameter("x", settings, configurationData);
 
   // Aggregating all results
   const aggregated_data = aggregateAllResults(parameters, measurements, results);

@@ -44,7 +44,7 @@ export function resultsToConfiguration(
     switch (selected_graph_type) {
       case GRAPH_TYPES.LINE: {
         configuration.experiments.push({
-          ...getLineChartConfiguration(configurationData, resultsByChangingParameter),
+          ...getLineChartConfiguration(settings, configurationData, resultsByChangingParameter),
           split_parameters,
           metadata: {
             type: GRAPH_TYPES.LINE,
@@ -55,7 +55,7 @@ export function resultsToConfiguration(
       }
       case GRAPH_TYPES.BAR: {
         configuration.experiments.push({
-          ...getLineChartConfiguration(configurationData, resultsByChangingParameter),
+          ...getLineChartConfiguration(settings, configurationData, resultsByChangingParameter),
           split_parameters,
           metadata: { type: GRAPH_TYPES.BAR, recommended_type: recommended_graph_type },
         });
