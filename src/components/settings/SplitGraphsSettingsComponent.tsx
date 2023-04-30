@@ -1,14 +1,10 @@
-import { getSplitParameters } from "../../utils/configuration/utils";
 import { _clsx } from "../../utils/misc";
-import { SettingsProps, getSettingsSplitAxisFormat } from "./utils";
+import { SettingsProps } from "./utils";
 
-import styles from "../../styles/grid.module.scss";
 import { ChartSplitterComponent } from "../charts/ChartSplitterComponent";
 
 export const SplitGraphsSettingsComponent = (props: SettingsProps) => {
-  const { setSettings, configuration, settings } = props;
-
-  const split_parameters = getSplitParameters(configuration.experiments);
+  const { configuration, settings } = props;
 
   return (
     <div>
