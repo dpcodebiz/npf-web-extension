@@ -28,7 +28,7 @@ export const SplitGraphsSettingsComponent = (props: SettingsProps) => {
               </div>
               {split_parameters.y && index % split_cols == split_cols - 1 && (
                 <div className="border-l-2 px-4 inline-grid place-content-center">
-                  {getSettingsSplitAxisFormat("x", index, settings, configuration)}
+                  {getSettingsSplitAxisFormat("y", index, settings, configuration)}
                 </div>
               )}
             </>
