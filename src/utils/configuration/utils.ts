@@ -111,47 +111,53 @@ export const getConfigurationDataByParameters = (
   }[] = [];
 
   // Split along X axis
-  // TODO refactor this to not do it X => Y but separately
-  if (nParameters > 2 && (getSettingsSplitAxis("x", settings, configurationData.id)?.enable ?? true)) {
-    const [parameterX, valuesX] =
-      Object.entries(parametersWithValues).find(
-        (entry) => entry[0] === getSettingsSplitAxis("x", settings, configurationData.id)?.parameter
-      ) ?? Object.entries(parametersWithValues)[2];
-    const [parameterY, valuesY] =
-      nParameters > 3 && (getSettingsSplitAxis("y", settings, configurationData.id)?.enable ?? true)
-        ? Object.entries(parametersWithValues).find(
-            (entry) => entry[0] === getSettingsSplitAxis("y", settings, configurationData.id)?.parameter
-          ) ?? Object.entries(parametersWithValues)[3]
-        : [];
-    const splitY = nParameters > 3 && parameterY && valuesY;
+  const parameterXEntry =
+    nParameters > 2 && (getSettingsSplitAxis("x", settings, configurationData.id)?.enable ?? true)
+      ? Object.entries(parametersWithValues).find(
+          (entry) => entry[0] === getSettingsSplitAxis("x", settings, configurationData.id)?.parameter
+        ) ?? Object.entries(parametersWithValues)[2]
+      : undefined;
+  const parameterYEntry =
+    nParameters > 3 && (getSettingsSplitAxis("y", settings, configurationData.id)?.enable ?? true)
+      ? Object.entries(parametersWithValues).find(
+          (entry) => entry[0] === getSettingsSplitAxis("y", settings, configurationData.id)?.parameter
+        ) ?? Object.entries(parametersWithValues)[3]
+      : undefined;
+
+  if (parameterXEntry || parameterYEntry) {
+    const [parameterX, valuesX] = parameterXEntry ?? [];
+    const [parameterY, valuesY] = parameterYEntry ?? [];
 
     // Filtering data by parameters
-    const configurationDataByParameters = valuesX.map((valueX) =>
-      splitY
-        ? valuesY.map((valueY) =>
-            parsedConfigurationData.filter((data) => data[parameterX] == valueX && data[parameterY] == valueY)
-          )
-        : parsedConfigurationData.filter((data) => data[parameterX] == valueX)
-    );
+    const configurationDataByParameters = parameterXEntry
+      ? (valuesX as string[]).map((valueX) =>
+          parameterYEntry
+            ? (valuesY as string[]).map((valueY) =>
+                parsedConfigurationData.filter(
+                  (data) => data[parameterX as string] == valueX && data[parameterY as string] == valueY
+                )
+              )
+            : parsedConfigurationData.filter((data) => data[parameterX as string] == valueX)
+        )
+      : (valuesY as string[]).map((valueY) =>
+          parsedConfigurationData.filter((data) => data[parameterY as string] == valueY)
+        );
 
     // Iterating through all possible combinations
-    configurationDataByParameters.forEach((subResultsX) => {
-      if (isArray(subResultsX[0])) {
-        (subResultsX as ParsedConfigurationData[][]).forEach((subResultsXY) => {
+    configurationDataByParameters.forEach((subResultsXorY) => {
+      // We have both x and y
+      if (parameterXEntry && parameterYEntry) {
+        (subResultsXorY as ParsedConfigurationData[][]).forEach((subResultsXY) => {
           splitParsedConfigurationData.push({
             split_parameters: {
               x: {
-                name: parameterX,
+                name: parameterX as string,
                 values: valuesX as string[],
               },
-              ...(parameterY && valuesY
-                ? {
-                    y: {
-                      name: parameterY,
-                      values: valuesY as string[],
-                    },
-                  }
-                : {}),
+              y: {
+                name: parameterY as string,
+                values: valuesY as string[],
+              },
             },
             data: subResultsXY,
           });
@@ -161,20 +167,24 @@ export const getConfigurationDataByParameters = (
 
       splitParsedConfigurationData.push({
         split_parameters: {
-          x: {
-            name: parameterX,
-            values: valuesX as string[],
-          },
-          ...(parameterY && valuesY
+          ...(parameterXEntry
+            ? {
+                x: {
+                  name: parameterX as string,
+                  values: valuesX as string[],
+                },
+              }
+            : {}),
+          ...(parameterYEntry
             ? {
                 y: {
-                  name: parameterY,
+                  name: parameterY as string,
                   values: valuesY as string[],
                 },
               }
             : {}),
         },
-        data: subResultsX as ParsedConfigurationData[],
+        data: subResultsXorY as ParsedConfigurationData[],
       });
     });
 
