@@ -6,6 +6,8 @@ import {
   getSettingsGraphOptions,
   getSettingsGraphTitle,
   getSettingsGraphType,
+  getSettingsSplitAxis,
+  getSettingsSplitAxisFormat,
   getSettingsSplitParametersOptions,
 } from "../utils";
 import { useCallback, useEffect } from "react";
@@ -29,10 +31,10 @@ export const SettingsForm = (props: Props) => {
       title: getSettingsGraphTitle(settings, configuration),
       split: {
         x: {
-          format: "{{parameter}}={{value}}", // TODO fix
+          format: getSettingsSplitAxis("x", settings, configuration.id)?.format ?? "{{parameter}}={{value}}",
         },
         y: {
-          format: "{{parameter}}={{value}}", // TODO fix
+          format: getSettingsSplitAxis("y", settings, configuration.id)?.format ?? "{{parameter}}={{value}}",
         },
       },
     },
