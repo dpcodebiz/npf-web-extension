@@ -15,7 +15,9 @@ export type ConfigurationData = {
 export type Configuration = {
   id: string;
   name: string;
-  parameters: string[];
+  parameters: {
+    [index: string]: string[];
+  };
   measurements: string[];
   split: {
     x?: string;

@@ -2,7 +2,7 @@ import { ParseResult } from "papaparse";
 import { Configuration, ConfigurationData, GRAPH_TYPES } from "./types";
 import { getRecommendedGraphType } from "./data_analyzer";
 import { getLineChartConfiguration } from "./parser/line";
-import { getConfigurationDataByParameters } from "./utils";
+import { getConfigurationDataByParameters, getParametersWithValues } from "./utils";
 import { Settings } from "../settings/types";
 
 export type ParsedConfigurationData = { [index: string]: string };
@@ -14,6 +14,7 @@ export function resultsToConfiguration(
   settings: Settings
 ): Configuration {
   // TODO remove main param?
+  const parametersWithValues = getParametersWithValues(configurationData.parameters, results.data);
   const configurationDataByParameters = getConfigurationDataByParameters(configurationData, results.data, settings);
   const split_parameters = {
     x: configurationDataByParameters[0].split_parameters?.x?.name,
@@ -23,7 +24,7 @@ export function resultsToConfiguration(
   // Preparing configuration
   const configuration: Configuration = {
     name: configurationData.name,
-    parameters: configurationData.parameters,
+    parameters: parametersWithValues,
     measurements: configurationData.measurements,
     split: {
       ...(split_parameters.x ? { x: split_parameters.x } : {}),

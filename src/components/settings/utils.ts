@@ -3,6 +3,7 @@ import { Configuration, GRAPH_TYPES } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 import { Settings } from "../../utils/settings/types";
 
+const MAXIMUM_AXIS_PARAMETER_VALUES = 6;
 export type Axis = "x" | "y";
 
 export type SettingsProps = {
@@ -83,9 +84,9 @@ export const getSplitParameter = (axis: Axis, settings: Settings, configuration:
 export const getSettingsSplitParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
   const other_axis_value = getSplitParameter(axis == "x" ? "y" : "x", settings, configuration);
 
-  return configuration.parameters
-    .filter((parameter) => parameter != other_axis_value)
-    .map((parameter) => ({
+  return Object.entries(configuration.parameters)
+    .filter(([parameter, values]) => parameter != other_axis_value && values.length < MAXIMUM_AXIS_PARAMETER_VALUES)
+    .map(([parameter]) => ({
       label: parameter,
       value: parameter,
     }));
