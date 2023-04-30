@@ -1,16 +1,17 @@
 import { Controller, useForm } from "react-hook-form";
-import { Configuration, ConfigurationSettings, Settings } from "../../../utils/configuration/types";
+import { Configuration } from "../../../utils/configuration/types";
 import Select from "react-select";
 import {
-  getSettingsGraphSelectOptions,
+  getSettingsDefaultSplitParametersOptions,
+  getSettingsGraphOptions,
   getSettingsGraphTitle,
-  getSettingsParametersOptions,
-  getSettingsSelectedGraphType,
-  getSettingsSelectedParametersOptions,
+  getSettingsGraphType,
+  getSettingsSplitParametersOptions,
 } from "../utils";
 import { useCallback, useEffect } from "react";
 import { _clsx } from "../../../utils/misc";
 import styles from "../../../styles/form.module.scss";
+import { ConfigurationSettings, Settings } from "../../../utils/settings/types";
 
 type Props = {
   settings: Settings;
@@ -25,8 +26,14 @@ export const MetadataForm = (props: Props) => {
   const { control, handleSubmit, watch, register } = useForm<FormData>({
     defaultValues: {
       title: getSettingsGraphTitle(settings, configuration),
-      x_format: "{{parameter}}={{value}}",
-      y_format: "{{parameter}}={{value}}",
+      split: {
+        x: {
+          format: "{{parameter}}={{value}}",
+        },
+        y: {
+          format: "{{parameter}}={{value}}",
+        },
+      },
     },
   });
 
@@ -34,10 +41,7 @@ export const MetadataForm = (props: Props) => {
     (data: FormData) => {
       setSettings({
         [configuration.id]: {
-          x_parameter: data.x_parameter,
-          y_parameter: data.y_parameter,
-          x_format: data.x_format,
-          y_format: data.y_format,
+          split: data.split,
           title: data.title,
           type: data.type,
         },
@@ -62,62 +66,64 @@ export const MetadataForm = (props: Props) => {
         <label htmlFor="y_format">Chart type</label>
         <Controller
           name="type"
-          defaultValue={getSettingsSelectedGraphType(settings, configuration)}
+          defaultValue={getSettingsGraphType(settings, configuration)}
           control={control}
           render={({ field: { value, onChange } }) => (
             <Select
-              value={
-                getSettingsGraphSelectOptions().find((c) => c.value === value) ?? getSettingsGraphSelectOptions()[0]
-              }
-              options={getSettingsGraphSelectOptions()}
-              onChange={(val) => onChange((val ?? getSettingsGraphSelectOptions()[0]).value)}
+              value={getSettingsGraphOptions().find((c) => c.value === value) ?? getSettingsGraphOptions()[0]}
+              options={getSettingsGraphOptions()}
+              onChange={(val) => onChange((val ?? getSettingsGraphOptions()[0]).value)}
             />
           )}
         />
       </div>
       <div className={_clsx(styles["form-group"])}>
-        <label htmlFor="x_parameter">Split X axis variable</label>
+        <label htmlFor="split.x.parameter">Split X axis variable</label>
         <Controller
-          name="x_parameter"
-          defaultValue={getSettingsSelectedParametersOptions("x", settings, configuration)?.value}
+          name="split.x.parameter"
+          defaultValue={getSettingsDefaultSplitParametersOptions("x", settings, configuration)?.value}
           control={control}
           render={({ field: { value, onChange } }) => (
             <Select
               value={
-                getSettingsParametersOptions(configuration).find((c) => c.value === value) ??
-                getSettingsParametersOptions(configuration)[0]
+                getSettingsSplitParametersOptions("x", settings, configuration).find((c) => c.value === value) ??
+                getSettingsSplitParametersOptions("x", settings, configuration)[0]
               }
-              options={getSettingsParametersOptions(configuration)}
-              onChange={(val) => onChange((val ?? getSettingsGraphSelectOptions()[0]).value)}
+              options={getSettingsSplitParametersOptions("x", settings, configuration)}
+              onChange={(val) =>
+                onChange((val ?? getSettingsSplitParametersOptions("x", settings, configuration)[0]).value)
+              }
             />
           )}
         />
       </div>
       <div className={_clsx(styles["form-group"])}>
-        <label htmlFor="x_parameter">Split Y axis variable</label>
+        <label htmlFor="split.y.parameter">Split Y axis variable</label>
         <Controller
-          name="y_parameter"
-          defaultValue={getSettingsSelectedParametersOptions("y", settings, configuration)?.value}
+          name="split.y.parameter"
+          defaultValue={getSettingsDefaultSplitParametersOptions("y", settings, configuration)?.value}
           control={control}
           render={({ field: { value, onChange } }) => (
             <Select
               value={
-                getSettingsParametersOptions(configuration).find((c) => c.value === value) ??
-                getSettingsParametersOptions(configuration)[0]
+                getSettingsSplitParametersOptions("y", settings, configuration).find((c) => c.value === value) ??
+                getSettingsSplitParametersOptions("y", settings, configuration)[0]
               }
-              options={getSettingsParametersOptions(configuration)}
-              onChange={(val) => onChange((val ?? getSettingsGraphSelectOptions()[0]).value)}
+              options={getSettingsSplitParametersOptions("y", settings, configuration)}
+              onChange={(val) =>
+                onChange((val ?? getSettingsSplitParametersOptions("y", settings, configuration)[0]).value)
+              }
             />
           )}
         />
       </div>
       <div className={_clsx(styles["form-group"])}>
-        <label htmlFor="x_format">Split X axis format</label>
-        <input className={styles["form-input"]} {...register("x_format")} id="x_format" type="text" />
+        <label htmlFor="split.y.format">Split X axis format</label>
+        <input className={styles["form-input"]} {...register("split.x.format")} id="x_format" type="text" />
       </div>
       <div className={_clsx(styles["form-group"])}>
-        <label htmlFor="y_format">Split Y axis format</label>
-        <input className={styles["form-input"]} {...register("y_format")} id="y_format" type="text" />
+        <label htmlFor="split.y.format">Split Y axis format</label>
+        <input className={styles["form-input"]} {...register("split.y.format")} id="y_format" type="text" />
       </div>
     </form>
   );

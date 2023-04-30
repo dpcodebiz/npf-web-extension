@@ -1,8 +1,9 @@
 import { ParseResult } from "papaparse";
 import { readString } from "react-papaparse";
 import { useCallback, useEffect, useState } from "react";
-import { Configuration, ConfigurationData, Settings } from "./types";
+import { Configuration, ConfigurationData } from "./types";
 import { ParsedConfigurationData, resultsToConfiguration } from "./parser";
+import { Settings } from "../settings/types";
 
 /**
  * Hook handling the app configuration

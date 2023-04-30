@@ -1,6 +1,9 @@
 import { isEmpty } from "radash";
-import { Configuration, GRAPH_TYPES, Settings } from "../../utils/configuration/types";
+import { Configuration, GRAPH_TYPES } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
+import { Settings } from "../../utils/settings/types";
+
+export type Axis = "x" | "y";
 
 export type SettingsProps = {
   settings: Settings;
@@ -8,7 +11,7 @@ export type SettingsProps = {
   configuration: Configuration;
 };
 
-export const getSettingsGraphSelectOptions = () => {
+export const getSettingsGraphOptions = () => {
   return [
     {
       label: "Line Chart",
@@ -18,10 +21,11 @@ export const getSettingsGraphSelectOptions = () => {
   ];
 };
 
-export const getSettingsSelectedGraphType = (settings: Settings, configuration: Configuration) => {
+export const getSettingsGraphType = (settings: Settings, configuration: Configuration) => {
   return settings[configuration.id]?.type ?? configuration.experiments[0].metadata.type;
 };
 
+//@deprecated ?
 export const getSettingsSelectedGraphTypeOption = () => {};
 
 export const getSettingsGraphTitle = (settings: Settings, configuration: Configuration) => {
@@ -31,7 +35,7 @@ export const getSettingsGraphTitle = (settings: Settings, configuration: Configu
 };
 
 export const getSettingsSplitAxisFormat = (
-  axis: "x" | "y",
+  axis: Axis,
   index: number,
   settings: Settings,
   configuration: Configuration
@@ -59,7 +63,7 @@ export const getSettingsSplitAxisFormat = (
     }
   }
 
-  const settingsFormat = axis == "x" ? settings[configuration.id]?.x_format : settings[configuration.id]?.y_format;
+  const settingsFormat = settings[configuration.id]?.split?.[axis]?.format;
   const formatted_str =
     settingsFormat &&
     `${settingsFormat.replace(/{{[ ]*parameter[ ]*}}/, parameter_name).replace(/{{[ ]*value[ ]*}}/, parameter_value)}`;
@@ -67,24 +71,33 @@ export const getSettingsSplitAxisFormat = (
   return formatted_str || `${parameter_name}=${parameter_value}`;
 };
 
-export const getSettingsParametersOptions = (configuration: Configuration) => {
-  return configuration.parameters.map((parameter) => ({
-    label: parameter,
-    value: parameter,
-  }));
+export const getSettingsSplitParameter = (axis: Axis, settings: Settings, configuration_id: string) =>
+  settings[configuration_id]?.split?.[axis].parameter;
+
+export const getSplitParameter = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  const settings_value = getSettingsSplitParameter(axis, settings, configuration.id);
+  const default_value = configuration.split[axis];
+  return settings_value ?? default_value;
 };
 
-export const getSettingsSelectedParametersOptions = (
-  axis: "x" | "y",
+export const getSettingsSplitParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  const other_axis_value = getSplitParameter(axis == "x" ? "y" : "x", settings, configuration);
+
+  return configuration.parameters
+    .filter((parameter) => parameter != other_axis_value)
+    .map((parameter) => ({
+      label: parameter,
+      value: parameter,
+    }));
+};
+
+export const getSettingsDefaultSplitParametersOptions = (
+  axis: Axis,
   settings: Settings,
   configuration: Configuration
 ) => {
-  const parametersOptions = getSettingsParametersOptions(configuration);
-  const settings_value = settings[configuration.id]?.[axis == "x" ? "x_parameter" : "y_parameter"];
-  const split_x = configuration.experiments[0].split_parameters?.[axis]?.name;
+  const parametersOptions = getSettingsSplitParametersOptions(axis, settings, configuration);
+  const value = getSplitParameter(axis, settings, configuration);
 
-  return (
-    parametersOptions.find((option) => option.value === settings_value) ??
-    parametersOptions.find((option) => option.value === split_x)
-  );
+  return parametersOptions.find((option) => option.value === value);
 };

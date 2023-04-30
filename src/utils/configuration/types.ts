@@ -1,16 +1,3 @@
-export type Settings = {
-  [index: string]: ConfigurationSettings;
-};
-
-export type ConfigurationSettings = {
-  title: string;
-  x_parameter?: string;
-  y_parameter?: string;
-  x_format?: string;
-  y_format?: string;
-  type: GRAPH_TYPES;
-};
-
 /**
  * Configuration data that will be injected into the app
  */
@@ -30,6 +17,10 @@ export type Configuration = {
   name: string;
   parameters: string[];
   measurements: string[];
+  split: {
+    x?: string;
+    y?: string;
+  };
   experiments: Experiment[]; // TODO in the future each experiment will be tied to only one configuration
 };
 

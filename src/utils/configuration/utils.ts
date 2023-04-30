@@ -1,7 +1,8 @@
 import { isArray, mapValues, shake, unique } from "radash";
 import { ParsedConfigurationData } from "./parser";
 import { groupDataByParameters } from "./parser/line";
-import { ConfigurationData, Experiment, Settings, SplitParametersData } from "./types";
+import { ConfigurationData, Experiment, SplitParametersData } from "./types";
+import { Settings } from "../settings/types";
 
 /**
  * Joins all parameters
@@ -111,12 +112,13 @@ export const getConfigurationDataByParameters = (
   // Split along X axis
   if (nParameters > 2) {
     const [parameterX, valuesX] =
-      Object.entries(parametersWithValues).find((entry) => entry[0] === settings[configurationData.id]?.x_parameter) ??
-      Object.entries(parametersWithValues)[2];
+      Object.entries(parametersWithValues).find(
+        (entry) => entry[0] === settings[configurationData.id]?.split.x.parameter
+      ) ?? Object.entries(parametersWithValues)[2];
     const [parameterY, valuesY] =
       nParameters > 3
         ? Object.entries(parametersWithValues).find(
-            (entry) => entry[0] === settings[configurationData.id]?.y_parameter
+            (entry) => entry[0] === settings[configurationData.id]?.split.y.parameter
           ) ?? Object.entries(parametersWithValues)[3]
         : [];
     const splitY = nParameters > 3 && parameterY && valuesY;

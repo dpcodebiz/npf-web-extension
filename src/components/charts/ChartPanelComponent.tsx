@@ -1,9 +1,10 @@
-import { Configuration, Settings } from "../../utils/configuration/types";
+import { Configuration } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 import { _clsx } from "../../utils/misc";
 import { getSettingsGraphTitle, getSettingsSplitAxisFormat } from "../settings/utils";
 import { ChartComponent } from "./ChartComponent";
 import styles from "../../styles/grid.module.scss";
+import { Settings } from "../../utils/settings/types";
 
 type Props = {
   settings: Settings;
