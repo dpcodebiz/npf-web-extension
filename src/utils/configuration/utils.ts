@@ -3,7 +3,7 @@ import { ParsedConfigurationData } from "./parser";
 import { groupDataByParameters } from "./parser/line";
 import { ConfigurationData, Experiment, SplitParametersData } from "./types";
 import { Settings } from "../settings/types";
-import { getSettingsSplitParameter } from "../../components/settings/utils";
+import { getSettingsSplitAxis } from "../../components/settings/utils";
 
 /**
  * Joins all parameters
@@ -111,15 +111,16 @@ export const getConfigurationDataByParameters = (
   }[] = [];
 
   // Split along X axis
-  if (nParameters > 2) {
+  // TODO refactor this to not do it X => Y but separately
+  if (nParameters > 2 && (getSettingsSplitAxis("x", settings, configurationData.id)?.enable ?? true)) {
     const [parameterX, valuesX] =
       Object.entries(parametersWithValues).find(
-        (entry) => entry[0] === getSettingsSplitParameter("x", settings, configurationData.id)
+        (entry) => entry[0] === getSettingsSplitAxis("x", settings, configurationData.id)?.parameter
       ) ?? Object.entries(parametersWithValues)[2];
     const [parameterY, valuesY] =
-      nParameters > 3
+      nParameters > 3 && (getSettingsSplitAxis("y", settings, configurationData.id)?.enable ?? true)
         ? Object.entries(parametersWithValues).find(
-            (entry) => entry[0] === getSettingsSplitParameter("y", settings, configurationData.id)
+            (entry) => entry[0] === getSettingsSplitAxis("y", settings, configurationData.id)?.parameter
           ) ?? Object.entries(parametersWithValues)[3]
         : [];
     const splitY = nParameters > 3 && parameterY && valuesY;

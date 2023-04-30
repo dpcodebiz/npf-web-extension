@@ -72,11 +72,11 @@ export const getSettingsSplitAxisFormat = (
   return formatted_str || `${parameter_name}=${parameter_value}`;
 };
 
-export const getSettingsSplitParameter = (axis: Axis, settings: Settings, configuration_id: string) =>
-  settings[configuration_id]?.split?.[axis].parameter;
+export const getSettingsSplitAxis = (axis: Axis, settings: Settings, configuration_id: string) =>
+  settings[configuration_id]?.split?.[axis];
 
 export const getSplitParameter = (axis: Axis, settings: Settings, configuration: Configuration) => {
-  const settings_value = getSettingsSplitParameter(axis, settings, configuration.id);
+  const settings_value = getSettingsSplitAxis(axis, settings, configuration.id)?.parameter;
   const default_value = configuration.split[axis];
   return settings_value ?? default_value;
 };
@@ -84,12 +84,14 @@ export const getSplitParameter = (axis: Axis, settings: Settings, configuration:
 export const getSettingsSplitParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
   const other_axis_value = getSplitParameter(axis == "x" ? "y" : "x", settings, configuration);
 
-  return Object.entries(configuration.parameters)
-    .filter(([parameter, values]) => parameter != other_axis_value && values.length < MAXIMUM_AXIS_PARAMETER_VALUES)
-    .map(([parameter]) => ({
-      label: parameter,
-      value: parameter,
-    }));
+  return [{ label: "None", value: "undefined" }].concat(
+    Object.entries(configuration.parameters)
+      .filter(([parameter, values]) => parameter != other_axis_value && values.length < MAXIMUM_AXIS_PARAMETER_VALUES)
+      .map(([parameter]) => ({
+        label: parameter,
+        value: parameter,
+      }))
+  );
 };
 
 export const getSettingsDefaultSplitParametersOptions = (

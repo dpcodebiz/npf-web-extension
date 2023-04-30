@@ -28,10 +28,10 @@ export const MetadataForm = (props: Props) => {
       title: getSettingsGraphTitle(settings, configuration),
       split: {
         x: {
-          format: "{{parameter}}={{value}}",
+          format: "{{parameter}}={{value}}", // TODO fix
         },
         y: {
-          format: "{{parameter}}={{value}}",
+          format: "{{parameter}}={{value}}", // TODO fix
         },
       },
     },
@@ -41,7 +41,16 @@ export const MetadataForm = (props: Props) => {
     (data: FormData) => {
       setSettings({
         [configuration.id]: {
-          split: data.split,
+          split: {
+            x: {
+              ...data.split.x,
+              enable: data.split.x.parameter != "undefined",
+            },
+            y: {
+              ...data.split.y,
+              enable: data.split.y.parameter != "undefined",
+            },
+          },
           title: data.title,
           type: data.type,
         },
