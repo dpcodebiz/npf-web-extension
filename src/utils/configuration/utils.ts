@@ -1,7 +1,7 @@
 import { isArray, mapValues, shake, unique } from "radash";
 import { ParsedConfigurationData } from "./parser";
 import { groupDataByParameters } from "./parser/line";
-import { Experiment, SplitParametersData } from "./types";
+import { ConfigurationData, Experiment, Settings, SplitParametersData } from "./types";
 
 /**
  * Joins all parameters
@@ -94,10 +94,12 @@ export const getParametersWithValues = (
  * @returns
  */
 export const getConfigurationDataByParameters = (
-  parameters: string[],
-  parsedConfigurationData: ParsedConfigurationData[]
+  configurationData: ConfigurationData,
+  parsedConfigurationData: ParsedConfigurationData[],
+  settings: Settings
 ) => {
   // Getting all parameters with their values
+  const parameters = configurationData.parameters;
   const parametersWithValues = getParametersWithValues(parameters, parsedConfigurationData);
   const nParameters = Object.keys(parametersWithValues).length;
 
@@ -108,8 +110,15 @@ export const getConfigurationDataByParameters = (
 
   // Split along X axis
   if (nParameters > 2) {
-    const [parameterX, valuesX] = Object.entries(parametersWithValues)[2];
-    const [parameterY, valuesY] = nParameters > 3 ? Object.entries(parametersWithValues)[3] : [];
+    const [parameterX, valuesX] =
+      Object.entries(parametersWithValues).find((entry) => entry[0] === settings[configurationData.id]?.x_parameter) ??
+      Object.entries(parametersWithValues)[2];
+    const [parameterY, valuesY] =
+      nParameters > 3
+        ? Object.entries(parametersWithValues).find(
+            (entry) => entry[0] === settings[configurationData.id]?.y_parameter
+          ) ?? Object.entries(parametersWithValues)[3]
+        : [];
     const splitY = nParameters > 3 && parameterY && valuesY;
 
     // Filtering data by parameters

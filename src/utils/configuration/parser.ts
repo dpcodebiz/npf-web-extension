@@ -13,11 +13,13 @@ export function resultsToConfiguration(
   settings: Settings
 ): Configuration {
   // TODO remove main param?
-  const configurationDataByParameters = getConfigurationDataByParameters(configurationData.parameters, results.data);
+  const configurationDataByParameters = getConfigurationDataByParameters(configurationData, results.data, settings);
 
   // Preparing configuration
   const configuration: Configuration = {
     name: configurationData.name,
+    parameters: configurationData.parameters,
+    measurements: configurationData.measurements,
     id: configurationData.id,
     experiments: [],
   };

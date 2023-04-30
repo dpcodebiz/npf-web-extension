@@ -4,6 +4,8 @@ export type Settings = {
 
 export type ConfigurationSettings = {
   title: string;
+  x_parameter?: string;
+  y_parameter?: string;
   x_format?: string;
   y_format?: string;
   type: GRAPH_TYPES;
@@ -26,6 +28,8 @@ export type ConfigurationData = {
 export type Configuration = {
   id: string;
   name: string;
+  parameters: string[];
+  measurements: string[];
   experiments: Experiment[]; // TODO in the future each experiment will be tied to only one configuration
 };
 

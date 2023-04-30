@@ -1,5 +1,5 @@
 import { isEmpty } from "radash";
-import { Configuration, Experiment, GRAPH_TYPES, Settings } from "../../utils/configuration/types";
+import { Configuration, GRAPH_TYPES, Settings } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 
 export type SettingsProps = {
@@ -65,4 +65,26 @@ export const getSettingsSplitAxisFormat = (
     `${settingsFormat.replace(/{{[ ]*parameter[ ]*}}/, parameter_name).replace(/{{[ ]*value[ ]*}}/, parameter_value)}`;
 
   return formatted_str || `${parameter_name}=${parameter_value}`;
+};
+
+export const getSettingsParametersOptions = (configuration: Configuration) => {
+  return configuration.parameters.map((parameter) => ({
+    label: parameter,
+    value: parameter,
+  }));
+};
+
+export const getSettingsSelectedParametersOptions = (
+  axis: "x" | "y",
+  settings: Settings,
+  configuration: Configuration
+) => {
+  const parametersOptions = getSettingsParametersOptions(configuration);
+  const settings_value = settings[configuration.id]?.[axis == "x" ? "x_parameter" : "y_parameter"];
+  const split_x = configuration.experiments[0].split_parameters?.[axis]?.name;
+
+  return (
+    parametersOptions.find((option) => option.value === settings_value) ??
+    parametersOptions.find((option) => option.value === split_x)
+  );
 };
