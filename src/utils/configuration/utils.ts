@@ -3,6 +3,7 @@ import { ParsedConfigurationData } from "./parser";
 import { groupDataByParameters } from "./parser/line";
 import { ConfigurationData, Experiment, SplitParametersData } from "./types";
 import { Settings } from "../settings/types";
+import { getSettingsSplitParameter } from "../../components/settings/utils";
 
 /**
  * Joins all parameters
@@ -113,12 +114,12 @@ export const getConfigurationDataByParameters = (
   if (nParameters > 2) {
     const [parameterX, valuesX] =
       Object.entries(parametersWithValues).find(
-        (entry) => entry[0] === settings[configurationData.id]?.split.x.parameter
+        (entry) => entry[0] === getSettingsSplitParameter("x", settings, configurationData.id)
       ) ?? Object.entries(parametersWithValues)[2];
     const [parameterY, valuesY] =
       nParameters > 3
         ? Object.entries(parametersWithValues).find(
-            (entry) => entry[0] === settings[configurationData.id]?.split.y.parameter
+            (entry) => entry[0] === getSettingsSplitParameter("y", settings, configurationData.id)
           ) ?? Object.entries(parametersWithValues)[3]
         : [];
     const splitY = nParameters > 3 && parameterY && valuesY;
