@@ -15,7 +15,9 @@ export const ChartPanelComponent = (props: Props) => {
 
   return (
     <div className="bg-white p-6 rounded-xl">
-      <span className="text-2xl block text-center pb-6">{getSettingsGraphTitle(settings, configuration)}</span>
+      <span className="text-5xl font-semibold block text-center pb-12">
+        {getSettingsGraphTitle(settings, configuration)}
+      </span>
       <ChartSplitterComponent configuration={configuration} settings={settings}>
         {configuration.experiments.map((experiment) => (
           <>

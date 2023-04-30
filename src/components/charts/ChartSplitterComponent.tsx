@@ -20,21 +20,26 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
   return (
     <div className={_clsx("grid", styles["grid-" + split_cols])}>
       {split_parameters.x ? (
-        configuration.experiments.map((_, index) => (
-          <>
-            {split_parameters.x && Math.floor(index / split_cols) == 0 && (
-              <div className="text-center px-4 pb-4 border-b-2">
-                {getSettingsSplitAxisFormat("x", index, settings, configuration)}
-              </div>
-            )}
-          </>
-        ))
+        <>
+          {configuration.experiments.map((_, index) => (
+            <>
+              {split_parameters.x && Math.floor(index / split_cols) == 0 && (
+                <div className="text-center px-4 pb-4 border-b-2">
+                  {getSettingsSplitAxisFormat("x", index, settings, configuration)}
+                </div>
+              )}
+            </>
+          ))}
+          <span></span>
+        </>
       ) : split_parameters.y ? (
-        <span></span>
+        <>
+          <span></span>
+          <span></span>
+        </>
       ) : (
         <></>
       )}
-      <span></span>
       {props.children &&
         React.Children.map(props.children, (child, index) => (
           <>
