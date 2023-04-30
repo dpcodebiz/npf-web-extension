@@ -13,26 +13,35 @@ export const SplitGraphsSettingsComponent = (props: SettingsProps) => {
   return (
     <div>
       <div className="p-4 gap-4 flex flex-col place-content-center justify-center w-full flex-grow">
-        <span className="text-2xl">Per graph settings</span>
+        <span className="text-2xl">Preview</span>
         <span></span>
-        <div className={_clsx("grid", styles["grid-" + split_cols])}>
-          {configuration.experiments.map((experiment, index) => (
-            <>
-              <div>
+        <div className="p-10">
+          <div className={_clsx("grid", styles["grid-" + split_cols])}>
+            {configuration.experiments.map((_, index) => (
+              <>
                 {split_parameters.x && Math.floor(index / split_cols) == 0 && (
-                  <div className="text-center pl-20 pr-5 pb-4 border-b-2">
+                  <div className="text-center px-4 pb-4 border-b-2">
                     {getSettingsSplitAxisFormat("x", index, settings, configuration)}
                   </div>
                 )}
-                <div className="p-4">Options here</div>
-              </div>
-              {split_parameters.y && index % split_cols == split_cols - 1 && (
-                <div className="border-l-2 px-4 inline-grid place-content-center">
-                  {getSettingsSplitAxisFormat("y", index, settings, configuration)}
+              </>
+            ))}
+            <span></span>
+            {configuration.experiments.map((_, index) => (
+              <>
+                <div>
+                  <div className="p-4 m-2 bg-gray-100">
+                    <div className="py-2 w-full h-full"></div>
+                  </div>
                 </div>
-              )}
-            </>
-          ))}
+                {split_parameters.y && index % split_cols == split_cols - 1 && (
+                  <div className="border-l-2 px-4 inline-grid place-content-center">
+                    {getSettingsSplitAxisFormat("y", index, settings, configuration)}
+                  </div>
+                )}
+              </>
+            ))}
+          </div>
         </div>
       </div>
     </div>

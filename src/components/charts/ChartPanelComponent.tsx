@@ -25,14 +25,19 @@ export const ChartPanelComponent = (props: Props) => {
     <div className="bg-white p-6 rounded-xl">
       <span className="text-2xl block text-center pb-6">{getSettingsGraphTitle(settings, configuration)}</span>
       <div className={_clsx("grid", styles["grid-" + split_cols])}>
+        {configuration.experiments.map((_, index) => (
+          <>
+            {split_parameters.x && Math.floor(index / split_cols) == 0 && (
+              <div className="text-center px-4 pb-4 border-b-2">
+                {getSettingsSplitAxisFormat("x", index, settings, configuration)}
+              </div>
+            )}
+          </>
+        ))}
+        <span></span>
         {configuration.experiments.map((experiment, index) => (
           <>
             <div>
-              {split_parameters.x && Math.floor(index / split_cols) == 0 && (
-                <div className="text-center pl-20 pr-5 pb-4 border-b-2">
-                  {getSettingsSplitAxisFormat("x", index, settings, configuration)}
-                </div>
-              )}
               <div className="p-4">
                 <ChartComponent experiment={experiment} />
               </div>
