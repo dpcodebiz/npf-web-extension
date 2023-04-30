@@ -18,7 +18,7 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
   const split_cols = split_parameters.x?.length ?? 1;
 
   return (
-    <div className={_clsx("grid", styles["grid-" + split_cols])}>
+    <div className={_clsx("grid h-full gap-4", styles["grid-" + split_cols])}>
       {split_parameters.x ? (
         <>
           {configuration.experiments.map((_, index) => (
@@ -45,7 +45,7 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
           <>
             {child}
             {split_parameters.y && index % split_cols == split_cols - 1 && (
-              <div className="border-l-2 px-4 inline-grid place-content-center">
+              <div className="border-l-2 w-max px-4 inline-grid place-content-center">
                 {getSettingsSplitAxisFormat("y", index, settings, configuration)}
               </div>
             )}

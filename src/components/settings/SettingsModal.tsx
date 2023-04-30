@@ -12,7 +12,6 @@ export const SettingsModal = (props: Props) => {
     <Modal setOpen={props.setOpen} open={props.open}>
       <div className="p-4 flex flex-row divide-x-[1px] gap-4">
         <SettingsComponent setSettings={setSettings} settings={settings} configuration={configuration} />
-        <SplitGraphsSettingsComponent setSettings={setSettings} settings={settings} configuration={configuration} />
       </div>
     </Modal>
   );
