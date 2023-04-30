@@ -23,7 +23,7 @@ export const ChartPanelComponent = (props: Props) => {
           <>
             <div>
               <div className="p-4">
-                <ChartComponent experiment={experiment} />
+                <ChartComponent settings={settings} configuration={configuration} experiment={experiment} />
               </div>
             </div>
           </>

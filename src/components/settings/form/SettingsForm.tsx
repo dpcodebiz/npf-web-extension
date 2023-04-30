@@ -2,6 +2,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Configuration } from "../../../utils/configuration/types";
 import Select from "react-select";
 import {
+  getGraphAxisTitle,
   getSettingsDefaultSplitParametersOptions,
   getSettingsGraphOptions,
   getSettingsGraphTitle,
@@ -29,6 +30,12 @@ export const SettingsForm = (props: Props) => {
   const { control, handleSubmit, watch, register } = useForm<FormData>({
     defaultValues: {
       title: getSettingsGraphTitle(settings, configuration),
+      x: {
+        title: getGraphAxisTitle("x", settings, configuration),
+      },
+      y: {
+        title: getGraphAxisTitle("y", settings, configuration),
+      },
       split: {
         x: {
           format: getSettingsSplitAxis("x", settings, configuration.id)?.format ?? "{{parameter}}={{value}}",
@@ -44,6 +51,10 @@ export const SettingsForm = (props: Props) => {
     (data: FormData) => {
       setSettings({
         [configuration.id]: {
+          title: data.title,
+          type: data.type,
+          x: data.x,
+          y: data.y,
           split: {
             x: {
               ...data.split.x,
@@ -54,8 +65,6 @@ export const SettingsForm = (props: Props) => {
               enable: data.split.y.parameter != "undefined",
             },
           },
-          title: data.title,
-          type: data.type,
         },
       });
     },
@@ -90,6 +99,14 @@ export const SettingsForm = (props: Props) => {
                 />
               )}
             />
+          </div>
+          <div className={_clsx(styles.group)}>
+            <label htmlFor="x.title">X axis label</label>
+            <input className={styles.input} {...register("x.title")} id="x.title" type="text" />
+          </div>
+          <div className={_clsx(styles.group)}>
+            <label htmlFor="y.title">Y axis label</label>
+            <input className={styles.input} {...register("y.title")} id="y.title" type="text" />
           </div>
         </div>
         <SplitGraphsSettingsComponent setSettings={setSettings} settings={settings} configuration={configuration} />

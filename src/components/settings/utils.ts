@@ -1,5 +1,5 @@
 import { isEmpty } from "radash";
-import { Configuration, GRAPH_TYPES } from "../../utils/configuration/types";
+import { Configuration, Experiment, GRAPH_TYPES } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 import { Settings } from "../../utils/settings/types";
 
@@ -24,6 +24,16 @@ export const getSettingsGraphOptions = () => {
 
 export const getSettingsGraphType = (settings: Settings, configuration: Configuration) => {
   return settings[configuration.id]?.type ?? configuration.experiments[0].metadata.type;
+};
+
+export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  const value = settings[configuration.id]?.[axis].title;
+  const default_value =
+    axis == "x"
+      ? configuration.experiments[0].main_parameter
+      : Object.keys(configuration.experiments[0].runs[0]?.results)[0];
+
+  return value ?? default_value;
 };
 
 //@deprecated ?

@@ -6,6 +6,8 @@ export type Settings = {
 
 export type ConfigurationSettings = {
   title: string;
+  x: AxisSettings;
+  y: AxisSettings;
   split: {
     x: AxisSplitSettings;
     y: AxisSplitSettings;
@@ -17,4 +19,8 @@ export type AxisSplitSettings = {
   enable: boolean;
   parameter: string;
   format: string;
+};
+
+export type AxisSettings = {
+  title: string;
 };

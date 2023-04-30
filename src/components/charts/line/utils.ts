@@ -1,5 +1,5 @@
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
-import { Experiment } from "../../../utils/configuration/types";
+import { Configuration, Experiment } from "../../../utils/configuration/types";
 import {
   CartesianScaleTypeRegistry,
   Chart,
@@ -13,18 +13,20 @@ import {
   ScaleOptionsByType,
   TitleOptions,
 } from "chart.js";
+import { Settings } from "../../../utils/settings/types";
+import { getGraphAxisTitle } from "../../settings/utils";
 
-export const getLineChartAxisLabels = (experiment: Experiment) => {
+export const getLineChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {
-    x: experiment.main_parameter,
-    y: Object.keys(experiment.runs[0]?.results)[0] ?? "undefined",
+    x: getGraphAxisTitle("x", settings, configuration),
+    y: getGraphAxisTitle("y", settings, configuration),
   };
 };
 
-export const lineChartAxisStyles = (experiment: Experiment, axis: "x" | "y") =>
+export const lineChartAxisStyles = (settings: Settings, configuration: Configuration, axis: "x" | "y") =>
   ({
     title: {
-      text: getLineChartAxisLabels(experiment)[axis],
+      text: getLineChartAxisLabels(settings, configuration)[axis],
       color: "#000",
       font: {
         size: 16,
@@ -44,14 +46,9 @@ export const lineChartAxisStyles = (experiment: Experiment, axis: "x" | "y") =>
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
 
-export const lineChartTitleStyles = (experiment: Experiment, split: boolean) =>
+export const lineChartTitleStyles = () =>
   ({
-    display: !split,
-    text: experiment.name,
-    font: {
-      size: 40,
-    },
-    color: "#000",
+    display: false,
   } as _DeepPartialObject<TitleOptions>);
 
 export const lineChartLegendStyles = (split: boolean) =>
@@ -77,17 +74,17 @@ export const lineChartLegendStyles = (split: boolean) =>
     },
   } as _DeepPartialObject<LegendOptions<"line">>);
 
-export const lineChartOptions = (experiment: Experiment, split: boolean) =>
+export const lineChartOptions = (settings: Settings, configuration: Configuration, split: boolean) =>
   ({
     responsive: true,
     plugins: {
       legend: lineChartLegendStyles(split),
-      title: lineChartTitleStyles(experiment, split),
+      title: lineChartTitleStyles(),
       tooltip: {},
     },
     scales: {
-      x: lineChartAxisStyles(experiment, "x"),
-      y: lineChartAxisStyles(experiment, "y"),
+      x: lineChartAxisStyles(settings, configuration, "x"),
+      y: lineChartAxisStyles(settings, configuration, "y"),
     },
   } as _DeepPartialObject<
     CoreChartOptions<"line"> &
