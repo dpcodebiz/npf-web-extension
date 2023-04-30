@@ -5,6 +5,7 @@ import { getSettingsGraphTitle, getSettingsSplitAxisFormat } from "../settings/u
 import { ChartComponent } from "./ChartComponent";
 import styles from "../../styles/grid.module.scss";
 import { Settings } from "../../utils/settings/types";
+import { ChartSplitterComponent } from "./ChartSplitterComponent";
 
 type Props = {
   settings: Settings;
@@ -24,17 +25,7 @@ export const ChartPanelComponent = (props: Props) => {
   return (
     <div className="bg-white p-6 rounded-xl">
       <span className="text-2xl block text-center pb-6">{getSettingsGraphTitle(settings, configuration)}</span>
-      <div className={_clsx("grid", styles["grid-" + split_cols])}>
-        {configuration.experiments.map((_, index) => (
-          <>
-            {split_parameters.x && Math.floor(index / split_cols) == 0 && (
-              <div className="text-center px-4 pb-4 border-b-2">
-                {getSettingsSplitAxisFormat("x", index, settings, configuration)}
-              </div>
-            )}
-          </>
-        ))}
-        <span></span>
+      <ChartSplitterComponent configuration={configuration} settings={settings}>
         {configuration.experiments.map((experiment, index) => (
           <>
             <div>
@@ -42,14 +33,9 @@ export const ChartPanelComponent = (props: Props) => {
                 <ChartComponent experiment={experiment} />
               </div>
             </div>
-            {split_parameters.y && index % split_cols == split_cols - 1 && (
-              <div className="border-l-2 px-4 inline-grid place-content-center">
-                {getSettingsSplitAxisFormat("y", index, settings, configuration)}
-              </div>
-            )}
           </>
         ))}
-      </div>
+      </ChartSplitterComponent>
     </div>
   );
 };
