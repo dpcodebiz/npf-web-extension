@@ -16,18 +16,10 @@ function App() {
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const { loading, load, configuration, settings, setSettings } = useConfiguration();
-  const [experiments, setExperiments] = useState<{ [index: string]: ConfigurationData }>();
 
-  const [selectedExperiment, setSelectedExperiment] = useState("");
-
-  const demo = () => {
-    setExperiments({
-      [CPU_ALGORITHM_DATA.id]: CPU_ALGORITHM_DATA,
-      [IPERF_DATA.id]: IPERF_DATA,
-      [MATH_DATA.id]: MATH_DATA,
-      [WORLD_POPULATION_DATA.id]: WORLD_POPULATION_DATA,
-    });
-  };
+  // Configurations available
+  const [configurations, setConfigurations] = useState<{ [index: string]: ConfigurationData }>();
+  const [selectedConfiguration, setSelectedConfiguration] = useState("");
 
   const onKeyDown = (ev: KeyboardEvent) => {
     ev.key == "Escape" && setFullScreen(false);
@@ -35,9 +27,22 @@ function App() {
 
   // Mounting
   useEffect(() => {
+    // TODO extract this
+    const demo = () => {
+      setConfigurations({
+        ...configurations,
+        ...{
+          [CPU_ALGORITHM_DATA.id]: CPU_ALGORITHM_DATA,
+          [IPERF_DATA.id]: IPERF_DATA,
+          [MATH_DATA.id]: MATH_DATA,
+          [WORLD_POPULATION_DATA.id]: WORLD_POPULATION_DATA,
+        },
+      });
+    };
+
     const updateConfiguration = (configurationData: ConfigurationData) => {
       load(configurationData);
-      setExperiments({ [configurationData.id]: configurationData });
+      setConfigurations({ [configurationData.id]: configurationData });
     };
 
     // Exporting the update method
@@ -46,6 +51,7 @@ function App() {
     //@ts-expect-error because we are setting the window variable
     window.demo = demo;
 
+    // Set up demo if no configuration provided
     if (!configuration) {
       demo();
     }
@@ -56,22 +62,22 @@ function App() {
     // Listening for escape key
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [configuration, load]);
+  }, [configuration, load, setConfigurations, configurations]);
 
   // Reset selected experiment and configuration loaded when experiments available change
   useEffect(() => {
-    if (!experiments || Object.keys(experiments).length == 0) return;
-    if (Object.keys(experiments).includes(selectedExperiment)) return;
+    if (!configurations || Object.keys(configurations).length == 0) return;
+    if (Object.keys(configurations).includes(selectedConfiguration)) return;
 
-    setSelectedExperiment(Object.keys(experiments)[0]);
-    load(experiments[Object.keys(experiments)[0]]);
-  }, [experiments, load, selectedExperiment]);
+    setSelectedConfiguration(Object.keys(configurations)[0]);
+    load(configurations[Object.keys(configurations)[0]]);
+  }, [configurations, load, selectedConfiguration]);
 
   const onExperimentClick = (id: string) => {
-    if (!experiments) return;
+    if (!configurations) return;
 
-    setSelectedExperiment(id);
-    load(experiments[id]);
+    setSelectedConfiguration(id);
+    load(configurations[id]);
   };
 
   return (
@@ -91,15 +97,15 @@ function App() {
           <div className="font-bold text-xl">Network Performance Framework</div>
           <div className="space-y-2 flex flex-col">
             {!loading &&
-              experiments &&
-              Object.entries(experiments).map(([id, configurationData]) => (
+              configurations &&
+              Object.entries(configurations).map(([id, configurationData]) => (
                 <button
                   className={`p-4 text-lg text-left rounded transition-all duration-200 ${
-                    selectedExperiment == id ? "bg-uclouvain-1 text-white" : "hover:bg-gray-200"
+                    selectedConfiguration == id ? "bg-uclouvain-1 text-white" : "hover:bg-gray-200"
                   }`}
                   key={id}
                   onClick={() => {
-                    selectedExperiment != id && onExperimentClick(id);
+                    selectedConfiguration != id && onExperimentClick(id);
                   }}
                 >
                   {configurationData.name}
