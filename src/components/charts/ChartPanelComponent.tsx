@@ -22,14 +22,12 @@ export const ChartPanelComponent = (props: Props) => {
         {getSettingsGraphTitle(settings, configuration)}
       </span>
       <ChartSplitterComponent configuration={configuration} settings={settings}>
-        {configuration.experiments.map((experiment) => (
-          <>
-            <div>
-              <div className="p-4">
-                <ChartComponent settings={settings} configuration={configuration} experiment={experiment} />
-              </div>
+        {configuration.experiments.map((experiment, index) => (
+          <div key={index}>
+            <div className="p-4">
+              <ChartComponent settings={settings} configuration={configuration} experiment={experiment} />
             </div>
-          </>
+          </div>
         ))}
       </ChartSplitterComponent>
     </div>

@@ -29,6 +29,10 @@ function App() {
     });
   };
 
+  const onKeyDown = (ev: KeyboardEvent) => {
+    ev.key == "Escape" && setFullScreen(false);
+  };
+
   // Mounting
   useEffect(() => {
     const updateConfiguration = (configurationData: ConfigurationData) => {
@@ -48,6 +52,10 @@ function App() {
 
     // Dispatching event
     window.dispatchEvent(new Event(Events.APP_READY));
+
+    // Listening for escape key
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [configuration, load]);
 
   // Reset selected experiment and configuration loaded when experiments available change
@@ -78,12 +86,7 @@ function App() {
         />
       )}
       <WebsiteLoader loading={loading || !configuration} />
-      <div
-        onKeyDown={(event) => {
-          event.key == "Escape" && setFullScreen(false);
-        }}
-        className="bg-gray-100 w-screen h-screen flex flex-row"
-      >
+      <div className="bg-gray-100 w-screen h-screen flex flex-row">
         <div className="bg-white w-[400px] p-6 space-y-6">
           <div className="font-bold text-xl">Network Performance Framework</div>
           <div className="space-y-2 flex flex-col">

@@ -18,6 +18,7 @@ export const Modal = (props: PropsWithChildren<ModalProps>) => {
         onClick={(e) => {
           e.stopPropagation();
         }}
+        role="presentation"
       >
         <div className={styles.modal}>{children}</div>
       </div>

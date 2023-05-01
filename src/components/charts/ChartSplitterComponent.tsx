@@ -4,7 +4,7 @@ import { Settings } from "../../utils/settings/types";
 import { Configuration } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 import { getSettingsSplitAxisFormat } from "../settings/utils";
-import React, { PropsWithChildren } from "react";
+import React, { Fragment, PropsWithChildren } from "react";
 
 type Props = {
   settings: Settings;
@@ -22,13 +22,13 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
       {split_parameters.x ? (
         <>
           {configuration.experiments.map((_, index) => (
-            <>
+            <Fragment key={index}>
               {split_parameters.x && Math.floor(index / split_cols) == 0 && (
                 <div className="text-center px-4 pb-4 border-b-2">
                   {getSettingsSplitAxisFormat("x", index, settings, configuration)}
                 </div>
               )}
-            </>
+            </Fragment>
           ))}
           <span></span>
         </>
