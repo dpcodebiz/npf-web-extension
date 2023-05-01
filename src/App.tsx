@@ -91,13 +91,12 @@ function App() {
           setSettings={setSettings}
         />
       )}
-      <WebsiteLoader loading={loading || !configuration} />
+      <WebsiteLoader loading={loading && !configuration} />
       <div className="bg-gray-100 w-screen h-screen flex flex-row">
         <div className="bg-white w-[400px] p-6 space-y-6">
           <div className="font-bold text-xl">Network Performance Framework</div>
           <div className="space-y-2 flex flex-col">
-            {!loading &&
-              configurations &&
+            {configurations &&
               Object.entries(configurations).map(([id, configurationData]) => (
                 <button
                   className={`p-4 text-lg text-left rounded transition-all duration-200 ${
@@ -116,7 +115,7 @@ function App() {
         {!loading && configuration && fullScreen && (
           <ChartPanelComponent fullScreen={true} settings={settings} configuration={configuration} />
         )}
-        <div className="p-6 w-full space-y-6">
+        <div className="p-6 w-full space-y-6 grid" style={{ gridTemplateRows: "min-content repeat(1, 1fr)" }}>
           <div className="ml-auto w-max px-4 space-x-4">
             <button
               onClick={() => setSettingsModalOpen(!settingsModalOpen)}
@@ -128,8 +127,13 @@ function App() {
               Full Screen
             </button>
           </div>
-          {!loading && configuration && !fullScreen && (
-            <ChartPanelComponent fullScreen={false} settings={settings} configuration={configuration} />
+          {configuration && !fullScreen && (
+            <ChartPanelComponent
+              loading={loading}
+              fullScreen={false}
+              settings={settings}
+              configuration={configuration}
+            />
           )}
         </div>
       </div>

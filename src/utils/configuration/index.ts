@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Configuration, ConfigurationData } from "./types";
 import { ParsedConfigurationData, resultsToConfiguration } from "./parser";
 import { Settings } from "../settings/types";
+import { debounce } from "radash";
 
 /**
  * Hook handling the app configuration
@@ -17,6 +18,7 @@ export const useConfiguration = () => {
 
   const load = useCallback(
     (configurationData: ConfigurationData) => {
+      setLoading(true);
       setConfigurationData(configurationData);
 
       readString(configurationData.data, {
@@ -35,7 +37,7 @@ export const useConfiguration = () => {
   useEffect(() => {
     if (configuration == undefined) return;
 
-    setLoading(false);
+    debounce({ delay: 100 }, () => setLoading(false))();
   }, [configuration]);
 
   // Update configuration on settings changed
