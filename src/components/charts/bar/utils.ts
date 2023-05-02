@@ -1,5 +1,5 @@
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
-import { Experiment } from "../../../utils/configuration/types";
+import { Configuration, Experiment } from "../../../utils/configuration/types";
 import {
   CartesianScaleTypeRegistry,
   Chart,
@@ -13,18 +13,20 @@ import {
   ScaleOptionsByType,
   TitleOptions,
 } from "chart.js";
+import { Settings } from "../../../utils/settings/types";
+import { getGraphAxisTitle } from "../../settings/utils";
 
-export const getBarChartAxisLabels = (experiment: Experiment) => {
+export const getBarChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {
-    x: experiment.main_parameter,
-    y: Object.keys(experiment.runs[0]?.results)[0] ?? "undefined",
+    x: getGraphAxisTitle("x", settings, configuration),
+    y: getGraphAxisTitle("y", settings, configuration),
   };
 };
 
-export const barChartAxisStyles = (experiment: Experiment, axis: "x" | "y") =>
+export const barChartAxisStyles = (settings: Settings, configuration: Configuration, axis: "x" | "y") =>
   ({
     title: {
-      text: getBarChartAxisLabels(experiment)[axis],
+      text: getBarChartAxisLabels(settings, configuration)[axis],
       color: "#000",
       font: {
         size: 16,
@@ -44,27 +46,15 @@ export const barChartAxisStyles = (experiment: Experiment, axis: "x" | "y") =>
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
 
-export const barChartTitleStyles = (experiment: Experiment) =>
+export const barChartTitleStyles = () =>
   ({
-    display: true,
-    text: experiment.name,
-    font: {
-      size: 40,
-    },
-    color: "#000",
+    display: false,
   } as _DeepPartialObject<TitleOptions>);
 
-export const barChartLegendStyles = () =>
+export const barChartLegendStyles = (split: boolean) =>
   ({
-    position: "right" as const,
-    title: {
-      display: true,
-      text: "Datasets",
-      font: {
-        size: 20,
-      },
-      color: "#000",
-    },
+    position: split ? "top" : ("right" as const),
+    align: split ? "end" : "center",
     labels: {
       generateLabels: function (chart) {
         const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
@@ -83,17 +73,17 @@ export const barChartLegendStyles = () =>
     },
   } as _DeepPartialObject<LegendOptions<"bar">>);
 
-export const barChartOptions = (experiment: Experiment) =>
+export const barChartOptions = (settings: Settings, configuration: Configuration, split: boolean) =>
   ({
     responsive: true,
     plugins: {
-      legend: barChartLegendStyles(),
-      title: barChartTitleStyles(experiment),
+      legend: barChartLegendStyles(split),
+      title: barChartTitleStyles(),
       tooltip: {},
     },
     scales: {
-      x: barChartAxisStyles(experiment, "x"),
-      y: barChartAxisStyles(experiment, "y"),
+      x: barChartAxisStyles(settings, configuration, "x"),
+      y: barChartAxisStyles(settings, configuration, "y"),
     },
   } as _DeepPartialObject<
     CoreChartOptions<"bar"> &

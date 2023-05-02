@@ -28,4 +28,4 @@ dist/
 python_src/*.egg-info
 
 # Ignore build file being copied for the manifest
-index.html
+/index.html

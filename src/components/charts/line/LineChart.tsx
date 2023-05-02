@@ -11,27 +11,31 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { lineChartOptions } from "./utils";
-import { Experiment } from "../../../utils/configuration/types";
+import { Configuration, Experiment } from "../../../utils/configuration/types";
 import { getDatasets, getLabel } from "../../../utils/chart";
+import { Settings } from "../../../utils/settings/types";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 type Props = {
+  settings: Settings;
+  configuration: Configuration;
   experiment: Experiment;
+  split?: boolean;
 };
 
-export const LineChart = ({ experiment }: Props) => {
+export const LineChart = (props: Props) => {
+  const { settings, configuration, experiment, split = false } = props;
+
   return (
-    <div className="bg-white p-6 rounded-xl">
-      <Line
-        data={
-          {
-            labels: getLabel(experiment),
-            datasets: getDatasets(experiment),
-          } as ChartData<"line", number[], string>
-        }
-        options={lineChartOptions(experiment)}
-      />
-    </div>
+    <Line
+      data={
+        {
+          labels: getLabel(experiment),
+          datasets: getDatasets(experiment),
+        } as ChartData<"line", number[], string>
+      }
+      options={lineChartOptions(settings, configuration, split)}
+    />
   );
 };

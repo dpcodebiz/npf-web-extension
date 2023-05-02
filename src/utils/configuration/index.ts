@@ -1,8 +1,10 @@
 import { ParseResult } from "papaparse";
 import { readString } from "react-papaparse";
 import { useCallback, useEffect, useState } from "react";
-import { Configuration, ConfigurationData, Settings } from "./types";
+import { Configuration, ConfigurationData } from "./types";
 import { ParsedConfigurationData, resultsToConfiguration } from "./parser";
+import { Settings } from "../settings/types";
+import { debounce } from "radash";
 
 /**
  * Hook handling the app configuration
@@ -12,10 +14,11 @@ export const useConfiguration = () => {
   const [settings, setSettings] = useState<Settings>({});
   const [loading, setLoading] = useState(true);
   const [configuration, setConfiguration] = useState<Configuration | undefined>(undefined);
-  const [configurationData, setConfigurationData] = useState<ConfigurationData | undefined>(undefined);
+  const [configurationData, setConfigurationData] = useState<ConfigurationData>();
 
   const load = useCallback(
     (configurationData: ConfigurationData) => {
+      setLoading(true);
       setConfigurationData(configurationData);
 
       readString(configurationData.data, {
@@ -34,15 +37,14 @@ export const useConfiguration = () => {
   useEffect(() => {
     if (configuration == undefined) return;
 
-    setLoading(false);
+    debounce({ delay: 100 }, () => setLoading(false))();
   }, [configuration]);
 
-  // Update configuration on settings changed
   useEffect(() => {
     if (!configurationData) return;
 
     load(configurationData);
-  }, [configurationData, settings, load]);
+  }, [settings, configurationData, load]);
 
   return { loading, load, configuration, settings, setSettings };
 };

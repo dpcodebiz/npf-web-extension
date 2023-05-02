@@ -1,8 +1,9 @@
-import { ParseResult } from "papaparse";
-import { Configuration, ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
+import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
 import { group, mapValues, objectify } from "radash";
 import { ExperimentData, ParsedConfigurationData } from "../parser";
 import { joinParams, splitParams } from "../utils";
+import { getParameter } from "../../../components/settings/utils";
+import { Settings } from "../../settings/types";
 
 export const groupDataByParameters = (
   parameters: string[],
@@ -19,13 +20,9 @@ export const groupDataByParameters = (
  * @param results Raw pandas dataframe parsed from csv
  * @returns
  */
-function aggregateAllResults(
-  parameters: string[],
-  measurements: string[],
-  results: ParseResult<ParsedConfigurationData>
-) {
+function aggregateAllResults(parameters: string[], measurements: string[], results: ParsedConfigurationData[]) {
   // Grouping all data by all params
-  const grouped_data_by_all_params = groupDataByParameters(parameters, results.data);
+  const grouped_data_by_all_params = groupDataByParameters(parameters, results);
 
   // Computing average of all results
   const aggregated_data = mapValues(grouped_data_by_all_params, (data) => {
@@ -88,13 +85,14 @@ export const unfoldAggregatedData = (aggregated_data: ReturnType<typeof aggregat
 };
 
 export const getLineChartConfiguration = (
+  settings: Settings,
   configurationData: ConfigurationData,
-  results: ParseResult<ParsedConfigurationData>
+  results: ParsedConfigurationData[]
 ) => {
   // Grouping all the data by parameter value
   const parameters = configurationData.parameters;
   const measurements = configurationData.measurements;
-  const main_param = configurationData.parameters[0];
+  const main_param = getParameter("x", settings, configurationData);
 
   // Aggregating all results
   const aggregated_data = aggregateAllResults(parameters, measurements, results);

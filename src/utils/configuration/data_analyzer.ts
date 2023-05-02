@@ -1,11 +1,7 @@
-import { ParseResult } from "papaparse";
 import { ParsedConfigurationData } from "./parser";
 import { ConfigurationData, GRAPH_TYPES } from "./types";
 
-export const getRecommendedGraphType = (
-  configurationData: ConfigurationData,
-  results: ParseResult<ParsedConfigurationData>
-) => {
+export const getRecommendedGraphType = (configurationData: ConfigurationData, results: ParsedConfigurationData[]) => {
   // Getting number of parameters
   const paramsCount = configurationData.parameters.length;
   const measurementsCount = configurationData.measurements.length;

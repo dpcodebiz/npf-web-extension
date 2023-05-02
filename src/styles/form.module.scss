@@ -1,0 +1,19 @@
+.form {
+  @apply flex flex-col gap-6;
+}
+
+.group {
+  @apply flex flex-col gap-4;
+
+  .group {
+    @apply gap-2;
+  }
+}
+
+.input {
+  @apply px-4 py-2 border-[1px] focus:outline-none focus:border-uclouvain-1;
+}
+
+.heading {
+  @apply text-xl border-b-2 py-2;
+}
