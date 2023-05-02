@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./App.scss";
 import { Events } from "./utils/events";
 import { WebsiteLoader } from "./components/WebsiteLoader";
@@ -10,6 +10,7 @@ import { ConfigurationData } from "./utils/configuration/types";
 import { CPU_ALGORITHM_DATA } from "./utils/examples/cpu_algorithm";
 import { ChartPanelComponent } from "./components/charts/ChartPanelComponent";
 import { SettingsModal } from "./components/settings/SettingsModal";
+import { isArray } from "radash";
 
 function App() {
   // States
@@ -25,46 +26,63 @@ function App() {
     ev.key == "Escape" && setFullScreen(false);
   };
 
+  // Callbacks
+  const updateConfiguration = useCallback(
+    (configurationData: ConfigurationData | ConfigurationData[]) => {
+      if (isArray(configurationData)) {
+        load(configurationData[0]);
+        setConfigurations(Object.assign({ ...configurations }, ...configurationData));
+        return;
+      }
+
+      load(configurationData);
+      setConfigurations({ ...configurations, ...{ [configurationData.id]: configurationData } });
+    },
+    [configurations, load]
+  );
+  const demo = useCallback(() => {
+    setConfigurations({
+      ...{
+        [CPU_ALGORITHM_DATA.id]: CPU_ALGORITHM_DATA,
+        [IPERF_DATA.id]: IPERF_DATA,
+        [MATH_DATA.id]: MATH_DATA,
+        [WORLD_POPULATION_DATA.id]: WORLD_POPULATION_DATA,
+      },
+    });
+  }, [setConfigurations]);
+  const onConfigurationClick = useCallback(
+    (id: string) => {
+      if (!configurations) return;
+
+      setSelectedConfiguration(id);
+      load(configurations[id]);
+    },
+    [configurations, setSelectedConfiguration, load]
+  );
+
   // Mounting
   useEffect(() => {
-    // TODO extract this
-    const demo = () => {
-      setConfigurations({
-        ...configurations,
-        ...{
-          [CPU_ALGORITHM_DATA.id]: CPU_ALGORITHM_DATA,
-          [IPERF_DATA.id]: IPERF_DATA,
-          [MATH_DATA.id]: MATH_DATA,
-          [WORLD_POPULATION_DATA.id]: WORLD_POPULATION_DATA,
-        },
-      });
-    };
+    // Listening for escape key
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
 
-    const updateConfiguration = (configurationData: ConfigurationData) => {
-      load(configurationData);
-      setConfigurations({ [configurationData.id]: configurationData });
-    };
-
+  // Mounting
+  useEffect(() => {
     // Exporting the update method
     //@ts-expect-error because we are setting the window variable
     window.updateConfiguration = updateConfiguration;
     //@ts-expect-error because we are setting the window variable
     window.demo = demo;
 
-    // Set up demo if no configuration provided
-    if (!configuration) {
-      demo();
-    }
-
     // Dispatching event
-    window.dispatchEvent(new Event(Events.APP_READY));
+    if (!configurations) {
+      console.log("dispa");
+      window.dispatchEvent(new Event(Events.APP_READY));
+    }
+  }, [updateConfiguration, demo, configurations]);
 
-    // Listening for escape key
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [configuration, load, setConfigurations, configurations]);
-
-  // Reset selected experiment and configuration loaded when experiments available change
+  // Reset selected configuration and configuration loaded when configurations available change
   useEffect(() => {
     if (!configurations || Object.keys(configurations).length == 0) return;
     if (Object.keys(configurations).includes(selectedConfiguration)) return;
@@ -73,12 +91,7 @@ function App() {
     load(configurations[Object.keys(configurations)[0]]);
   }, [configurations, load, selectedConfiguration]);
 
-  const onExperimentClick = (id: string) => {
-    if (!configurations) return;
-
-    setSelectedConfiguration(id);
-    load(configurations[id]);
-  };
+  console.log("rendered");
 
   return (
     <>
@@ -104,7 +117,7 @@ function App() {
                   }`}
                   key={id}
                   onClick={() => {
-                    selectedConfiguration != id && onExperimentClick(id);
+                    selectedConfiguration != id && onConfigurationClick(id);
                   }}
                 >
                   {configurationData.name}

@@ -14,7 +14,7 @@ export const useConfiguration = () => {
   const [settings, setSettings] = useState<Settings>({});
   const [loading, setLoading] = useState(true);
   const [configuration, setConfiguration] = useState<Configuration | undefined>(undefined);
-  const [configurationData, setConfigurationData] = useState<ConfigurationData | undefined>(undefined);
+  const [configurationData, setConfigurationData] = useState<ConfigurationData>();
 
   const load = useCallback(
     (configurationData: ConfigurationData) => {
@@ -40,12 +40,11 @@ export const useConfiguration = () => {
     debounce({ delay: 100 }, () => setLoading(false))();
   }, [configuration]);
 
-  // Update configuration on settings changed
   useEffect(() => {
     if (!configurationData) return;
 
     load(configurationData);
-  }, [configurationData, settings, load]);
+  }, [settings, configurationData, load]);
 
   return { loading, load, configuration, settings, setSettings };
 };

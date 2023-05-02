@@ -23,7 +23,7 @@ def main():
 def _prepare(outdir):
 
     # Configuration
-    output_path = f"{outdir}/index.html"
+    output_path = f"{outdir}"
 
     # Copying app to outdir
     shutil.copy(template_path, output_path)
@@ -32,7 +32,7 @@ def _prepare(outdir):
 def _hydrate(configurationData, outdir):
 
     # Configuration
-    file_path = f"{outdir}/index.html"
+    file_path = f"{outdir}"
     insertion_point = "<!-- NPF_CONFIG_INSERTION -->"
     js_snippet = f'\t<script type="text/javascript">window.addEventListener("APP_READY", () => window.updateConfiguration({json.dumps(configurationData)}))</script>'
 
