@@ -9,6 +9,8 @@ import {
   getSettingsGraphTitle,
   getSettingsGraphType,
   getSettingsParametersOptions,
+  getSettingsPlacement,
+  getSettingsPlacementOptions,
   getSettingsSplitAxis,
   getSettingsSplitParametersOptions,
 } from "../utils";
@@ -40,9 +42,11 @@ export const SettingsForm = (props: Props) => {
       split: {
         x: {
           format: getSettingsSplitAxis("x", settings, configuration.id)?.format ?? "{{parameter}}={{value}}",
+          placement: getSettingsPlacement("x", settings, configuration) ?? "before",
         },
         y: {
           format: getSettingsSplitAxis("y", settings, configuration.id)?.format ?? "{{parameter}}={{value}}",
+          placement: getSettingsPlacement("y", settings, configuration) ?? "after",
         },
       },
     },
@@ -192,6 +196,26 @@ export const SettingsForm = (props: Props) => {
             <label htmlFor="split.y.format">Format</label>
             <input className={styles.input} {...register("split.x.format")} id="x_format" type="text" />
           </div>
+          <div className={_clsx(styles.group)}>
+            <label htmlFor="split.x.placement">Placement</label>
+            <Controller
+              name="split.x.placement"
+              defaultValue={getSettingsPlacement("x", settings, configuration)}
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  value={
+                    getSettingsPlacementOptions("x").find((c) => c.value === value) ?? {
+                      label: "Top",
+                      value: "before",
+                    }
+                  }
+                  options={getSettingsPlacementOptions("x")}
+                  onChange={(val) => onChange((val ?? getSettingsPlacementOptions("x")[0]).value)}
+                />
+              )}
+            />
+          </div>
         </div>
         <div className={_clsx(styles.group)}>
           <span className={_clsx(styles.heading)}>Rows Split</span>
@@ -216,6 +240,26 @@ export const SettingsForm = (props: Props) => {
           <div className={_clsx(styles.group)}>
             <label htmlFor="split.y.format">Format</label>
             <input className={styles.input} {...register("split.y.format")} id="y_format" type="text" />
+          </div>
+          <div className={_clsx(styles.group)}>
+            <label htmlFor="split.y.placement">Placement</label>
+            <Controller
+              name="split.y.placement"
+              defaultValue={getSettingsPlacement("y", settings, configuration)}
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  value={
+                    getSettingsPlacementOptions("y").find((c) => c.value === value) ?? {
+                      label: "Right",
+                      value: "after",
+                    }
+                  }
+                  options={getSettingsPlacementOptions("y")}
+                  onChange={(val) => onChange((val ?? getSettingsPlacementOptions("y")[1]).value)}
+                />
+              )}
+            />
           </div>
         </div>
       </div>

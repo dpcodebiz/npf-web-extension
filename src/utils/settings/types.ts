@@ -19,6 +19,7 @@ export type AxisSplitSettings = {
   enable: boolean;
   parameter: string;
   format: string;
+  placement: "before" | "after";
 };
 
 export type AxisSettings = {

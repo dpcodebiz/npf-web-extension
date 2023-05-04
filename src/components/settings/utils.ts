@@ -146,3 +146,23 @@ export const getSettingsDefaultParametersOptions = (axis: Axis, settings: Settin
 
   return parametersOptions.find((option) => option.value === value);
 };
+
+export const getSettingsPlacementOptions = (axis: Axis) => {
+  return [
+    {
+      label: axis == "x" ? "Top" : "Left",
+      value: "before",
+    },
+    {
+      label: axis == "x" ? "Bottom" : "Right",
+      value: "after",
+    },
+  ];
+};
+
+export const getSettingsPlacement = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  const value = settings[configuration.id]?.split?.[axis].placement;
+  const default_value = axis == "x" ? "before" : "after";
+
+  return value ?? default_value;
+};
