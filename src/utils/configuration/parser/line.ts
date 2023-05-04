@@ -20,7 +20,7 @@ export const groupDataByParameters = (
  * @param results Raw pandas dataframe parsed from csv
  * @returns
  */
-function aggregateAllResults(parameters: string[], measurements: string[], results: ParsedConfigurationData[]) {
+export function aggregateAllResults(parameters: string[], measurements: string[], results: ParsedConfigurationData[]) {
   // Grouping all data by all params
   const grouped_data_by_all_params = groupDataByParameters(parameters, results);
 

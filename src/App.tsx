@@ -19,7 +19,12 @@ function App() {
   const { loading, load, configuration, settings, setSettings } = useConfiguration();
 
   // Configurations available
-  const [configurations, setConfigurations] = useState<{ [index: string]: ConfigurationData }>();
+  const [configurations, setConfigurations] = useState<{ [index: string]: ConfigurationData }>({
+    [CPU_ALGORITHM_DATA.id]: CPU_ALGORITHM_DATA,
+    [IPERF_DATA.id]: IPERF_DATA,
+    [MATH_DATA.id]: MATH_DATA,
+    [WORLD_POPULATION_DATA.id]: WORLD_POPULATION_DATA,
+  });
   const [selectedConfiguration, setSelectedConfiguration] = useState("");
 
   const onKeyDown = (ev: KeyboardEvent) => {

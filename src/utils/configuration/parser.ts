@@ -4,6 +4,7 @@ import { getRecommendedGraphType } from "./data_analyzer";
 import { getLineChartConfiguration } from "./parser/line";
 import { getConfigurationDataByParameters, getParametersWithValues } from "./utils";
 import { Settings } from "../settings/types";
+import { getPieChartConfiguration } from "./parser/doughnut";
 
 export type ParsedConfigurationData = { [index: string]: string };
 export type ExperimentData = { [index: string]: number };
@@ -58,6 +59,14 @@ export function resultsToConfiguration(
           ...getLineChartConfiguration(settings, configurationData, resultsByChangingParameter),
           split_parameters,
           metadata: { type: GRAPH_TYPES.BAR, recommended_type: recommended_graph_type },
+        });
+        break;
+      }
+      case GRAPH_TYPES.PIE: {
+        configuration.experiments.push({
+          ...getPieChartConfiguration(settings, configurationData, resultsByChangingParameter),
+          split_parameters,
+          metadata: { type: GRAPH_TYPES.PIE, recommended_type: recommended_graph_type },
         });
         break;
       }

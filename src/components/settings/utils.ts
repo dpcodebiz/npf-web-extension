@@ -19,6 +19,7 @@ export const getSettingsGraphOptions = () => {
       value: GRAPH_TYPES.LINE,
     },
     { value: GRAPH_TYPES.BAR, label: "Bar Chart" },
+    { value: GRAPH_TYPES.PIE, label: "Pie Chart" },
   ];
 };
 

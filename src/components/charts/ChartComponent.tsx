@@ -2,6 +2,7 @@ import { Configuration, Experiment, GRAPH_TYPES } from "../../utils/configuratio
 import { Settings } from "../../utils/settings/types";
 import { BarChart } from "./bar/BarChart";
 import { LineChart } from "./line/LineChart";
+import { PieChart } from "./pie/PieChart";
 type Props = {
   settings: Settings;
   configuration: Configuration;
@@ -27,6 +28,11 @@ export const ChartComponent = (props: Props) => {
       case GRAPH_TYPES.BAR: {
         return (
           <BarChart settings={settings} configuration={configuration} split={split} experiment={experiment}></BarChart>
+        );
+      }
+      case GRAPH_TYPES.PIE: {
+        return (
+          <PieChart settings={settings} configuration={configuration} split={split} experiment={experiment}></PieChart>
         );
       }
     }

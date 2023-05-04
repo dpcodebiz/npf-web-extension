@@ -43,6 +43,8 @@ export type SplitParameter = {
 export enum GRAPH_TYPES {
   LINE,
   BAR,
+  PIE,
+  DOUGHNUT,
 }
 
 export type Metadata = {
