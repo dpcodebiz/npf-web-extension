@@ -37,9 +37,6 @@ export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration:
   return value ?? default_value;
 };
 
-//@deprecated ?
-export const getSettingsSelectedGraphTypeOption = () => {};
-
 export const getSettingsGraphTitle = (settings: Settings, configuration: Configuration) => {
   const settings_title = settings[configuration.id]?.title;
 

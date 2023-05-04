@@ -10,7 +10,6 @@ import {
   getSettingsGraphType,
   getSettingsParametersOptions,
   getSettingsSplitAxis,
-  getSettingsSplitAxisFormat,
   getSettingsSplitParametersOptions,
 } from "../utils";
 import { useCallback, useEffect } from "react";
@@ -110,64 +109,65 @@ export const SettingsForm = (props: Props) => {
               )}
             />
           </div>
-          {getSettingsGraphType(settings, configuration) != GRAPH_TYPES.PIE && (
-            <>
-              <div className={_clsx(styles.group)}>
-                <span className={_clsx(styles.heading)}>X axis</span>
-                <div className={_clsx(styles.group)}>
-                  <label htmlFor="x.title">Label</label>
-                  <input className={styles.input} {...register("x.title")} id="x.title" type="text" />
-                </div>
-                <div className={_clsx(styles.group)}>
-                  <label htmlFor="x.parameter">Variable</label>
-                  <Controller
-                    name="x.parameter"
-                    defaultValue={getSettingsDefaultParametersOptions("x", settings, configuration)?.value}
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <Select
-                        value={
-                          parametersOptions.x.find((c) => c.value === value) ??
-                          getSettingsDefaultParametersOptions("x", settings, configuration)
-                        }
-                        options={parametersOptions.x}
-                        onChange={(val) => onChange((val ?? parametersOptions.x[0]).value)}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-              <div className={_clsx(styles.group)}>
-                <span className={_clsx(styles.heading)}>Y axis</span>
-                <div className={_clsx(styles.group)}>
-                  <label htmlFor="y.title">Label</label>
-                  <input className={styles.input} {...register("y.title")} id="y.title" type="text" />
-                </div>
-                <div className={_clsx(styles.group)}>
-                  <label htmlFor="y.parameter">Variable</label>
-                  <Controller
-                    name="y.parameter"
-                    defaultValue={getSettingsDefaultParametersOptions("y", settings, configuration)?.value}
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <Select
-                        value={
-                          parametersOptions.y.find((c) => c.value === value) ??
-                          getSettingsDefaultParametersOptions("y", settings, configuration)
-                        }
-                        options={parametersOptions.y}
-                        onChange={(val) => onChange((val ?? parametersOptions.y[0]).value)}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-            </>
-          )}
         </div>
         <SplitGraphsSettingsComponent setSettings={setSettings} settings={settings} configuration={configuration} />
       </div>
+
       <div className="grid grid-cols-2 gap-6">
+        {getSettingsGraphType(settings, configuration) != GRAPH_TYPES.PIE && (
+          <>
+            <div className={_clsx(styles.group)}>
+              <span className={_clsx(styles.heading)}>X axis</span>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="x.parameter">Variable</label>
+                <Controller
+                  name="x.parameter"
+                  defaultValue={getSettingsDefaultParametersOptions("x", settings, configuration)?.value}
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      value={
+                        parametersOptions.x.find((c) => c.value === value) ??
+                        getSettingsDefaultParametersOptions("x", settings, configuration)
+                      }
+                      options={parametersOptions.x}
+                      onChange={(val) => onChange((val ?? parametersOptions.x[0]).value)}
+                    />
+                  )}
+                />
+              </div>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="x.title">Label</label>
+                <input className={styles.input} {...register("x.title")} id="x.title" type="text" />
+              </div>
+            </div>
+            <div className={_clsx(styles.group)}>
+              <span className={_clsx(styles.heading)}>Y axis</span>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="y.parameter">Variable</label>
+                <Controller
+                  name="y.parameter"
+                  defaultValue={getSettingsDefaultParametersOptions("y", settings, configuration)?.value}
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      value={
+                        parametersOptions.y.find((c) => c.value === value) ??
+                        getSettingsDefaultParametersOptions("y", settings, configuration)
+                      }
+                      options={parametersOptions.y}
+                      onChange={(val) => onChange((val ?? parametersOptions.y[0]).value)}
+                    />
+                  )}
+                />
+              </div>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="y.title">Label</label>
+                <input className={styles.input} {...register("y.title")} id="y.title" type="text" />
+              </div>
+            </div>
+          </>
+        )}
         <div className={_clsx(styles.group)}>
           <span className={_clsx(styles.heading)}>Columns Split</span>
           <div className={_clsx(styles.group)}>
