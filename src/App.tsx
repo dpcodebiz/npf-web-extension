@@ -10,26 +10,18 @@ import { ConfigurationData } from "./utils/configuration/types";
 import { CPU_ALGORITHM_DATA } from "./utils/examples/cpu_algorithm";
 import { ChartPanelComponent } from "./components/charts/ChartPanelComponent";
 import { SettingsModal } from "./components/settings/SettingsModal";
-import { isArray } from "radash";
+import { isArray, isEqual } from "radash";
 
 function App() {
   // States
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const { loading, load, configuration, settings, setSettings } = useConfiguration();
+  const [keysHistory, setKeysHistory] = useState<string[]>([]);
 
   // Configurations available
-  const [configurations, setConfigurations] = useState<{ [index: string]: ConfigurationData }>({
-    [CPU_ALGORITHM_DATA.id]: CPU_ALGORITHM_DATA,
-    [IPERF_DATA.id]: IPERF_DATA,
-    [MATH_DATA.id]: MATH_DATA,
-    [WORLD_POPULATION_DATA.id]: WORLD_POPULATION_DATA,
-  });
+  const [configurations, setConfigurations] = useState<{ [index: string]: ConfigurationData }>();
   const [selectedConfiguration, setSelectedConfiguration] = useState("");
-
-  const onKeyDown = (ev: KeyboardEvent) => {
-    ev.key == "Escape" && setFullScreen(false);
-  };
 
   // Callbacks
   const updateConfiguration = useCallback(
@@ -65,12 +57,24 @@ function App() {
     [configurations, setSelectedConfiguration, load]
   );
 
+  const onKeyDown = useCallback(
+    (ev: KeyboardEvent) => {
+      const newHistory = [ev.key, ...keysHistory].slice(0, 4);
+      if (isEqual(newHistory, ["o", "m", "e", "d"])) {
+        setKeysHistory([]);
+        demo();
+      } else setKeysHistory([ev.key, ...keysHistory].slice(0, 4));
+      ev.key == "Escape" && setFullScreen(false);
+    },
+    [setKeysHistory, demo, keysHistory]
+  );
+
   // Mounting
   useEffect(() => {
     // Listening for escape key
-    document.addEventListener("keydown", onKeyDown);
+    !settingsModalOpen && document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [onKeyDown, settingsModalOpen]);
 
   // Mounting
   useEffect(() => {
