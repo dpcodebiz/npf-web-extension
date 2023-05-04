@@ -86,7 +86,7 @@ export const SettingsForm = (props: Props) => {
         )
       );
     },
-    [configuration, setSettings]
+    [configuration, setSettings, settings]
   );
 
   useEffect(() => {
