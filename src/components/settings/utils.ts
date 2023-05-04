@@ -75,7 +75,13 @@ export const getSettingsSplitAxisFormat = (
   const settingsFormat = settings[configuration.id]?.split?.[axis]?.format;
   const formatted_str =
     settingsFormat &&
-    `${settingsFormat.replace(/{{[ ]*parameter[ ]*}}/, parameter_name).replace(/{{[ ]*value[ ]*}}/, parameter_value)}`;
+    `${settingsFormat
+      .replaceAll(/{{[ ]*parameter[ ]*}}/g, parameter_name)
+      .replaceAll(/{{[ ]*p[ ]*}}/g, parameter_name)
+      .replaceAll(/{{[ ]*0[ ]*}}/g, parameter_name)
+      .replaceAll(/{{[ ]*value[ ]*}}/g, parameter_value)
+      .replaceAll(/{{[ ]*v[ ]*}}/g, parameter_value)
+      .replaceAll(/{{[ ]*1[ ]*}}/g, parameter_value)}`;
 
   return formatted_str || `${parameter_name}=${parameter_value}`;
 };
