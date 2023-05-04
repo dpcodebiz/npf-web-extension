@@ -96,7 +96,7 @@ export const SettingsForm = (props: Props) => {
 
   return (
     <form key={configuration.id} className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-row gap-4 divide-x-2">
+      <div className="flex flex-row gap-12">
         <div className={_clsx(styles.group)}>
           <span className={_clsx(styles.heading)}>General</span>
           <div className={_clsx(styles.group)}>
@@ -122,7 +122,7 @@ export const SettingsForm = (props: Props) => {
         <SplitGraphsSettingsComponent setSettings={setSettings} settings={settings} configuration={configuration} />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-12">
         {getSettingsGraphType(settings, configuration) != GRAPH_TYPES.PIE && (
           <>
             <div className={_clsx(styles.group)}>
