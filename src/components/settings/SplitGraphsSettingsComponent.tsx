@@ -10,14 +10,14 @@ export const SplitGraphsSettingsComponent = (props: SettingsProps) => {
   return (
     <div className="w-full h-full">
       <div className="p-4 flex flex-col h-full">
-        <span className="text-center block pb-4 text-xl font-semibold">
+        <span className="text-center block pb-4 text-lg xl:text-xl font-semibold">
           {getSettingsGraphTitle(settings, configuration)}
         </span>
         <ChartSplitterComponent configuration={configuration} settings={settings}>
           {configuration.experiments.map((_, index) => (
             <Fragment key={index}>
               <div>
-                <div className="p-4 m-2 bg-gray-100 h-full">
+                <div className="xl:p-4 m-2 bg-gray-100 h-full">
                   <div className="py-2 w-full h-full"></div>
                 </div>
               </div>

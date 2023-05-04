@@ -23,13 +23,13 @@ export const ChartPanelComponent = (props: Props) => {
         <div className="w-full bg-gray-200 rounded-xl animate-pulse"></div>
       ) : (
         <>
-          <span className="text-5xl font-semibold block text-center pb-12">
+          <span className="text-3xl xl:text-5xl font-semibold block text-center pb-12">
             {getSettingsGraphTitle(settings, configuration)}
           </span>
           <ChartSplitterComponent configuration={configuration} settings={settings}>
             {configuration.experiments.map((experiment, index) => (
               <div key={index}>
-                <div className="p-4">
+                <div className="p-2 xl:p-4">
                   <ChartComponent settings={settings} configuration={configuration} experiment={experiment} />
                 </div>
               </div>

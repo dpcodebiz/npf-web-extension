@@ -5,8 +5,8 @@ export const SettingsComponent = (props: SettingsProps) => {
   const { setSettings, configuration, settings } = props;
 
   return (
-    <div className="bg-white rounded-xl min-w-[1200px]">
-      <div className="flex flex-col gap-4 p-4">
+    <div className="bg-white rounded-xl xl:min-w-[1200px]">
+      <div className="flex flex-col gap-2 xl:gap-4 p-4">
         <span className="text-2xl">Settings</span>
         <span>
           The recommended graph type for this data is:

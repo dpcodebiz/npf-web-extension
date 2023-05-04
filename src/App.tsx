@@ -114,14 +114,14 @@ function App() {
         />
       )}
       <WebsiteLoader loading={loading && !configuration} />
-      <div className="bg-gray-100 w-screen h-screen flex flex-row">
-        <div className="bg-white w-[400px] p-6 space-y-6">
-          <div className="font-bold text-xl">Network Performance Framework</div>
+      <div className="bg-gray-100 min-w-[100vw] w-max h-screen flex flex-row">
+        <div className="bg-white w-[300px] xlw-[400px] p-6 space-y-6">
+          <div className="font-bold text-lg xl:text-xl">Network Performance Framework</div>
           <div className="space-y-2 flex flex-col">
             {configurations &&
               Object.entries(configurations).map(([id, configurationData]) => (
                 <button
-                  className={`p-4 text-lg text-left rounded transition-all duration-200 ${
+                  className={`p-4 xl:text-lg text-left rounded transition-all duration-200 ${
                     selectedConfiguration == id ? "bg-uclouvain-1 text-white" : "hover:bg-gray-200"
                   }`}
                   key={id}
@@ -137,8 +137,8 @@ function App() {
         {!loading && configuration && fullScreen && (
           <ChartPanelComponent fullScreen={true} settings={settings} configuration={configuration} />
         )}
-        <div className="p-6 w-full space-y-6 grid" style={{ gridTemplateRows: "min-content repeat(1, 1fr)" }}>
-          <div className="ml-auto w-max px-4 space-x-4">
+        <div className="p-6 w-full space-y-6 grid pt-12" style={{ gridTemplateRows: "min-content repeat(1, 1fr)" }}>
+          <div className="w-max px-4 space-x-4 fixed top-4 right-4">
             <button
               onClick={() => setSettingsModalOpen(!settingsModalOpen)}
               className="bg-uclouvain-1 text-white px-4 py-2 rounded"

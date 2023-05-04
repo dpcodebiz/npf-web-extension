@@ -23,7 +23,7 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
   return (
     <div
       className={_clsx(
-        "grid gap-4",
+        "grid gap-2 xl:gap-4",
         styles["grid-" + split_cols + (split_rows > 0 ? (split_y_placement == "after" ? "-r" : "-l") : "")]
       )}
     >
