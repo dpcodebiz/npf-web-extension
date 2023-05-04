@@ -62,24 +62,29 @@ export const SettingsForm = (props: Props) => {
 
   const onSubmit = useCallback(
     (data: FormData) => {
-      setSettings({
-        [configuration.id]: {
-          title: data.title,
-          type: data.type,
-          x: data.x,
-          y: data.y,
-          split: {
-            x: {
-              ...data.split.x,
-              enable: data.split.x.parameter != "undefined", // TODO find a better way for this because quid if parameter name is "undefined"?
+      setSettings(
+        Object.assign(
+          { ...settings },
+          {
+            [configuration.id]: {
+              title: data.title,
+              type: data.type,
+              x: data.x,
+              y: data.y,
+              split: {
+                x: {
+                  ...data.split.x,
+                  enable: data.split.x.parameter != "undefined", // TODO find a better way for this because quid if parameter name is "undefined"?
+                },
+                y: {
+                  ...data.split.y,
+                  enable: data.split.y.parameter != "undefined",
+                },
+              },
             },
-            y: {
-              ...data.split.y,
-              enable: data.split.y.parameter != "undefined",
-            },
-          },
-        },
-      });
+          }
+        )
+      );
     },
     [configuration, setSettings]
   );

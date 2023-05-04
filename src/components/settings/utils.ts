@@ -166,3 +166,11 @@ export const getSettingsPlacement = (axis: Axis, settings: Settings, configurati
 
   return value ?? default_value;
 };
+
+export const saveSettings = (settings: Settings) => {
+  localStorage.setItem("settings", JSON.stringify(settings));
+};
+
+export const loadSettings = () => {
+  return JSON.parse(localStorage.getItem("settings") ?? "{}") as Settings;
+};
