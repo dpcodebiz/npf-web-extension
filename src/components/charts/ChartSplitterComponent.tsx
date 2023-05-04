@@ -20,8 +20,6 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
   const split_x_placement = getSettingsPlacement("x", settings, configuration);
   const split_y_placement = getSettingsPlacement("y", settings, configuration);
 
-  console.log("grid-" + split_cols + (split_rows > 0 ? (split_y_placement == "after" ? "-r" : "-l") : ""));
-
   return (
     <div
       className={_clsx(
