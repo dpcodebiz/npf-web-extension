@@ -1,2 +1,4 @@
 * [Home](/)
-* [Quickstart](quickstart/index.md)
+* [Quickstart](quickstart.md)
+* [Settings](settings.md)
+* [Python Package](python.md)
