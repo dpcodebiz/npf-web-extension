@@ -13,6 +13,11 @@ export const groupDataByParameters = (
   return group(configurationData, (data) => joinParams(parameters, data));
 };
 
+export const sumDataAggregation = (data: { [index: string]: string }[], measurement: string) => {
+  const sum = data.reduce((acc, currentValue) => acc + parseFloat(currentValue[measurement]), 0) ?? 0;
+  return sum / data.length;
+};
+
 /**
  * Groups all data by all common parameters and then aggregates all the results (computes average value)
  * @param parameters Parameters of the configuration
@@ -20,7 +25,12 @@ export const groupDataByParameters = (
  * @param results Raw pandas dataframe parsed from csv
  * @returns
  */
-export function aggregateAllResults(parameters: string[], measurements: string[], results: ParsedConfigurationData[]) {
+export function aggregateAllResults(
+  parameters: string[],
+  measurements: string[],
+  results: ParsedConfigurationData[],
+  aggregation: (data: any, measurement: string) => any
+) {
   // Grouping all data by all params
   const grouped_data_by_all_params = groupDataByParameters(parameters, results);
 
@@ -33,8 +43,7 @@ export function aggregateAllResults(parameters: string[], measurements: string[]
       (measurement) => {
         if (!data) return 0;
 
-        const sum = data.reduce((acc, currentValue) => acc + parseFloat(currentValue[measurement]), 0) ?? 0;
-        return sum / data.length;
+        return aggregation(data, measurement);
       }
     );
 
@@ -95,7 +104,7 @@ export const getLineChartConfiguration = (
   const main_param = getParameter("x", settings, configurationData);
 
   // Aggregating all results
-  const aggregated_data = aggregateAllResults(parameters, measurements, results);
+  const aggregated_data = aggregateAllResults(parameters, measurements, results, sumDataAggregation);
 
   // Now, we unfold all the data
   const unfolded_data = unfoldAggregatedData(aggregated_data);

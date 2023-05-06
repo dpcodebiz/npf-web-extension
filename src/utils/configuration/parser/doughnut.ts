@@ -4,7 +4,7 @@ import { Settings } from "../../settings/types";
 import { ParsedConfigurationData } from "../parser";
 import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
 import { splitParams } from "../utils";
-import { aggregateAllResults, groupDataByParameters, unfoldAggregatedData } from "./line";
+import { aggregateAllResults, groupDataByParameters, sumDataAggregation, unfoldAggregatedData } from "./line";
 
 function getRunsFromGroupedDataPie(summed_results: Partial<Record<string, any>>) {
   const runs: ParameterizedRun[] = [];
@@ -33,7 +33,7 @@ export const getPieChartConfiguration = (
   const main_param = getParameter("x", settings, configurationData);
 
   // Aggregating all results
-  const aggregated_data = aggregateAllResults(parameters, measurements, results);
+  const aggregated_data = aggregateAllResults(parameters, measurements, results, sumDataAggregation);
 
   // Now, we unfold all the data
   const unfolded_data = unfoldAggregatedData(aggregated_data);

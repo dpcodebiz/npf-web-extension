@@ -3,36 +3,10 @@ import { getParameter } from "../../../components/settings/utils";
 import { Settings } from "../../settings/types";
 import { ParsedConfigurationData } from "../parser";
 import { ConfigurationData, Experiment, GRAPH_TYPES } from "../types";
-import { getRunsFromGroupedData, groupDataByParameters, unfoldAggregatedData } from "./line";
+import { aggregateAllResults, getRunsFromGroupedData, groupDataByParameters, unfoldAggregatedData } from "./line";
 
-/**
- * Groups all data by all common parameters and then aggregates all the results (concatenates all results into a single array)
- * @param parameters Parameters of the configuration
- * @param measurements Measurements of the configuration
- * @param results Raw pandas dataframe parsed from csv
- * @returns
- */
-function aggregateAllResults(parameters: string[], measurements: string[], results: ParsedConfigurationData[]) {
-  // Grouping all data by all params
-  const grouped_data_by_all_params = groupDataByParameters(parameters, results);
-
-  // Retrieving all values
-  const aggregated_data = mapValues(grouped_data_by_all_params, (data) => {
-    // Aggregating for each measurement
-    const measurements_aggregated = objectify(
-      measurements,
-      (measurement) => measurement,
-      (measurement) => {
-        if (!data) return 0;
-        return data.reduce((acc, currentValue) => acc.concat([parseFloat(currentValue[measurement])]), []);
-      }
-    );
-
-    return measurements_aggregated;
-  });
-
-  return aggregated_data;
-}
+const mergeValuesAggregation = (data: { [index: string]: string }[], measurement: string) =>
+  data.reduce((acc, currentValue) => acc.concat([parseFloat(currentValue[measurement])]), [] as number[]);
 
 export const getBoxPlotChartConfiguration = (
   settings: Settings,
@@ -45,7 +19,7 @@ export const getBoxPlotChartConfiguration = (
   const main_param = getParameter("x", settings, configurationData);
 
   // Aggregating all results
-  const aggregated_data = aggregateAllResults(parameters, measurements, results);
+  const aggregated_data = aggregateAllResults(parameters, measurements, results, mergeValuesAggregation);
 
   console.log(aggregated_data);
 
