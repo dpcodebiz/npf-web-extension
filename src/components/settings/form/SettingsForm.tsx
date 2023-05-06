@@ -62,6 +62,7 @@ export const SettingsForm = (props: Props) => {
     y: getSettingsParametersOptions("y", settings, configuration),
   };
   const graph_type = getSettingsGraphType(settings, configuration);
+  const nbParameters = Object.keys(configuration.parameters).length;
 
   const onSubmit = useCallback(
     (data: FormData) => {
@@ -189,96 +190,100 @@ export const SettingsForm = (props: Props) => {
             </div>
           </>
         )}
-        <div className={_clsx(styles.group)}>
-          <span className={_clsx(styles.heading)}>Columns Split</span>
-          <div className={_clsx(styles.group)}>
-            <label htmlFor="split.x.parameter">Variable</label>
-            <Controller
-              name="split.x.parameter"
-              defaultValue={getSettingsDefaultSplitParametersOptions("x", settings, configuration)?.value}
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  value={
-                    splitParametersOptions.x.find((c) => c.value === value) ??
-                    getSettingsDefaultSplitParametersOptions("x", settings, configuration)
-                  }
-                  options={splitParametersOptions.x}
-                  onChange={(val) => onChange((val ?? splitParametersOptions.x[0]).value)}
+        {nbParameters > 2 && (
+          <>
+            <div className={_clsx(styles.group)}>
+              <span className={_clsx(styles.heading)}>Columns Split</span>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="split.x.parameter">Variable</label>
+                <Controller
+                  name="split.x.parameter"
+                  defaultValue={getSettingsDefaultSplitParametersOptions("x", settings, configuration)?.value}
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      value={
+                        splitParametersOptions.x.find((c) => c.value === value) ??
+                        getSettingsDefaultSplitParametersOptions("x", settings, configuration)
+                      }
+                      options={splitParametersOptions.x}
+                      onChange={(val) => onChange((val ?? splitParametersOptions.x[0]).value)}
+                    />
+                  )}
                 />
-              )}
-            />
-          </div>
-          <div className={_clsx(styles.group)}>
-            <label htmlFor="split.y.format">Format</label>
-            <input className={styles.input} {...register("split.x.format")} id="x_format" type="text" />
-          </div>
-          <div className={_clsx(styles.group)}>
-            <label htmlFor="split.x.placement">Placement</label>
-            <Controller
-              name="split.x.placement"
-              defaultValue={getSettingsPlacement("x", settings, configuration)}
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  value={
-                    getSettingsPlacementOptions("x").find((c) => c.value === value) ?? {
-                      label: "Top",
-                      value: "before",
-                    }
-                  }
-                  options={getSettingsPlacementOptions("x")}
-                  onChange={(val) => onChange((val ?? getSettingsPlacementOptions("x")[0]).value)}
+              </div>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="split.y.format">Format</label>
+                <input className={styles.input} {...register("split.x.format")} id="x_format" type="text" />
+              </div>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="split.x.placement">Placement</label>
+                <Controller
+                  name="split.x.placement"
+                  defaultValue={getSettingsPlacement("x", settings, configuration)}
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      value={
+                        getSettingsPlacementOptions("x").find((c) => c.value === value) ?? {
+                          label: "Top",
+                          value: "before",
+                        }
+                      }
+                      options={getSettingsPlacementOptions("x")}
+                      onChange={(val) => onChange((val ?? getSettingsPlacementOptions("x")[0]).value)}
+                    />
+                  )}
                 />
-              )}
-            />
-          </div>
-        </div>
-        <div className={_clsx(styles.group)}>
-          <span className={_clsx(styles.heading)}>Rows Split</span>
-          <div className={_clsx(styles.group)}>
-            <label htmlFor="split.y.parameter">Variable</label>
-            <Controller
-              name="split.y.parameter"
-              defaultValue={getSettingsDefaultSplitParametersOptions("y", settings, configuration)?.value}
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  value={
-                    splitParametersOptions.y.find((c) => c.value === value) ??
-                    getSettingsDefaultSplitParametersOptions("y", settings, configuration)
-                  }
-                  options={splitParametersOptions.y}
-                  onChange={(val) => onChange((val ?? splitParametersOptions.y[0]).value)}
+              </div>
+            </div>
+            <div className={_clsx(styles.group)}>
+              <span className={_clsx(styles.heading)}>Rows Split</span>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="split.y.parameter">Variable</label>
+                <Controller
+                  name="split.y.parameter"
+                  defaultValue={getSettingsDefaultSplitParametersOptions("y", settings, configuration)?.value}
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      value={
+                        splitParametersOptions.y.find((c) => c.value === value) ??
+                        getSettingsDefaultSplitParametersOptions("y", settings, configuration)
+                      }
+                      options={splitParametersOptions.y}
+                      onChange={(val) => onChange((val ?? splitParametersOptions.y[0]).value)}
+                    />
+                  )}
                 />
-              )}
-            />
-          </div>
-          <div className={_clsx(styles.group)}>
-            <label htmlFor="split.y.format">Format</label>
-            <input className={styles.input} {...register("split.y.format")} id="y_format" type="text" />
-          </div>
-          <div className={_clsx(styles.group)}>
-            <label htmlFor="split.y.placement">Placement</label>
-            <Controller
-              name="split.y.placement"
-              defaultValue={getSettingsPlacement("y", settings, configuration)}
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  value={
-                    getSettingsPlacementOptions("y").find((c) => c.value === value) ?? {
-                      label: "Right",
-                      value: "after",
-                    }
-                  }
-                  options={getSettingsPlacementOptions("y")}
-                  onChange={(val) => onChange((val ?? getSettingsPlacementOptions("y")[1]).value)}
+              </div>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="split.y.format">Format</label>
+                <input className={styles.input} {...register("split.y.format")} id="y_format" type="text" />
+              </div>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="split.y.placement">Placement</label>
+                <Controller
+                  name="split.y.placement"
+                  defaultValue={getSettingsPlacement("y", settings, configuration)}
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      value={
+                        getSettingsPlacementOptions("y").find((c) => c.value === value) ?? {
+                          label: "Right",
+                          value: "after",
+                        }
+                      }
+                      options={getSettingsPlacementOptions("y")}
+                      onChange={(val) => onChange((val ?? getSettingsPlacementOptions("y")[1]).value)}
+                    />
+                  )}
                 />
-              )}
-            />
-          </div>
-        </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </form>
   );
