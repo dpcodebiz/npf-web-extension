@@ -6,15 +6,35 @@ import { getConfigurationDataByParameters, getParametersWithValues } from "./uti
 import { Settings } from "../settings/types";
 import { getPieChartConfiguration } from "./parser/doughnut";
 import { getBoxPlotChartConfiguration } from "./parser/boxplot";
+import { isEmpty } from "radash";
 
 export type ParsedConfigurationData = { [index: string]: string };
 export type ExperimentData = { [index: string]: number };
 
+/**
+ * Returns a Configuration based on a specified configuration data,
+ * parsed results and settings. This is the most important method of the app
+ * as it returns the data structure used by the rendering component.
+ * @param configurationData
+ * @param results
+ * @param settings
+ * @returns
+ */
 export function resultsToConfiguration(
   configurationData: ConfigurationData,
   results: ParseResult<ParsedConfigurationData>,
   settings: Settings
 ): Configuration {
+  if (isEmpty(results.data))
+    return {
+      id: configurationData.id,
+      parameters: {},
+      name: configurationData.name,
+      split: {},
+      experiments: [],
+      measurements: configurationData.measurements,
+    };
+
   // TODO remove main param?
   const parametersWithValues = getParametersWithValues(configurationData.parameters, results.data);
   const configurationDataByParameters = getConfigurationDataByParameters(configurationData, results.data, settings);
