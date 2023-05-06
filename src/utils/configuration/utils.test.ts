@@ -1,4 +1,3 @@
-import { CPU_ALGORITHM_DATA } from "../examples/cpu_algorithm";
 import { Settings } from "../settings/types";
 import { ParsedConfigurationData } from "./parser";
 import { ConfigurationData, Experiment, GRAPH_TYPES } from "./types";
