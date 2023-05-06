@@ -86,7 +86,6 @@ function App() {
 
     // Dispatching event
     if (!configurations) {
-      console.log("dispa");
       window.dispatchEvent(new Event(Events.APP_READY));
     }
   }, [updateConfiguration, demo, configurations]);
@@ -100,7 +99,7 @@ function App() {
     load(configurations[Object.keys(configurations)[0]]);
   }, [configurations, load, selectedConfiguration]);
 
-  console.log("rendered");
+  // console.log("rendered");
 
   return (
     <>

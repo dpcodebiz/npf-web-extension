@@ -21,8 +21,6 @@ export const getBoxPlotChartConfiguration = (
   // Aggregating all results
   const aggregated_data = aggregateAllResults(parameters, measurements, results, mergeValuesAggregation);
 
-  console.log(aggregated_data);
-
   // Now, we unfold all the data
   const unfolded_data = unfoldAggregatedData(aggregated_data);
 

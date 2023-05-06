@@ -95,7 +95,6 @@ const runToBoxPlotDataset = (run: ParameterizedRun, experiment: Experiment, inde
   return {
     label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", "\n"),
     data: (Object.values(Object.values(run.results)[0]) as unknown as number[][]).map((values) => {
-      console.log(values, getStatsFromValues(values));
       return getStatsFromValues(values);
     }),
     backgroundColor: COLORS.LINE_CHART[index],
