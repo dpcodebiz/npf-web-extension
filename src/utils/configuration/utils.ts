@@ -202,7 +202,5 @@ export const getConfigurationDataByParameters = (
     });
   }
 
-  console.log(parsedConfigurationData, splitParsedConfigurationData);
-
   return splitParsedConfigurationData;
 };
