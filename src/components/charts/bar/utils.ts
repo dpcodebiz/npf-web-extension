@@ -86,10 +86,10 @@ export const barChartOptions = (settings: Settings, configuration: Configuration
       y: barChartAxisStyles(settings, configuration, "y"),
     },
   } as _DeepPartialObject<
-    CoreChartOptions<"bar"> &
-      ElementChartOptions<"bar"> &
-      PluginChartOptions<"bar"> &
-      DatasetChartOptions<"bar"> &
-      ScaleChartOptions<"bar"> &
+    CoreChartOptions<"bar" | "barWithErrorBars"> &
+      ElementChartOptions<"bar" | "barWithErrorBars"> &
+      PluginChartOptions<"bar" | "barWithErrorBars"> &
+      DatasetChartOptions<"bar" | "barWithErrorBars"> &
+      ScaleChartOptions<"bar" | "barWithErrorBars"> &
       BarControllerChartOptions
   >);

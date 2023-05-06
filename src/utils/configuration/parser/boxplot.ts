@@ -3,10 +3,13 @@ import { getParameter } from "../../../components/settings/utils";
 import { Settings } from "../../settings/types";
 import { ParsedConfigurationData } from "../parser";
 import { ConfigurationData, Experiment, GRAPH_TYPES } from "../types";
-import { aggregateAllResults, getRunsFromGroupedData, groupDataByParameters, unfoldAggregatedData } from "./line";
-
-const mergeValuesAggregation = (data: { [index: string]: string }[], measurement: string) =>
-  data.reduce((acc, currentValue) => acc.concat([parseFloat(currentValue[measurement])]), [] as number[]);
+import {
+  aggregateAllResults,
+  getRunsFromGroupedData,
+  groupDataByParameters,
+  mergeValuesAggregation,
+  unfoldAggregatedData,
+} from "./line";
 
 export const getBoxPlotChartConfiguration = (
   settings: Settings,

@@ -13,6 +13,9 @@ export const groupDataByParameters = (
   return group(configurationData, (data) => joinParams(parameters, data));
 };
 
+export const mergeValuesAggregation = (data: { [index: string]: string }[], measurement: string) =>
+  data.reduce((acc, currentValue) => acc.concat([parseFloat(currentValue[measurement])]), [] as number[]);
+
 export const sumDataAggregation = (data: { [index: string]: string }[], measurement: string) => {
   const sum = data.reduce((acc, currentValue) => acc + parseFloat(currentValue[measurement]), 0) ?? 0;
   return sum / data.length;
@@ -104,7 +107,7 @@ export const getLineChartConfiguration = (
   const main_param = getParameter("x", settings, configurationData);
 
   // Aggregating all results
-  const aggregated_data = aggregateAllResults(parameters, measurements, results, sumDataAggregation);
+  const aggregated_data = aggregateAllResults(parameters, measurements, results, mergeValuesAggregation);
 
   // Now, we unfold all the data
   const unfolded_data = unfoldAggregatedData(aggregated_data);

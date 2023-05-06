@@ -168,6 +168,10 @@ export const getSettingsPlacement = (axis: Axis, settings: Settings, configurati
   return value ?? default_value;
 };
 
+export const getSettingsErrorBars = (settings: Settings, configuration: Configuration) => {
+  return settings[configuration.id]?.error_bars ?? false;
+};
+
 export const saveSettings = (settings: Settings) => {
   localStorage.setItem("settings", JSON.stringify(settings));
 };

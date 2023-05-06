@@ -8,6 +8,14 @@
   .group {
     @apply xl:gap-2;
   }
+
+  &.checkbox {
+    @apply flex flex-row;
+
+    input {
+      @apply ml-auto align-middle;
+    }
+  }
 }
 
 .input {

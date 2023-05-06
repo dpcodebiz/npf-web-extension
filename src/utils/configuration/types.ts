@@ -66,5 +66,5 @@ export type ParameterizedResults = {
 };
 
 export type Results = {
-  [index: string]: number;
+  [index: string]: number[];
 };

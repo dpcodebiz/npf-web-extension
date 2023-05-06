@@ -5,6 +5,7 @@ import {
   getGraphAxisTitle,
   getSettingsDefaultParametersOptions,
   getSettingsDefaultSplitParametersOptions,
+  getSettingsErrorBars,
   getSettingsGraphOptions,
   getSettingsGraphTitle,
   getSettingsGraphType,
@@ -49,6 +50,7 @@ export const SettingsForm = (props: Props) => {
           placement: getSettingsPlacement("y", settings, configuration) ?? "after",
         },
       },
+      error_bars: getSettingsErrorBars(settings, configuration),
     },
   });
   const splitParametersOptions = {
@@ -59,6 +61,7 @@ export const SettingsForm = (props: Props) => {
     x: getSettingsParametersOptions("x", settings, configuration),
     y: getSettingsParametersOptions("y", settings, configuration),
   };
+  const graph_type = getSettingsGraphType(settings, configuration);
 
   const onSubmit = useCallback(
     (data: FormData) => {
@@ -81,6 +84,7 @@ export const SettingsForm = (props: Props) => {
                   enable: data.split.y.parameter != "undefined",
                 },
               },
+              error_bars: data.error_bars,
             },
           }
         )
@@ -118,6 +122,14 @@ export const SettingsForm = (props: Props) => {
               )}
             />
           </div>
+          {(graph_type == GRAPH_TYPES.LINE || graph_type == GRAPH_TYPES.BAR) && (
+            <div className={_clsx(styles.group, styles.checkbox)}>
+              <label className="w-max" htmlFor="error_bars">
+                Error bars
+              </label>
+              <input {...register("error_bars")} id="error_bars" type="checkbox" />
+            </div>
+          )}
         </div>
         <SplitGraphsSettingsComponent setSettings={setSettings} settings={settings} configuration={configuration} />
       </div>

@@ -13,6 +13,7 @@ export type ConfigurationSettings = {
     y: AxisSplitSettings;
   };
   type: GRAPH_TYPES;
+  error_bars: boolean;
 };
 
 export type AxisSplitSettings = {
