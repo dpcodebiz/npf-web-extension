@@ -34,6 +34,7 @@
     "build": "craco build",
     "deploy": "npm run build && npx gulp && npx copy-files-from-to",
     "test": "react-scripts test",
+    "coverage": "react-scripts test --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

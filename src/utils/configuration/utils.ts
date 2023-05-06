@@ -32,9 +32,20 @@ export const splitParams = (joined_params: string) => {
   return separated;
 };
 
+/**
+ * Returns the name of each split parameter
+ * @param experiment
+ * @returns
+ */
 export const getExperimentSplitParametersNames = (experiment: Experiment) =>
   Object.values(experiment.split_parameters ?? {}).map((split_parameter) => split_parameter.name);
 
+/**
+ * Returns the split parameters for each axis (columns/rows)
+ * along with their values
+ * @param experiments
+ * @returns
+ */
 export const getSplitParameters = (experiments: Experiment[]) => ({
   x: experiments[0].split_parameters?.x?.values.map((value) => ({
     name: experiments[0].split_parameters?.x?.name,
@@ -74,23 +85,17 @@ const getParametersValues = (dataGroupedByParameters: ReturnType<typeof groupDat
  * Returns all parameters along with their possible values found inside the data
  * @param parameters Acts as a filter for the parameters returned
  * @param parsedConfigurationData
- * @param changing If true, will return only parameters where the values change
  * @returns
  */
-export const getParametersWithValues = (
-  parameters: string[],
-  parsedConfigurationData: ParsedConfigurationData[],
-  changing = false
-) => {
+export const getParametersWithValues = (parameters: string[], parsedConfigurationData: ParsedConfigurationData[]) => {
   const dataGrouped = groupDataByParameters(parameters, parsedConfigurationData);
   const valuesForEachParameter = getParametersValues(dataGrouped);
-  const changingParameters = shake(valuesForEachParameter, (values) => values.length < 2);
 
-  return changing ? changingParameters : valuesForEachParameter;
+  return valuesForEachParameter;
 };
 
 /**
- * Returns subsets of ParsedConfigurationData[] where each subset is has a specific combination of parameters values.
+ * Returns subsets of ParsedConfigurationData[] where each subset has a specific combination of parameters values.
  * @param parameters
  * @param parsedConfigurationData
  * @returns
@@ -196,6 +201,8 @@ export const getConfigurationDataByParameters = (
       data: parsedConfigurationData,
     });
   }
+
+  console.log(parsedConfigurationData, splitParsedConfigurationData);
 
   return splitParsedConfigurationData;
 };
