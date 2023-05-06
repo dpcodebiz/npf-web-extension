@@ -1,6 +1,7 @@
 import { ChartDataset } from "chart.js";
 import { Experiment, GRAPH_TYPES, ParameterizedRun } from "./configuration/types";
 import { getExperimentSplitParametersNames, joinParams } from "./configuration/utils";
+import { iqr, maxArray, mean, median, minArray } from "@basementuniverse/stats";
 
 /**
  * @param experiment
@@ -72,6 +73,37 @@ const runToPieDataset = (experiment: Experiment) => {
 };
 
 /**
+ * Returns a chart dataset for a given run
+ * @param run
+ * @returns
+ */
+const runToBoxPlotDataset = (run: ParameterizedRun, experiment: Experiment, index: number) => {
+  const splitParameters = getExperimentSplitParametersNames(experiment);
+  const parametersWithoutSplitParameters = Object.keys(run.parameters).filter(
+    (parameter) => !splitParameters.includes(parameter)
+  );
+
+  const getStatsFromValues = (values: number[]) => ({
+    min: minArray(values),
+    max: maxArray(values),
+    mean: mean(values),
+    median: median(values),
+    items: values,
+    ...iqr(values),
+  });
+
+  return {
+    label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", "\n"),
+    data: (Object.values(Object.values(run.results)[0]) as unknown as number[][]).map((values) => {
+      console.log(values, getStatsFromValues(values));
+      return getStatsFromValues(values);
+    }),
+    backgroundColor: COLORS.LINE_CHART[index],
+    borderColor: COLORS.LINE_CHART[index],
+  };
+};
+
+/**
  *
  * @param experiment
  * @returns Datasets for the chart
@@ -82,6 +114,8 @@ export const getDatasets = (experiment: Experiment, type: GRAPH_TYPES = GRAPH_TY
   switch (type) {
     case GRAPH_TYPES.BAR:
     case GRAPH_TYPES.LINE: {
+      // TODO remove this because this is related to multiple results
+      // (measurements and it instead show only one result and the user should actually prepare the data correctly)
       return Object.keys(experiment.runs[0].results).length > 1
         ? Object.entries(experiment.runs[0].results).map(
             ([key, values], index) =>
@@ -96,6 +130,9 @@ export const getDatasets = (experiment: Experiment, type: GRAPH_TYPES = GRAPH_TY
     }
     case GRAPH_TYPES.PIE: {
       return runToPieDataset(experiment);
+    }
+    case GRAPH_TYPES.BOXPLOT: {
+      return experiment.runs.map((run, index) => runToBoxPlotDataset(run, experiment, index));
     }
   }
 };

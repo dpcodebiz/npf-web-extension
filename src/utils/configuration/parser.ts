@@ -5,6 +5,7 @@ import { getLineChartConfiguration } from "./parser/line";
 import { getConfigurationDataByParameters, getParametersWithValues } from "./utils";
 import { Settings } from "../settings/types";
 import { getPieChartConfiguration } from "./parser/doughnut";
+import { getBoxPlotChartConfiguration } from "./parser/boxplot";
 
 export type ParsedConfigurationData = { [index: string]: string };
 export type ExperimentData = { [index: string]: number };
@@ -67,6 +68,14 @@ export function resultsToConfiguration(
           ...getPieChartConfiguration(settings, configurationData, resultsByChangingParameter),
           split_parameters,
           metadata: { type: GRAPH_TYPES.PIE, recommended_type: recommended_graph_type },
+        });
+        break;
+      }
+      case GRAPH_TYPES.BOXPLOT: {
+        configuration.experiments.push({
+          ...getBoxPlotChartConfiguration(settings, configurationData, resultsByChangingParameter),
+          split_parameters,
+          metadata: { type: GRAPH_TYPES.BOXPLOT, recommended_type: recommended_graph_type },
         });
         break;
       }

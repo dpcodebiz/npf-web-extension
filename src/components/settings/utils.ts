@@ -20,6 +20,7 @@ export const getSettingsGraphOptions = () => {
     },
     { value: GRAPH_TYPES.BAR, label: "Bar Chart" },
     { value: GRAPH_TYPES.PIE, label: "Pie Chart" },
+    { value: GRAPH_TYPES.BOXPLOT, label: "Boxplot Chart" },
   ];
 };
 

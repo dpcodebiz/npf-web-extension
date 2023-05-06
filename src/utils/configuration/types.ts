@@ -44,6 +44,7 @@ export enum GRAPH_TYPES {
   LINE,
   BAR,
   PIE,
+  BOXPLOT,
 }
 
 export type Metadata = {

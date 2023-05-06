@@ -44,7 +44,7 @@ export function aggregateAllResults(parameters: string[], measurements: string[]
   return aggregated_data;
 }
 
-function getRunsFromGroupedData(
+export function getRunsFromGroupedData(
   main_param: string,
   measurements: string[],
   grouped_data_by_params: ReturnType<typeof groupDataByParameters>
