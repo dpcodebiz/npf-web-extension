@@ -2,7 +2,7 @@ import { ConfigurationData } from "../configuration/types";
 
 export const WORLD_POPULATION_DATA: ConfigurationData = {
   id: "735ccdf3-c77c-4558-baa3-99495082b77e",
-  name: "Example dataset with world population",
+  name: "World population",
   parameters: ["Age", "Gender"],
   measurements: ["Population"],
   data: `Age,Gender,Population

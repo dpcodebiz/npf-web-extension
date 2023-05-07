@@ -2,7 +2,7 @@ import { ConfigurationData } from "../configuration/types";
 
 export const IPERF_DATA: ConfigurationData = {
   id: "823dfb17-6b46-4c97-b081-bf4f76c0236b",
-  name: "Example dataset with iperf",
+  name: "IPerf",
   parameters: ["PARALLEL", "ZEROCOPY", "TIME"],
   measurements: ["THROUGHPUT"],
   data: `
