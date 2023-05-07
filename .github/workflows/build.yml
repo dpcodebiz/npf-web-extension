@@ -44,5 +44,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Jest coverage report
-        uses: ArtiomTr/jest-coverage-report-action@v2.2.4
+      - name: run coverage tests
+        run: npm run coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
