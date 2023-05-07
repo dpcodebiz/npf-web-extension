@@ -60,7 +60,7 @@ export function resultsToConfiguration(
     const { split_parameters, data: resultsByChangingParameter } = data;
 
     // Analyzing data and getting recommended graph type for this data
-    const recommended_graph_type = getRecommendedGraphType(configurationData, resultsByChangingParameter);
+    const recommended_graph_type = getRecommendedGraphType(configurationData, resultsByChangingParameter, settings);
     const selected_graph_type = settings[configurationData.id]?.type ?? recommended_graph_type;
 
     switch (selected_graph_type) {
