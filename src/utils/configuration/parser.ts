@@ -60,8 +60,12 @@ export function resultsToConfiguration(
     const { split_parameters, data: resultsByChangingParameter } = data;
 
     // Analyzing data and getting recommended graph type for this data
-    const recommended_graph_type = getRecommendedGraphType(configurationData, resultsByChangingParameter, settings);
-    const selected_graph_type = settings[configurationData.id]?.type ?? recommended_graph_type;
+    const { recommended_type, recommended_error_bars } = getRecommendedGraphType(
+      configurationData,
+      resultsByChangingParameter,
+      settings
+    );
+    const selected_graph_type = settings[configurationData.id]?.type ?? recommended_type;
 
     switch (selected_graph_type) {
       case GRAPH_TYPES.LINE: {
@@ -70,7 +74,8 @@ export function resultsToConfiguration(
           split_parameters,
           metadata: {
             type: GRAPH_TYPES.LINE,
-            recommended_type: recommended_graph_type,
+            recommended_type: recommended_type,
+            recommended_error_bars: recommended_error_bars,
           },
         });
         break;
@@ -79,7 +84,11 @@ export function resultsToConfiguration(
         configuration.experiments.push({
           ...getLineChartConfiguration(settings, configurationData, resultsByChangingParameter),
           split_parameters,
-          metadata: { type: GRAPH_TYPES.BAR, recommended_type: recommended_graph_type },
+          metadata: {
+            type: GRAPH_TYPES.BAR,
+            recommended_type: recommended_type,
+            recommended_error_bars: recommended_error_bars,
+          },
         });
         break;
       }
@@ -87,7 +96,11 @@ export function resultsToConfiguration(
         configuration.experiments.push({
           ...getPieChartConfiguration(settings, configurationData, resultsByChangingParameter),
           split_parameters,
-          metadata: { type: GRAPH_TYPES.PIE, recommended_type: recommended_graph_type },
+          metadata: {
+            type: GRAPH_TYPES.PIE,
+            recommended_type: recommended_type,
+            recommended_error_bars: recommended_error_bars,
+          },
         });
         break;
       }
@@ -95,7 +108,11 @@ export function resultsToConfiguration(
         configuration.experiments.push({
           ...getBoxPlotChartConfiguration(settings, configurationData, resultsByChangingParameter),
           split_parameters,
-          metadata: { type: GRAPH_TYPES.BOXPLOT, recommended_type: recommended_graph_type },
+          metadata: {
+            type: GRAPH_TYPES.BOXPLOT,
+            recommended_type: recommended_type,
+            recommended_error_bars: recommended_error_bars,
+          },
         });
         break;
       }

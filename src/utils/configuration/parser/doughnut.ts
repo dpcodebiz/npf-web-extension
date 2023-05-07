@@ -87,6 +87,7 @@ export const getPieChartConfiguration = (
     metadata: {
       type: GRAPH_TYPES.PIE,
       recommended_type: GRAPH_TYPES.PIE,
+      recommended_error_bars: false,
     },
     name: configurationData.name,
     main_parameter: main_param,

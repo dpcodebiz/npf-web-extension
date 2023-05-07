@@ -1,5 +1,5 @@
 import { SettingsForm } from "./form/SettingsForm";
-import { SettingsProps } from "./utils";
+import { SettingsProps, getSettingsGraphOptions } from "./utils";
 
 export const SettingsComponent = (props: SettingsProps) => {
   const { setSettings, configuration, settings } = props;
@@ -12,7 +12,12 @@ export const SettingsComponent = (props: SettingsProps) => {
           The recommended graph type for this data is:
           <span className="font-bold">
             {" "}
-            {configuration.experiments[0].metadata.recommended_type ? "Bar Chart" : "Line Chart"}
+            {
+              getSettingsGraphOptions().find(
+                (option) => option.value == configuration.experiments[0].metadata.recommended_type
+              )?.label
+            }
+            {configuration.experiments[0].metadata.recommended_error_bars ?? "with error bars"}
           </span>
         </span>
         <SettingsForm configuration={configuration} settings={settings} setSettings={setSettings}></SettingsForm>

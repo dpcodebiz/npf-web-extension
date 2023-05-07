@@ -50,6 +50,7 @@ export enum GRAPH_TYPES {
 export type Metadata = {
   type: GRAPH_TYPES;
   recommended_type: GRAPH_TYPES;
+  recommended_error_bars?: boolean;
 };
 
 export type ParameterizedRun = {

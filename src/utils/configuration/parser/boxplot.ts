@@ -37,6 +37,7 @@ export const getBoxPlotChartConfiguration = (
     metadata: {
       type: GRAPH_TYPES.BOXPLOT,
       recommended_type: GRAPH_TYPES.BOXPLOT,
+      recommended_error_bars: false,
     },
     name: configurationData.name,
     main_parameter: main_param,
