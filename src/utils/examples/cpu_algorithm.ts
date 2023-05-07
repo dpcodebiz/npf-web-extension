@@ -2,7 +2,7 @@ import { ConfigurationData } from "../configuration/types";
 
 export const CPU_ALGORITHM_DATA: ConfigurationData = {
   id: "36292876-f3fc-4c6f-93d9-ae0a53d9d9da",
-  name: "CPU algor",
+  name: "CPU performance",
   parameters: ["N", "algorithm", "num_cpus", "cpu_brand"],
   measurements: ["efficiency"],
   data: `algorithm,N,num_cpus,efficiency,cpu_brand

@@ -1,5 +1,5 @@
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
-import { Configuration, Experiment } from "../../../utils/configuration/types";
+import { Configuration } from "../../../utils/configuration/types";
 import {
   CartesianScaleTypeRegistry,
   Chart,
@@ -7,7 +7,6 @@ import {
   DatasetChartOptions,
   ElementChartOptions,
   LegendOptions,
-  BarControllerChartOptions,
   PluginChartOptions,
   ScaleChartOptions,
   ScaleOptionsByType,
@@ -16,17 +15,17 @@ import {
 import { Settings } from "../../../utils/settings/types";
 import { getGraphAxisTitle } from "../../settings/utils";
 
-export const getBarChartAxisLabels = (settings: Settings, configuration: Configuration) => {
+export const getBoxplotChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {
     x: getGraphAxisTitle("x", settings, configuration),
     y: getGraphAxisTitle("y", settings, configuration),
   };
 };
 
-export const barChartAxisStyles = (settings: Settings, configuration: Configuration, axis: "x" | "y") =>
+export const boxplotChartAxisStyles = (settings: Settings, configuration: Configuration, axis: "x" | "y") =>
   ({
     title: {
-      text: getBarChartAxisLabels(settings, configuration)[axis],
+      text: getBoxplotChartAxisLabels(settings, configuration)[axis],
       color: "#000",
       font: {
         size: 16,
@@ -46,15 +45,16 @@ export const barChartAxisStyles = (settings: Settings, configuration: Configurat
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
 
-export const barChartTitleStyles = () =>
+export const boxplotChartTitleStyles = () =>
   ({
     display: false,
   } as _DeepPartialObject<TitleOptions>);
 
-export const barChartLegendStyles = (split: boolean) =>
+export const boxplotChartLegendStyles = (split: boolean) =>
   ({
     position: split ? "top" : ("right" as const),
     align: split ? "end" : "center",
+    display: true,
     labels: {
       generateLabels: function (chart) {
         const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
@@ -71,25 +71,24 @@ export const barChartLegendStyles = (split: boolean) =>
       },
       color: "#000",
     },
-  } as _DeepPartialObject<LegendOptions<"bar">>);
+  } as _DeepPartialObject<LegendOptions<"boxplot">>);
 
-export const barChartOptions = (settings: Settings, configuration: Configuration, split: boolean) =>
+export const boxplotChartOptions = (settings: Settings, configuration: Configuration, split: boolean) =>
   ({
     responsive: true,
     plugins: {
-      legend: barChartLegendStyles(split),
-      title: barChartTitleStyles(),
+      legend: boxplotChartLegendStyles(split),
+      title: boxplotChartTitleStyles(),
       tooltip: {},
     },
     scales: {
-      x: barChartAxisStyles(settings, configuration, "x"),
-      y: barChartAxisStyles(settings, configuration, "y"),
+      x: boxplotChartAxisStyles(settings, configuration, "x"),
+      y: boxplotChartAxisStyles(settings, configuration, "y"),
     },
   } as _DeepPartialObject<
-    CoreChartOptions<"bar" | "barWithErrorBars"> &
-      ElementChartOptions<"bar" | "barWithErrorBars"> &
-      PluginChartOptions<"bar" | "barWithErrorBars"> &
-      DatasetChartOptions<"bar" | "barWithErrorBars"> &
-      ScaleChartOptions<"bar" | "barWithErrorBars"> &
-      BarControllerChartOptions
+    CoreChartOptions<"boxplot"> &
+      ElementChartOptions<"boxplot"> &
+      PluginChartOptions<"boxplot"> &
+      DatasetChartOptions<"boxplot"> &
+      ScaleChartOptions<"boxplot">
   >);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
 import { group, mapValues, objectify } from "radash";
 import { ExperimentData, ParsedConfigurationData } from "../parser";
@@ -5,12 +6,26 @@ import { joinParams, splitParams } from "../utils";
 import { getParameter } from "../../../components/settings/utils";
 import { Settings } from "../../settings/types";
 
+/**
+ * Groups a set of configurationData by parameters
+ * @param parameters
+ * @param configurationData
+ * @returns
+ */
 export const groupDataByParameters = (
   parameters: string[],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configurationData: any[]
 ) => {
   return group(configurationData, (data) => joinParams(parameters, data));
+};
+
+export const mergeValuesAggregation = (data: { [index: string]: string }[], measurement: string) =>
+  data.reduce((acc, currentValue) => acc.concat([parseFloat(currentValue[measurement])]), [] as number[]);
+
+export const sumDataAggregation = (data: { [index: string]: string }[], measurement: string) => {
+  const sum = data.reduce((acc, currentValue) => acc + parseFloat(currentValue[measurement]), 0);
+  return sum / data.length;
 };
 
 /**
@@ -20,7 +35,12 @@ export const groupDataByParameters = (
  * @param results Raw pandas dataframe parsed from csv
  * @returns
  */
-function aggregateAllResults(parameters: string[], measurements: string[], results: ParsedConfigurationData[]) {
+export function aggregateAllResults(
+  parameters: string[],
+  measurements: string[],
+  results: ParsedConfigurationData[],
+  aggregation: (data: any, measurement: string) => any
+) {
   // Grouping all data by all params
   const grouped_data_by_all_params = groupDataByParameters(parameters, results);
 
@@ -31,10 +51,7 @@ function aggregateAllResults(parameters: string[], measurements: string[], resul
       measurements,
       (measurement) => measurement,
       (measurement) => {
-        if (!data) return 0;
-
-        const sum = data.reduce((acc, currentValue) => acc + parseFloat(currentValue[measurement]), 0) ?? 0;
-        return sum / data.length;
+        return aggregation(data, measurement);
       }
     );
 
@@ -44,7 +61,14 @@ function aggregateAllResults(parameters: string[], measurements: string[], resul
   return aggregated_data;
 }
 
-function getRunsFromGroupedData(
+/**
+ * Returns an array of parameterized runs
+ * @param main_param
+ * @param measurements
+ * @param grouped_data_by_params
+ * @returns
+ */
+export function getRunsFromGroupedData(
   main_param: string,
   measurements: string[],
   grouped_data_by_params: ReturnType<typeof groupDataByParameters>
@@ -59,7 +83,7 @@ function getRunsFromGroupedData(
 
     // Merges all { [main_param]: value }[] into ({ [measurement]: { [main_param]: value } })
     const results_by_measurement = measurements.map((measurement) => ({
-      [measurement]: Object.assign({}, ...(experiment_data_by_measurement(measurement) ?? [])),
+      [measurement]: Object.assign({}, ...(experiment_data_by_measurement(measurement) as any)),
     }));
 
     // Creating run
@@ -75,6 +99,12 @@ function getRunsFromGroupedData(
   return runs;
 }
 
+/**
+ * Unfolds a set of aggregated data and stores all the parameters with their values inside
+ * the experiment_data key
+ * @param aggregated_data
+ * @returns
+ */
 export const unfoldAggregatedData = (aggregated_data: ReturnType<typeof aggregateAllResults>) => {
   return Object.entries(aggregated_data).map(([joined_params, v]) => {
     return {
@@ -95,7 +125,7 @@ export const getLineChartConfiguration = (
   const main_param = getParameter("x", settings, configurationData);
 
   // Aggregating all results
-  const aggregated_data = aggregateAllResults(parameters, measurements, results);
+  const aggregated_data = aggregateAllResults(parameters, measurements, results, mergeValuesAggregation);
 
   // Now, we unfold all the data
   const unfolded_data = unfoldAggregatedData(aggregated_data);
@@ -116,9 +146,6 @@ export const getLineChartConfiguration = (
     main_parameter: main_param,
     runs: getRunsFromGroupedData(main_param, measurements, grouped_data_by_other_params),
   };
-
-  // Debug
-  // console.log(grouped_data_by_other_params, experiment);
 
   return experiment;
 };

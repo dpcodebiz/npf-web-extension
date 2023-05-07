@@ -87,10 +87,10 @@ export const lineChartOptions = (settings: Settings, configuration: Configuratio
       y: lineChartAxisStyles(settings, configuration, "y"),
     },
   } as _DeepPartialObject<
-    CoreChartOptions<"line"> &
-      ElementChartOptions<"line"> &
-      PluginChartOptions<"line"> &
-      DatasetChartOptions<"line"> &
-      ScaleChartOptions<"line"> &
+    CoreChartOptions<"line" | "lineWithErrorBars"> &
+      ElementChartOptions<"line" | "lineWithErrorBars"> &
+      PluginChartOptions<"line" | "lineWithErrorBars"> &
+      DatasetChartOptions<"line" | "lineWithErrorBars"> &
+      ScaleChartOptions<"line" | "lineWithErrorBars"> &
       LineControllerChartOptions
   >);

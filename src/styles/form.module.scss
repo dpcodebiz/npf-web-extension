@@ -1,12 +1,20 @@
 .form {
-  @apply flex flex-col gap-6;
+  @apply flex flex-col gap-2 xl:gap-6;
 }
 
 .group {
-  @apply flex flex-col gap-4;
+  @apply flex flex-col gap-2 xl:gap-4;
 
   .group {
-    @apply gap-2;
+    @apply xl:gap-2;
+  }
+
+  &.checkbox {
+    @apply flex flex-row;
+
+    input {
+      @apply ml-auto align-middle;
+    }
   }
 }
 
@@ -15,5 +23,5 @@
 }
 
 .heading {
-  @apply text-xl border-b-2 py-2;
+  @apply text-lg xl:text-xl border-b-2 py-2;
 }

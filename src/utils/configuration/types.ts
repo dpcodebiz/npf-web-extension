@@ -23,7 +23,7 @@ export type Configuration = {
     x?: string;
     y?: string;
   };
-  experiments: Experiment[]; // TODO in the future each experiment will be tied to only one configuration
+  experiments: Experiment[]; // Maybe this should be tied only to one experiment
 };
 
 export type Experiment = {
@@ -43,11 +43,14 @@ export type SplitParameter = {
 export enum GRAPH_TYPES {
   LINE,
   BAR,
+  PIE,
+  BOXPLOT,
 }
 
 export type Metadata = {
   type: GRAPH_TYPES;
   recommended_type: GRAPH_TYPES;
+  recommended_error_bars?: boolean;
 };
 
 export type ParameterizedRun = {
@@ -64,5 +67,5 @@ export type ParameterizedResults = {
 };
 
 export type Results = {
-  [index: string]: number;
+  [index: string]: number[];
 };

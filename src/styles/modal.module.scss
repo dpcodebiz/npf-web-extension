@@ -1,9 +1,9 @@
 .container {
-  @apply bg-black bg-opacity-50 absolute z-10 top-0 right-0 left-0 bottom-0 flex flex-col;
+  @apply bg-black bg-opacity-50 fixed z-10 top-0 right-0 left-0 bottom-0 flex flex-col overflow-scroll;
 }
 
 .space {
-  @apply flex-grow max-h-48;
+  @apply flex-grow max-h-20;
 }
 
 .modal {

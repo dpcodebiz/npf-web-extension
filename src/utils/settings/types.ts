@@ -13,12 +13,14 @@ export type ConfigurationSettings = {
     y: AxisSplitSettings;
   };
   type: GRAPH_TYPES;
+  error_bars: boolean;
 };
 
 export type AxisSplitSettings = {
   enable: boolean;
   parameter: string;
   format: string;
+  placement: "before" | "after";
 };
 
 export type AxisSettings = {

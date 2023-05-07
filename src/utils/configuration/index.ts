@@ -5,13 +5,14 @@ import { Configuration, ConfigurationData } from "./types";
 import { ParsedConfigurationData, resultsToConfiguration } from "./parser";
 import { Settings } from "../settings/types";
 import { debounce } from "radash";
+import { loadSettings, saveSettings } from "../../components/settings/utils";
 
 /**
  * Hook handling the app configuration
  */
 export const useConfiguration = () => {
   // States
-  const [settings, setSettings] = useState<Settings>({});
+  const [settings, setSettings] = useState<Settings>(loadSettings());
   const [loading, setLoading] = useState(true);
   const [configuration, setConfiguration] = useState<Configuration | undefined>(undefined);
   const [configurationData, setConfigurationData] = useState<ConfigurationData>();
@@ -45,6 +46,12 @@ export const useConfiguration = () => {
 
     load(configurationData);
   }, [settings, configurationData, load]);
+
+  useEffect(() => {
+    if (!settings) return;
+
+    saveSettings(settings);
+  }, [settings]);
 
   return { loading, load, configuration, settings, setSettings };
 };

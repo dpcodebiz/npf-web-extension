@@ -1,5 +1,5 @@
 import { isEmpty } from "radash";
-import { Configuration, Experiment, GRAPH_TYPES } from "../../utils/configuration/types";
+import { Configuration, GRAPH_TYPES } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 import { Settings } from "../../utils/settings/types";
 
@@ -12,6 +12,10 @@ export type SettingsProps = {
   configuration: Configuration;
 };
 
+/**
+ * Returns graph options for the settings select input
+ * @returns
+ */
 export const getSettingsGraphOptions = () => {
   return [
     {
@@ -19,32 +23,82 @@ export const getSettingsGraphOptions = () => {
       value: GRAPH_TYPES.LINE,
     },
     { value: GRAPH_TYPES.BAR, label: "Bar Chart" },
+    { value: GRAPH_TYPES.PIE, label: "Pie Chart" },
+    { value: GRAPH_TYPES.BOXPLOT, label: "Boxplot Chart" },
   ];
 };
 
+/**
+ * Returns the rendered graph type from the current settings.
+ * @default configuration.[...].metadata.type
+ * @param settings
+ * @param configuration
+ * @returns GRAPH_TYPES
+ */
 export const getSettingsGraphType = (settings: Settings, configuration: Configuration) => {
   return settings[configuration.id]?.type ?? configuration.experiments[0].metadata.type;
 };
 
-export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration: Configuration) => {
-  const value = settings[configuration.id]?.[axis].title;
-  const default_value =
-    axis == "x"
-      ? configuration.experiments[0].main_parameter
-      : Object.keys(configuration.experiments[0].runs[0]?.results)[0];
+/**
+ * Returns the parameter selected for a given axis
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
+export const getParameter = (
+  axis: Axis,
+  settings: Settings,
+  configuration: { id: string; parameters: string[]; measurements: string[] }
+) => {
+  const value = settings[configuration.id]?.[axis].parameter;
+  const default_value = axis == "x" ? configuration.parameters[0] : configuration.measurements[0];
 
   return value ?? default_value;
 };
 
-//@deprecated ?
-export const getSettingsSelectedGraphTypeOption = () => {};
+/**
+ * Returns the title of a given axis
+ * @default parameter.name
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
+export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  const value = settings[configuration.id]?.[axis].title;
+  const measurement = getParameter("y", settings, {
+    id: configuration.id,
+    parameters: Object.keys(configuration.parameters),
+    measurements: configuration.measurements,
+  });
+  const default_value = axis == "x" ? configuration.experiments[0].main_parameter : measurement;
 
+  return value ?? default_value;
+};
+
+/**
+ * Returns the title of the graph from the settings
+ * @default configuration.name
+ * @param settings
+ * @param configuration
+ * @returns
+ */
 export const getSettingsGraphTitle = (settings: Settings, configuration: Configuration) => {
   const settings_title = settings[configuration.id]?.title;
 
   return (settings_title && !isEmpty(settings_title) ? settings_title : undefined) ?? configuration.name ?? "";
 };
 
+/**
+ * Returns a formatted string for the split axis feature.
+ * It takes into account the format specified in the settings and an iteration.
+ * @param axis
+ * @param index
+ * @param settings
+ * @param configuration
+ * @returns
+ */
 export const getSettingsSplitAxisFormat = (
   axis: Axis,
   index: number,
@@ -77,11 +131,24 @@ export const getSettingsSplitAxisFormat = (
   const settingsFormat = settings[configuration.id]?.split?.[axis]?.format;
   const formatted_str =
     settingsFormat &&
-    `${settingsFormat.replace(/{{[ ]*parameter[ ]*}}/, parameter_name).replace(/{{[ ]*value[ ]*}}/, parameter_value)}`;
+    `${settingsFormat
+      .replaceAll(/{{[ ]*parameter[ ]*}}/g, parameter_name)
+      .replaceAll(/{{[ ]*p[ ]*}}/g, parameter_name)
+      .replaceAll(/{{[ ]*0[ ]*}}/g, parameter_name)
+      .replaceAll(/{{[ ]*value[ ]*}}/g, parameter_value)
+      .replaceAll(/{{[ ]*v[ ]*}}/g, parameter_value)
+      .replaceAll(/{{[ ]*1[ ]*}}/g, parameter_value)}`;
 
   return formatted_str || `${parameter_name}=${parameter_value}`;
 };
 
+/**
+ * Returns the split settings for a given axis
+ * @param axis
+ * @param settings
+ * @param configuration_id
+ * @returns
+ */
 export const getSettingsSplitAxis = (axis: Axis, settings: Settings, configuration_id: string) =>
   settings[configuration_id]?.split?.[axis];
 
@@ -91,6 +158,14 @@ export const getSplitParameter = (axis: Axis, settings: Settings, configuration:
   return settings_value ?? default_value;
 };
 
+/**
+ * Returns all parameters available for the split graphs feature as options for the
+ * select input
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
 export const getSettingsSplitParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
   const other_axis_value = getSplitParameter(axis == "x" ? "y" : "x", settings, configuration);
 
@@ -104,6 +179,13 @@ export const getSettingsSplitParametersOptions = (axis: Axis, settings: Settings
   );
 };
 
+/**
+ * Returns the option associated to the parameter chosen to split the graphs
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
 export const getSettingsDefaultSplitParametersOptions = (
   axis: Axis,
   settings: Settings,
@@ -115,23 +197,26 @@ export const getSettingsDefaultSplitParametersOptions = (
   return parametersOptions.find((option) => option.value === value);
 };
 
-export const getParameter = (
-  axis: Axis,
-  settings: Settings,
-  configuration: { id: string; parameters: string[]; measurements: string[] }
-) => {
-  const value = settings[configuration.id]?.[axis].parameter;
-  const default_value = axis == "x" ? configuration.parameters[0] : configuration.measurements[0];
-
-  return value ?? default_value;
-};
-
+/**
+ * Returns parameters available for a given axis
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
 export const getSettingsParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
   return axis == "x"
     ? Object.keys(configuration.parameters).map((parameter) => ({ label: parameter, value: parameter }))
     : configuration.measurements.map((measurement) => ({ label: measurement, value: measurement }));
 };
 
+/**
+ * Returns the default settings placement select option
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
 export const getSettingsDefaultParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
   const parametersOptions = getSettingsParametersOptions(axis, settings, configuration);
   const value = getParameter(axis, settings, {
@@ -141,4 +226,64 @@ export const getSettingsDefaultParametersOptions = (axis: Axis, settings: Settin
   });
 
   return parametersOptions.find((option) => option.value === value);
+};
+
+/**
+ * Returns the settings placement select options
+ * @param axis
+ * @returns
+ */
+export const getSettingsPlacementOptions = (axis: Axis) => {
+  return [
+    {
+      label: axis == "x" ? "Top" : "Left",
+      value: "before",
+    },
+    {
+      label: axis == "x" ? "Bottom" : "Right",
+      value: "after",
+    },
+  ];
+};
+
+/**
+ * Returns the placement of the headings of the split feature
+ * @default x: "before", y: "after"
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
+export const getSettingsPlacement = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  const value = settings[configuration.id]?.split?.[axis].placement;
+  const default_value = axis == "x" ? "before" : "after";
+
+  return value ?? default_value;
+};
+
+/**
+ * Returns whether error bars are enabled
+ * @default false
+ * @param settings
+ * @param configuration
+ * @returns
+ */
+export const getSettingsErrorBars = (settings: Settings, configuration: Configuration) => {
+  return settings[configuration.id]?.error_bars ?? false;
+};
+
+/**
+ * Saves the settings to the local storage
+ * @param settings
+ */
+export const saveSettings = (settings: Settings) => {
+  localStorage.setItem("settings", JSON.stringify(settings));
+};
+
+/**
+ * Loads the settings from the local storage
+ * @returns
+ */
+export const loadSettings = () => {
+  return JSON.parse(localStorage.getItem("settings") ?? "{}") as Settings;
 };

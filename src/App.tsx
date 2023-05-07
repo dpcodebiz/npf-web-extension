@@ -10,28 +10,29 @@ import { ConfigurationData } from "./utils/configuration/types";
 import { CPU_ALGORITHM_DATA } from "./utils/examples/cpu_algorithm";
 import { ChartPanelComponent } from "./components/charts/ChartPanelComponent";
 import { SettingsModal } from "./components/settings/SettingsModal";
-import { isArray } from "radash";
+import { isArray, isEqual } from "radash";
 
 function App() {
   // States
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const { loading, load, configuration, settings, setSettings } = useConfiguration();
+  const [keysHistory, setKeysHistory] = useState<string[]>([]);
 
   // Configurations available
   const [configurations, setConfigurations] = useState<{ [index: string]: ConfigurationData }>();
   const [selectedConfiguration, setSelectedConfiguration] = useState("");
-
-  const onKeyDown = (ev: KeyboardEvent) => {
-    ev.key == "Escape" && setFullScreen(false);
-  };
 
   // Callbacks
   const updateConfiguration = useCallback(
     (configurationData: ConfigurationData | ConfigurationData[]) => {
       if (isArray(configurationData)) {
         load(configurationData[0]);
-        setConfigurations(Object.assign({ ...configurations }, ...configurationData));
+        const newConfigurations: { [index: string]: ConfigurationData } = {};
+        configurationData.forEach((config) => {
+          newConfigurations[config.id] = config;
+        });
+        setConfigurations(Object.assign({ ...configurations }, newConfigurations));
         return;
       }
 
@@ -60,12 +61,24 @@ function App() {
     [configurations, setSelectedConfiguration, load]
   );
 
+  const onKeyDown = useCallback(
+    (ev: KeyboardEvent) => {
+      const newHistory = [ev.key, ...keysHistory].slice(0, 4);
+      if (isEqual(newHistory, ["o", "m", "e", "d"])) {
+        setKeysHistory([]);
+        demo();
+      } else setKeysHistory([ev.key, ...keysHistory].slice(0, 4));
+      ev.key == "Escape" && setFullScreen(false);
+    },
+    [setKeysHistory, demo, keysHistory]
+  );
+
   // Mounting
   useEffect(() => {
     // Listening for escape key
-    document.addEventListener("keydown", onKeyDown);
+    !settingsModalOpen && document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [onKeyDown, settingsModalOpen]);
 
   // Mounting
   useEffect(() => {
@@ -77,7 +90,6 @@ function App() {
 
     // Dispatching event
     if (!configurations) {
-      console.log("dispa");
       window.dispatchEvent(new Event(Events.APP_READY));
     }
   }, [updateConfiguration, demo, configurations]);
@@ -91,8 +103,6 @@ function App() {
     load(configurations[Object.keys(configurations)[0]]);
   }, [configurations, load, selectedConfiguration]);
 
-  console.log("rendered");
-
   return (
     <>
       {configuration && (
@@ -105,14 +115,14 @@ function App() {
         />
       )}
       <WebsiteLoader loading={loading && !configuration} />
-      <div className="bg-gray-100 w-screen h-screen flex flex-row">
-        <div className="bg-white w-[400px] p-6 space-y-6">
-          <div className="font-bold text-xl">Network Performance Framework</div>
+      <div className="bg-gray-100 min-w-[100vw] w-max h-screen flex flex-row">
+        <div className="bg-white w-[300px] xlw-[400px] p-6 space-y-6">
+          <div className="font-bold text-lg xl:text-xl">Network Performance Framework</div>
           <div className="space-y-2 flex flex-col">
             {configurations &&
               Object.entries(configurations).map(([id, configurationData]) => (
                 <button
-                  className={`p-4 text-lg text-left rounded transition-all duration-200 ${
+                  className={`p-4 xl:text-lg text-left rounded transition-all duration-200 ${
                     selectedConfiguration == id ? "bg-uclouvain-1 text-white" : "hover:bg-gray-200"
                   }`}
                   key={id}
@@ -128,8 +138,8 @@ function App() {
         {!loading && configuration && fullScreen && (
           <ChartPanelComponent fullScreen={true} settings={settings} configuration={configuration} />
         )}
-        <div className="p-6 w-full space-y-6 grid" style={{ gridTemplateRows: "min-content repeat(1, 1fr)" }}>
-          <div className="ml-auto w-max px-4 space-x-4">
+        <div className="p-6 w-full space-y-6 grid pt-12" style={{ gridTemplateRows: "min-content repeat(1, 1fr)" }}>
+          <div className="w-max px-4 space-x-4 fixed top-4 right-4">
             <button
               onClick={() => setSettingsModalOpen(!settingsModalOpen)}
               className="bg-uclouvain-1 text-white px-4 py-2 rounded"
