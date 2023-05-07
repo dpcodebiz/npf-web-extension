@@ -121,8 +121,6 @@ export const getDatasets = (experiment: Experiment, type: GRAPH_TYPES = GRAPH_TY
   switch (type) {
     case GRAPH_TYPES.BAR:
     case GRAPH_TYPES.LINE: {
-      // TODO remove this because this is related to multiple results
-      // (measurements and it instead show only one result and the user should actually prepare the data correctly)
       return experiment.runs.map((run, index) => runToLineDataset(run, experiment, index, error_bars));
     }
     case GRAPH_TYPES.PIE: {
