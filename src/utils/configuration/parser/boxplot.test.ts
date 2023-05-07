@@ -1,4 +1,4 @@
-import { ConfigurationData } from "../types";
+import { ConfigurationData, GRAPH_TYPES } from "../types";
 import { getBoxPlotChartConfiguration } from "./boxplot";
 
 // Mock
@@ -28,8 +28,8 @@ test("getBoxPlotChartConfiguration", () => {
   expect(getBoxPlotChartConfiguration({}, configurationDataSimple, arrayOfParsedConfigurationData)).toMatchObject({
     main_parameter: "a",
     metadata: {
-      recommended_type: 3,
-      type: 3,
+      recommended_type: GRAPH_TYPES.BOXPLOT,
+      type: GRAPH_TYPES.BOXPLOT,
     },
     name: "",
     runs: [
