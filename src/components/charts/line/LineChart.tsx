@@ -36,8 +36,8 @@ export const LineChart = (props: Props) => {
         <LineError
           data={
             {
-              labels: getLabel(experiment),
-              datasets: getDatasets(experiment, GRAPH_TYPES.LINE, true),
+              labels: getLabel(experiment, settings, configuration),
+              datasets: getDatasets(experiment, settings, configuration, GRAPH_TYPES.LINE, true),
             } as ChartData<"lineWithErrorBars", number[], string>
           }
           options={lineChartOptions(settings, configuration, split)}
@@ -46,8 +46,8 @@ export const LineChart = (props: Props) => {
         <Line
           data={
             {
-              labels: getLabel(experiment),
-              datasets: getDatasets(experiment),
+              labels: getLabel(experiment, settings, configuration),
+              datasets: getDatasets(experiment, settings, configuration),
             } as ChartData<"line", number[], string>
           }
           options={lineChartOptions(settings, configuration, split)}

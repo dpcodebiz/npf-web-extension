@@ -119,5 +119,7 @@ export function resultsToConfiguration(
     }
   });
 
+  console.log(configuration);
+
   return configuration;
 }

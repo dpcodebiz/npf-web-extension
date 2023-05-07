@@ -49,10 +49,12 @@ export const getSettingsGraphType = (settings: Settings, configuration: Configur
  */
 export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration: Configuration) => {
   const value = settings[configuration.id]?.[axis].title;
-  const default_value =
-    axis == "x"
-      ? configuration.experiments[0].main_parameter
-      : Object.keys(configuration.experiments[0].runs[0]?.results)[0];
+  const measurement = getParameter("y", settings, {
+    id: configuration.id,
+    parameters: Object.keys(configuration.parameters),
+    measurements: configuration.measurements,
+  });
+  const default_value = axis == "x" ? configuration.experiments[0].main_parameter : measurement;
 
   return value ?? default_value;
 };

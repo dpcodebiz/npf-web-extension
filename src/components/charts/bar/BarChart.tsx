@@ -24,8 +24,8 @@ export const BarChart = (props: Props) => {
         <BarError
           data={
             {
-              labels: getLabel(experiment),
-              datasets: getDatasets(experiment, GRAPH_TYPES.BAR, true),
+              labels: getLabel(experiment, settings, configuration),
+              datasets: getDatasets(experiment, settings, configuration, GRAPH_TYPES.BAR, true),
             } as ChartData<"barWithErrorBars", number[], string>
           }
           options={barChartOptions(settings, configuration, split)}
@@ -34,8 +34,8 @@ export const BarChart = (props: Props) => {
         <Bar
           data={
             {
-              labels: getLabel(experiment),
-              datasets: getDatasets(experiment),
+              labels: getLabel(experiment, settings, configuration),
+              datasets: getDatasets(experiment, settings, configuration),
             } as ChartData<"bar", number[], string>
           }
           options={barChartOptions(settings, configuration, split)}

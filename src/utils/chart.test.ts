@@ -46,7 +46,13 @@ const pie_experiment: Experiment = {
 };
 
 test("getLabel", () => {
-  expect(getLabel(experiment)).toMatchObject(["0", "1"]);
+  expect(
+    getLabel(
+      experiment,
+      {},
+      { id: "0", parameters: { p1: ["test"] }, measurements: ["p2"], experiments: [experiment], name: "", split: {} }
+    )
+  ).toMatchObject(["0", "1"]);
 });
 test("getLabel error", () => {
   // @ts-expect-error(undefined experiment)
@@ -60,7 +66,13 @@ test("getPieLabel error", () => {
   expect(getPieLabel(undefined)).toMatchObject([]);
 });
 test("getDatasets line", () => {
-  expect(getDatasets(experiment)).toMatchObject([
+  expect(
+    getDatasets(
+      experiment,
+      {},
+      { id: "0", parameters: { p1: ["test"] }, measurements: ["p2"], experiments: [experiment], name: "", split: {} }
+    )
+  ).toMatchObject([
     {
       backgroundColor: COLORS.LINE_CHART[0],
       borderColor: COLORS.LINE_CHART[0],
@@ -71,7 +83,14 @@ test("getDatasets line", () => {
 });
 
 test("getDatasets bar", () => {
-  expect(getDatasets(experiment, GRAPH_TYPES.BAR)).toMatchObject([
+  expect(
+    getDatasets(
+      experiment,
+      {},
+      { id: "0", parameters: { p1: ["test"] }, measurements: ["p2"], experiments: [experiment], name: "", split: {} },
+      GRAPH_TYPES.BAR
+    )
+  ).toMatchObject([
     {
       backgroundColor: COLORS.BARS_CHART[0],
       borderColor: COLORS.BARS_CHART[0],
@@ -82,7 +101,15 @@ test("getDatasets bar", () => {
 });
 
 test("getDatasets line error bars", () => {
-  expect(getDatasets(experiment, GRAPH_TYPES.LINE, true)).toMatchObject([
+  expect(
+    getDatasets(
+      experiment,
+      {},
+      { id: "0", parameters: { p1: ["test"] }, measurements: ["p2"], experiments: [experiment], name: "", split: {} },
+      GRAPH_TYPES.LINE,
+      true
+    )
+  ).toMatchObject([
     {
       backgroundColor: COLORS.LINE_CHART[0],
       borderColor: COLORS.LINE_CHART[0],
@@ -103,7 +130,14 @@ test("getDatasets line error bars", () => {
   ]);
 });
 test("getDatasets pie", () => {
-  expect(getDatasets(pie_experiment, GRAPH_TYPES.PIE)).toMatchObject([
+  expect(
+    getDatasets(
+      pie_experiment,
+      {},
+      { id: "0", parameters: { p1: ["test"] }, measurements: ["p2"], experiments: [experiment], name: "", split: {} },
+      GRAPH_TYPES.PIE
+    )
+  ).toMatchObject([
     {
       backgroundColor: COLORS.BARS_CHART,
       borderColor: COLORS.BARS_CHART,
@@ -118,7 +152,14 @@ test("getDatasets pie", () => {
 });
 
 test("getDatasets boxplot", () => {
-  expect(getDatasets(experiment, GRAPH_TYPES.BOXPLOT)).toMatchObject([
+  expect(
+    getDatasets(
+      experiment,
+      {},
+      { id: "0", parameters: { p1: ["test"] }, measurements: ["p2"], experiments: [experiment], name: "", split: {} },
+      GRAPH_TYPES.BOXPLOT
+    )
+  ).toMatchObject([
     {
       backgroundColor: COLORS.LINE_CHART[0],
       borderColor: COLORS.LINE_CHART[0],
