@@ -91,6 +91,7 @@ const runToLineDataset = (
  * @returns
  */
 const runToPieDataset = (experiment: Experiment) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const results = experiment.runs.map((run) => Object.values(run.results)[0]) as any;
 
   return [
