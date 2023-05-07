@@ -5,6 +5,7 @@ import type { ChartType, DefaultDataPoint } from "chart.js";
 import type { ForwardedRef, ChartProps, BaseChartComponent } from "./types";
 import { reforwardRef, cloneData, setOptions, setLabels, setDatasets } from "./utils";
 
+// All these utils classes come from react-chartjs-2
 function ChartComponent<TType extends ChartType = ChartType, TData = DefaultDataPoint<TType>, TLabel = unknown>(
   props: ChartProps<TType, TData, TLabel>,
   ref: ForwardedRef<ChartJS<TType, TData, TLabel>>

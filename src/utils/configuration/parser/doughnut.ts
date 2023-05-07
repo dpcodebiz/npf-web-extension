@@ -94,8 +94,5 @@ export const getPieChartConfiguration = (
     runs: getRunsFromGroupedDataPie(summed_results),
   };
 
-  // Debug
-  // console.log(summed_results);
-
   return experiment;
 };

@@ -18,7 +18,7 @@ jobs:
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@main
-      
+
       # Node modules cache
       - name: Cache node modules
         id: cache-npm
@@ -56,7 +56,7 @@ jobs:
       - name: Upload template.html to repo
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'python_src/npf_web_extension/template.html'
+          add: "python_src/npf_web_extension/template.html"
           commit: --signoff
           default_author: github_actions
           fetch: false
@@ -82,7 +82,7 @@ jobs:
           name: template.html
           path: build/index.html
           if-no-files-found: error
-      
+
       # Checkout last version
       - uses: actions/checkout@v3
         with:
@@ -91,11 +91,11 @@ jobs:
       # Building package for pypi
       - name: Building package
         run: python3 -m pip install --upgrade build && python3 -m build
-      
+
       # Debug
       - name: Debug
         run: ls -la python_src/npf_web_extension/
-      
+
       # Upload package artifact
       - name: Upload PyPi Package artifact
         uses: actions/upload-artifact@v3
@@ -109,5 +109,5 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           verbose: true
-          verify-metadata: false # TODO fix checking metadata, it should not throw an error
+          verify-metadata: false # the check is bugged somehow inside github env but it is uploaded properly on pypi
           password: ${{ secrets.PYPI_API_TOKEN }}

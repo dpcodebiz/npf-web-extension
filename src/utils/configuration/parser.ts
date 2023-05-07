@@ -35,7 +35,6 @@ export function resultsToConfiguration(
       measurements: configurationData.measurements,
     };
 
-  // TODO remove main param?
   const parametersWithValues = getParametersWithValues(configurationData.parameters, results.data);
   const configurationDataByParameters = getConfigurationDataByParameters(configurationData, results.data, settings);
   const split_parameters = {
@@ -118,8 +117,6 @@ export function resultsToConfiguration(
       }
     }
   });
-
-  console.log(configuration);
 
   return configuration;
 }

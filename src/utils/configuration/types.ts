@@ -23,7 +23,7 @@ export type Configuration = {
     x?: string;
     y?: string;
   };
-  experiments: Experiment[]; // TODO in the future each experiment will be tied to only one configuration
+  experiments: Experiment[]; // Maybe this should be tied only to one experiment
 };
 
 export type Experiment = {

@@ -146,8 +146,5 @@ export const getLineChartConfiguration = (
     runs: getRunsFromGroupedData(main_param, measurements, grouped_data_by_other_params),
   };
 
-  // Debug
-  // console.log(grouped_data_by_other_params, experiment);
-
   return experiment;
 };
