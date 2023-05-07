@@ -75,4 +75,4 @@ def export(configurationData, outdir):
     _prepare(outdir)
     _hydrate(configurationData, outdir)
 
-    print("Web app has been exported properly to {outdir}")
+    print(f"Web app has been exported properly to {outdir}")

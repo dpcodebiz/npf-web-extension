@@ -28,7 +28,11 @@ function App() {
     (configurationData: ConfigurationData | ConfigurationData[]) => {
       if (isArray(configurationData)) {
         load(configurationData[0]);
-        setConfigurations(Object.assign({ ...configurations }, ...configurationData));
+        const newConfigurations: { [index: string]: ConfigurationData } = {};
+        configurationData.forEach((config) => {
+          newConfigurations[config.id] = config;
+        });
+        setConfigurations(Object.assign({ ...configurations }, newConfigurations));
         return;
       }
 
@@ -98,8 +102,6 @@ function App() {
     setSelectedConfiguration(Object.keys(configurations)[0]);
     load(configurations[Object.keys(configurations)[0]]);
   }, [configurations, load, selectedConfiguration]);
-
-  // console.log("rendered");
 
   return (
     <>
