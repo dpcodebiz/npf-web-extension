@@ -40,6 +40,24 @@ export const getSettingsGraphType = (settings: Settings, configuration: Configur
 };
 
 /**
+ * Returns the parameter selected for a given axis
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
+export const getParameter = (
+  axis: Axis,
+  settings: Settings,
+  configuration: { id: string; parameters: string[]; measurements: string[] }
+) => {
+  const value = settings[configuration.id]?.[axis].parameter;
+  const default_value = axis == "x" ? configuration.parameters[0] : configuration.measurements[0];
+
+  return value ?? default_value;
+};
+
+/**
  * Returns the title of a given axis
  * @default parameter.name
  * @param axis
@@ -177,24 +195,6 @@ export const getSettingsDefaultSplitParametersOptions = (
   const value = getSplitParameter(axis, settings, configuration);
 
   return parametersOptions.find((option) => option.value === value);
-};
-
-/**
- * Returns the parameter selected for a given axis
- * @param axis
- * @param settings
- * @param configuration
- * @returns
- */
-export const getParameter = (
-  axis: Axis,
-  settings: Settings,
-  configuration: { id: string; parameters: string[]; measurements: string[] }
-) => {
-  const value = settings[configuration.id]?.[axis].parameter;
-  const default_value = axis == "x" ? configuration.parameters[0] : configuration.measurements[0];
-
-  return value ?? default_value;
 };
 
 /**
