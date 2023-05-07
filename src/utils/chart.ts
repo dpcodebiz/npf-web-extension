@@ -24,7 +24,7 @@ export const getPieLabel = (experiment: Experiment) => {
       (parameter) => !splitParameters.includes(parameter)
     );
 
-    return joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", "\n");
+    return joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", " ");
   });
 
   return parametersWithoutSplitParametersPerRun;
@@ -48,7 +48,7 @@ const runToLineDataset = (run: ParameterizedRun, experiment: Experiment, index: 
   );
 
   return {
-    label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", "\n"),
+    label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", " "),
     data: Object.values(Object.values(run.results)[0]).map((values) =>
       error_bars
         ? {
@@ -101,7 +101,7 @@ const runToBoxPlotDataset = (run: ParameterizedRun, experiment: Experiment, inde
   });
 
   return {
-    label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", "\n"),
+    label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", " "),
     data: (Object.values(Object.values(run.results)[0]) as unknown as number[][]).map((values) => {
       return getStatsFromValues(values);
     }),
@@ -123,25 +123,7 @@ export const getDatasets = (experiment: Experiment, type: GRAPH_TYPES = GRAPH_TY
     case GRAPH_TYPES.LINE: {
       // TODO remove this because this is related to multiple results
       // (measurements and it instead show only one result and the user should actually prepare the data correctly)
-      return Object.keys(experiment.runs[0].results).length > 1
-        ? Object.entries(experiment.runs[0].results).map(
-            ([key, values], index) =>
-              ({
-                label: key,
-                data: Object.values(values).map((value) =>
-                  error_bars
-                    ? {
-                        y: mean(value),
-                        yMin: [minArray(value)],
-                        yMax: [maxArray(value)],
-                      }
-                    : mean(value)
-                ),
-                backgroundColor: COLORS.LINE_CHART[index],
-                borderColor: COLORS.LINE_CHART[index],
-              } as ChartDataset<"line", number[]>)
-          )
-        : experiment.runs.map((run, index) => runToLineDataset(run, experiment, index, error_bars));
+      return experiment.runs.map((run, index) => runToLineDataset(run, experiment, index, error_bars));
     }
     case GRAPH_TYPES.PIE: {
       return runToPieDataset(experiment);
