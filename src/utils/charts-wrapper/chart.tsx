@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, forwardRef } from "react";
 import { Chart as ChartJS } from "chart.js";
 import type { ChartType, DefaultDataPoint } from "chart.js";

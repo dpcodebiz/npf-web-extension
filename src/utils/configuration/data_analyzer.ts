@@ -30,6 +30,7 @@ export const getRecommendedGraphType = (
     results
   );
   const averageResultsPerParameter =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.values(groupedData).reduce((acc, data) => acc + (data as any[]).length, 0) /
     Object.values(groupedData).length;
 

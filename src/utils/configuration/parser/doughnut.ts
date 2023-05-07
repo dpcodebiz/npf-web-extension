@@ -11,6 +11,7 @@ import { aggregateAllResults, groupDataByParameters, sumDataAggregation, unfoldA
  * @param summed_results
  * @returns
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getRunsFromGroupedDataPie(summed_results: Partial<Record<string, any>>) {
   const runs: ParameterizedRun[] = [];
   Object.entries(summed_results).forEach(([joined_params, results_data]) => {
