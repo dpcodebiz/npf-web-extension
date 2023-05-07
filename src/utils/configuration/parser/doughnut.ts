@@ -6,6 +6,11 @@ import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "..
 import { splitParams } from "../utils";
 import { aggregateAllResults, groupDataByParameters, sumDataAggregation, unfoldAggregatedData } from "./line";
 
+/**
+ * Returns an array of ParameterizedRun for a pie chart
+ * @param summed_results
+ * @returns
+ */
 function getRunsFromGroupedDataPie(summed_results: Partial<Record<string, any>>) {
   const runs: ParameterizedRun[] = [];
   Object.entries(summed_results).forEach(([joined_params, results_data]) => {
@@ -22,6 +27,13 @@ function getRunsFromGroupedDataPie(summed_results: Partial<Record<string, any>>)
   return runs;
 }
 
+/**
+ * Returns a configuration for a pie chart
+ * @param settings
+ * @param configurationData
+ * @param results
+ * @returns
+ */
 export const getPieChartConfiguration = (
   settings: Settings,
   configurationData: ConfigurationData,
@@ -47,19 +59,18 @@ export const getPieChartConfiguration = (
   // Summing all results again
   const summed_results = mapValues(grouped_data_by_other_params, (entries) => {
     // Reducing each array of entries to one object
-    const reduced_value =
-      entries?.reduce((acc, current) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const sum: any = { experiment_data: {} };
+    const reduced_value = entries?.reduce((acc, current) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sum: any = { experiment_data: {} };
 
-        // Summing each measurement
-        measurements.forEach((measurement) => {
-          sum.experiment_data[measurement] =
-            current.experiment_data[measurement] + (acc?.experiment_data?.efficiency ?? 0);
-        });
+      // Summing each measurement
+      measurements.forEach((measurement) => {
+        sum.experiment_data[measurement] =
+          current.experiment_data[measurement] + (acc?.experiment_data?.efficiency ?? 0);
+      });
 
-        return sum;
-      }, {}) ?? {};
+      return sum;
+    }, {});
 
     // Setting each parameter value
     parameters
