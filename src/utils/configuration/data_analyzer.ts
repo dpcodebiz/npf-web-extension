@@ -1,6 +1,13 @@
 import { ParsedConfigurationData } from "./parser";
 import { ConfigurationData, GRAPH_TYPES } from "./types";
 
+/**
+ * Analyzes the configuration data and results before returning a
+ * graph type
+ * @param configurationData
+ * @param results
+ * @returns
+ */
 export const getRecommendedGraphType = (configurationData: ConfigurationData, results: ParsedConfigurationData[]) => {
   // Getting number of parameters
   const paramsCount = configurationData.parameters.length;
