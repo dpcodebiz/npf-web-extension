@@ -5,6 +5,12 @@ import { joinParams, splitParams } from "../utils";
 import { getParameter } from "../../../components/settings/utils";
 import { Settings } from "../../settings/types";
 
+/**
+ * Groups a set of configurationData by parameters
+ * @param parameters
+ * @param configurationData
+ * @returns
+ */
 export const groupDataByParameters = (
   parameters: string[],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,7 +23,7 @@ export const mergeValuesAggregation = (data: { [index: string]: string }[], meas
   data.reduce((acc, currentValue) => acc.concat([parseFloat(currentValue[measurement])]), [] as number[]);
 
 export const sumDataAggregation = (data: { [index: string]: string }[], measurement: string) => {
-  const sum = data.reduce((acc, currentValue) => acc + parseFloat(currentValue[measurement]), 0) ?? 0;
+  const sum = data.reduce((acc, currentValue) => acc + parseFloat(currentValue[measurement]), 0);
   return sum / data.length;
 };
 
@@ -44,8 +50,6 @@ export function aggregateAllResults(
       measurements,
       (measurement) => measurement,
       (measurement) => {
-        if (!data) return 0;
-
         return aggregation(data, measurement);
       }
     );
@@ -56,6 +60,13 @@ export function aggregateAllResults(
   return aggregated_data;
 }
 
+/**
+ * Returns an array of parameterized runs
+ * @param main_param
+ * @param measurements
+ * @param grouped_data_by_params
+ * @returns
+ */
 export function getRunsFromGroupedData(
   main_param: string,
   measurements: string[],
@@ -71,7 +82,7 @@ export function getRunsFromGroupedData(
 
     // Merges all { [main_param]: value }[] into ({ [measurement]: { [main_param]: value } })
     const results_by_measurement = measurements.map((measurement) => ({
-      [measurement]: Object.assign({}, ...(experiment_data_by_measurement(measurement) ?? [])),
+      [measurement]: Object.assign({}, ...(experiment_data_by_measurement(measurement) as any)),
     }));
 
     // Creating run
@@ -87,6 +98,12 @@ export function getRunsFromGroupedData(
   return runs;
 }
 
+/**
+ * Unfolds a set of aggregated data and stores all the parameters with their values inside
+ * the experiment_data key
+ * @param aggregated_data
+ * @returns
+ */
 export const unfoldAggregatedData = (aggregated_data: ReturnType<typeof aggregateAllResults>) => {
   return Object.entries(aggregated_data).map(([joined_params, v]) => {
     return {
