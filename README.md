@@ -34,6 +34,9 @@ Builds the app for production, optimizes it then prepares it for deployment.
 
 ## Releases
 
+- V0.6.1
+  - Fixed app crash when no split parameter available
+  - Fixed too many labels being created when too much variance in the data
 - V0.6.0
   - Added boxplot charts
   - Added piechart
