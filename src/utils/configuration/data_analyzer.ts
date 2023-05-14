@@ -43,3 +43,45 @@ export const getRecommendedGraphType = (
   // Default to LINE
   return { recommended_type: GRAPH_TYPES.LINE, recommended_error_bars: false };
 };
+
+/**
+ * Analyzes the configuration data and results and returns whether to split the data into
+ * multiple labels for the graph or group everything under the same label.
+ * @param configurationData
+ * @param results
+ * @param settings
+ * @returns
+ */
+export const getRecommendedGroupByOtherParams = (
+  configurationData: ConfigurationData,
+  results: ParsedConfigurationData[],
+  settings: Settings
+) => {
+  // Grouping by main parameter and other parameters
+  const main_parameter = getParameter("x", settings, {
+    id: configurationData.id,
+    parameters: configurationData.parameters,
+    measurements: configurationData.measurements,
+  });
+  const second_parameter = configurationData.parameters.filter((param) => param != main_parameter)[0];
+  const groupedData = groupDataByParameters(second_parameter ? [second_parameter] : [], results);
+
+  return Object.keys(groupedData).length < 6;
+};
+
+/**
+ * Analyzes the configuration data and results before returning a recommended settings structure.
+ * @param configurationData
+ * @param results
+ * @param settings
+ * @returns
+ */
+export const getRecommendedGraphSettings = (
+  configurationData: ConfigurationData,
+  results: ParsedConfigurationData[],
+  settings: Settings
+) => {
+  const { recommended_type, recommended_error_bars } = getRecommendedGraphType(configurationData, results, settings);
+
+  return { recommended_type, recommended_error_bars };
+};

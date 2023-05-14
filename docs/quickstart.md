@@ -1,5 +1,7 @@
 # Quickstart
 
+If you are having troubles with this package, make sure to uninstall it and then reinstall it in order to be up-to-date.
+
 ## With npf
 
 This package is already integrated with npf. You can request an export to web via the `--web` parameter of `npf_run`.
@@ -21,7 +23,7 @@ pip install npf-web-extension
 Then import the package and call the `export` method.
 
 ```python
-import npf_web_extension
+from npf_web_extension.app import export
 
 # Preparing data to be exported
 configurationData = {
@@ -41,7 +43,7 @@ Algorithm 2,10,8,0.87,Ryzen
 output = "index.html"
 
 # Exporting the configuration to 
-npf_web_extension.export(configurationData, output)
+export(configurationData, output)
 ```
 
 There will be an `index.html` file waiting for you. Start playing with it!

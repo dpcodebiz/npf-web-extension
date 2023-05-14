@@ -1,6 +1,6 @@
 import { ParseResult } from "papaparse";
 import { Configuration, ConfigurationData, GRAPH_TYPES } from "./types";
-import { getRecommendedGraphType } from "./data_analyzer";
+import { getRecommendedGraphSettings, getRecommendedGraphType } from "./data_analyzer";
 import { getLineChartConfiguration } from "./parser/line";
 import { getConfigurationDataByParameters, getParametersWithValues } from "./utils";
 import { Settings } from "../settings/types";
@@ -59,7 +59,7 @@ export function resultsToConfiguration(
     const { split_parameters, data: resultsByChangingParameter } = data;
 
     // Analyzing data and getting recommended graph type for this data
-    const { recommended_type, recommended_error_bars } = getRecommendedGraphType(
+    const { recommended_type, recommended_error_bars } = getRecommendedGraphSettings(
       configurationData,
       resultsByChangingParameter,
       settings

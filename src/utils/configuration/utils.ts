@@ -1,9 +1,14 @@
-import { isArray, mapValues, shake, unique } from "radash";
+import { mapValues, unique } from "radash";
 import { ParsedConfigurationData } from "./parser";
 import { groupDataByParameters } from "./parser/line";
 import { ConfigurationData, Experiment, SplitParametersData } from "./types";
 import { Settings } from "../settings/types";
-import { getSettingsSplitAxis } from "../../components/settings/utils";
+import {
+  getParameter,
+  getSettingsParametersOptions,
+  getSettingsSplitAxis,
+  getSettingsSplitParametersOptions,
+} from "../../components/settings/utils";
 
 /**
  * Joins all parameters
@@ -107,6 +112,11 @@ export const getConfigurationDataByParameters = (
 ) => {
   // Getting all parameters with their values
   const parameters = configurationData.parameters;
+  const main_parameter = getParameter("x", settings, {
+    id: configurationData.id,
+    parameters,
+    measurements: configurationData.measurements,
+  });
   const parametersWithValues = getParametersWithValues(parameters, parsedConfigurationData);
   const nParameters = Object.keys(parametersWithValues).length;
 
@@ -116,17 +126,32 @@ export const getConfigurationDataByParameters = (
   }[] = [];
 
   // Split along X axis
+  const availableSplitParameters = getSettingsSplitParametersOptions("x", settings, {
+    id: configurationData.id,
+    split: {},
+    parameters: parametersWithValues,
+  })
+    .map((option) => option.value)
+    .filter((parameter) => !["undefined", main_parameter].includes(parameter));
+  const availableSplitParameterX =
+    availableSplitParameters.length > 1
+      ? [availableSplitParameters[1], parametersWithValues[availableSplitParameters[1]]]
+      : undefined;
+  const availableSplitParameterY =
+    availableSplitParameters.length > 2
+      ? [availableSplitParameters[2], parametersWithValues[availableSplitParameters[2]]]
+      : undefined;
   const parameterXEntry =
     nParameters > 2 && (getSettingsSplitAxis("x", settings, configurationData.id)?.enable ?? true)
       ? Object.entries(parametersWithValues).find(
           (entry) => entry[0] === getSettingsSplitAxis("x", settings, configurationData.id)?.parameter
-        ) ?? Object.entries(parametersWithValues)[2]
+        ) ?? availableSplitParameterX
       : undefined;
   const parameterYEntry =
     nParameters > 3 && (getSettingsSplitAxis("y", settings, configurationData.id)?.enable ?? true)
       ? Object.entries(parametersWithValues).find(
           (entry) => entry[0] === getSettingsSplitAxis("y", settings, configurationData.id)?.parameter
-        ) ?? Object.entries(parametersWithValues)[3]
+        ) ?? availableSplitParameterY
       : undefined;
 
   if (parameterXEntry || parameterYEntry) {
