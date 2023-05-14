@@ -15,15 +15,19 @@ export type ConfigurationData = {
 export type Configuration = {
   id: string;
   name: string;
-  parameters: {
-    [index: string]: string[];
-  };
+  parameters: ConfigurationParameters;
   measurements: string[];
-  split: {
-    x?: string;
-    y?: string;
-  };
+  split: ConfigurationSplit;
   experiments: Experiment[]; // Maybe this should be tied only to one experiment
+};
+
+export type ConfigurationParameters = {
+  [index: string]: string[];
+};
+
+export type ConfigurationSplit = {
+  x?: string;
+  y?: string;
 };
 
 export type Experiment = {

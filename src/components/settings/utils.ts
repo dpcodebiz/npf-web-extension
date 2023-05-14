@@ -1,5 +1,10 @@
 import { isEmpty } from "radash";
-import { Configuration, GRAPH_TYPES } from "../../utils/configuration/types";
+import {
+  Configuration,
+  ConfigurationParameters,
+  ConfigurationSplit,
+  GRAPH_TYPES,
+} from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 import { Settings } from "../../utils/settings/types";
 
@@ -152,7 +157,11 @@ export const getSettingsSplitAxisFormat = (
 export const getSettingsSplitAxis = (axis: Axis, settings: Settings, configuration_id: string) =>
   settings[configuration_id]?.split?.[axis];
 
-export const getSplitParameter = (axis: Axis, settings: Settings, configuration: Configuration) => {
+export const getSplitParameter = (
+  axis: Axis,
+  settings: Settings,
+  configuration: { id: string; split: ConfigurationSplit }
+) => {
   const settings_value = getSettingsSplitAxis(axis, settings, configuration.id)?.parameter;
   const default_value = configuration.split[axis];
   return settings_value ?? default_value;
@@ -166,7 +175,11 @@ export const getSplitParameter = (axis: Axis, settings: Settings, configuration:
  * @param configuration
  * @returns
  */
-export const getSettingsSplitParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
+export const getSettingsSplitParametersOptions = (
+  axis: Axis,
+  settings: Settings,
+  configuration: { id: string; split: ConfigurationSplit; parameters: ConfigurationParameters }
+) => {
   const other_axis_value = getSplitParameter(axis == "x" ? "y" : "x", settings, configuration);
 
   return [{ label: "None", value: "undefined" }].concat(
