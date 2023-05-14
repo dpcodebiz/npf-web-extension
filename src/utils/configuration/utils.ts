@@ -3,7 +3,12 @@ import { ParsedConfigurationData } from "./parser";
 import { groupDataByParameters } from "./parser/line";
 import { ConfigurationData, Experiment, SplitParametersData } from "./types";
 import { Settings } from "../settings/types";
-import { getSettingsSplitAxis, getSettingsSplitParametersOptions } from "../../components/settings/utils";
+import {
+  getParameter,
+  getSettingsParametersOptions,
+  getSettingsSplitAxis,
+  getSettingsSplitParametersOptions,
+} from "../../components/settings/utils";
 
 /**
  * Joins all parameters
@@ -107,6 +112,11 @@ export const getConfigurationDataByParameters = (
 ) => {
   // Getting all parameters with their values
   const parameters = configurationData.parameters;
+  const main_parameter = getParameter("x", settings, {
+    id: configurationData.id,
+    parameters,
+    measurements: configurationData.measurements,
+  });
   const parametersWithValues = getParametersWithValues(parameters, parsedConfigurationData);
   const nParameters = Object.keys(parametersWithValues).length;
 
@@ -122,12 +132,15 @@ export const getConfigurationDataByParameters = (
     parameters: parametersWithValues,
   })
     .map((option) => option.value)
-    .filter((parameter) => parameter != "undefined");
+    .filter((parameter) => !["undefined", main_parameter].includes(parameter));
   const availableSplitParameterX =
-    availableSplitParameters.length > 0 ? parametersWithValues[availableSplitParameters[0]] : undefined;
+    availableSplitParameters.length > 1
+      ? [availableSplitParameters[1], parametersWithValues[availableSplitParameters[1]]]
+      : undefined;
   const availableSplitParameterY =
-    availableSplitParameters.length > 1 ? parametersWithValues[availableSplitParameters[1]] : undefined;
-  console.log(availableSplitParameters);
+    availableSplitParameters.length > 2
+      ? [availableSplitParameters[2], parametersWithValues[availableSplitParameters[2]]]
+      : undefined;
   const parameterXEntry =
     nParameters > 2 && (getSettingsSplitAxis("x", settings, configurationData.id)?.enable ?? true)
       ? Object.entries(parametersWithValues).find(

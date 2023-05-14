@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
-import { group, mapValues, objectify } from "radash";
+import { group, isNumber, mapValues, objectify } from "radash";
 import { ExperimentData, ParsedConfigurationData } from "../parser";
 import { joinParams, splitParams } from "../utils";
 import { getParameter } from "../../../components/settings/utils";
 import { Settings } from "../../settings/types";
+import { getRecommendedGroupByOtherParams } from "../data_analyzer";
 
 /**
  * Groups a set of configurationData by parameters
@@ -123,16 +124,20 @@ export const getLineChartConfiguration = (
   const parameters = configurationData.parameters;
   const measurements = configurationData.measurements;
   const main_param = getParameter("x", settings, configurationData);
+  const second_param = parameters.filter((param) => param != main_param)[0];
+  const group_by_other_params = getRecommendedGroupByOtherParams(configurationData, results, settings);
 
   // Aggregating all results
   const aggregated_data = aggregateAllResults(parameters, measurements, results, mergeValuesAggregation);
 
   // Now, we unfold all the data
-  const unfolded_data = unfoldAggregatedData(aggregated_data);
+  const unfolded_data = unfoldAggregatedData(aggregated_data).sort(
+    (a, b) => parseFloat(a[main_param].toString()) - parseFloat(b[main_param].toString())
+  );
 
   // Grouping again but only by main parameter now
   const grouped_data_by_other_params = groupDataByParameters(
-    parameters.filter((param) => param != main_param),
+    group_by_other_params && second_param ? [second_param] : [],
     unfolded_data
   );
 
@@ -144,7 +149,13 @@ export const getLineChartConfiguration = (
     },
     name: configurationData.name,
     main_parameter: main_param,
-    runs: getRunsFromGroupedData(main_param, measurements, grouped_data_by_other_params),
+    runs: getRunsFromGroupedData(
+      main_param,
+      measurements,
+      group_by_other_params
+        ? grouped_data_by_other_params
+        : { ["parameter=" + main_param]: grouped_data_by_other_params[""] }
+    ),
   };
 
   return experiment;

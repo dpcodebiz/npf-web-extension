@@ -55,6 +55,7 @@ export type Metadata = {
   type: GRAPH_TYPES;
   recommended_type: GRAPH_TYPES;
   recommended_error_bars?: boolean;
+  group_by_other_params?: boolean;
 };
 
 export type ParameterizedRun = {
