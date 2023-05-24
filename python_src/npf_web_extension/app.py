@@ -1,7 +1,6 @@
 import json
 import sys
 from argparse import ArgumentParser
-from importlib.metadata import version
 import os
 import shutil
 
@@ -16,7 +15,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        print(version("npf-web-extension"))
+        print("0.6.2")
         sys.exit()
 
 """

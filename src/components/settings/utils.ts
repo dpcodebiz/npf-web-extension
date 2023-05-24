@@ -83,6 +83,20 @@ export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration:
 };
 
 /**
+ * Returns the scale of a given axis
+ * @param axis
+ * @param settings
+ * @param configuration
+ * @returns
+ */
+export const getGraphAxisScale = (axis: Axis, settings: Settings, configuration: Configuration) => {
+  const value = settings[configuration.id][axis].scale;
+  const default_value = 1;
+
+  return value ?? default_value;
+};
+
+/**
  * Returns the title of the graph from the settings
  * @default configuration.name
  * @param settings

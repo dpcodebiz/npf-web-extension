@@ -30,7 +30,12 @@ export const ChartPanelComponent = (props: Props) => {
             {configuration.experiments.map((experiment, index) => (
               <div key={index}>
                 <div className="p-2 xl:p-4">
-                  <ChartComponent settings={settings} configuration={configuration} experiment={experiment} />
+                  <ChartComponent
+                    settings={settings}
+                    configuration={configuration}
+                    experiment={experiment}
+                    index={index}
+                  />
                 </div>
               </div>
             ))}

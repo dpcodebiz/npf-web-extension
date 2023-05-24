@@ -14,7 +14,13 @@ import {
   TitleOptions,
 } from "chart.js";
 import { Settings } from "../../../utils/settings/types";
-import { getGraphAxisTitle } from "../../settings/utils";
+import {
+  getGraphAxisScale,
+  getGraphAxisTitle,
+  getSettingsDefaultParametersOptions,
+  getSettingsParametersOptions,
+} from "../../settings/utils";
+import { isString, range } from "radash";
 
 export const getLineChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {
@@ -43,6 +49,11 @@ export const lineChartAxisStyles = (settings: Settings, configuration: Configura
         size: 16,
       },
       padding: 10,
+      callback: function (value, index, ticks) {
+        const scale = getGraphAxisScale(axis, settings, configuration);
+        const valueScaled = parseFloat(value.toString()) / scale;
+        return `${valueScaled.toFixed(3).replace(/[.,]000$/, "")}`;
+      },
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
 
@@ -74,13 +85,42 @@ export const lineChartLegendStyles = (split: boolean) =>
     },
   } as _DeepPartialObject<LegendOptions<"line">>);
 
-export const lineChartOptions = (settings: Settings, configuration: Configuration, split: boolean) =>
+const getAnnotations = (settings: Settings, configuration: Configuration, index: number) => {
+  const values = Object.keys(Object.values(configuration.experiments[index].runs[0].results)[0]);
+  const pairs: string[][] = [];
+
+  for (const i of range(values.length - 2)) {
+    pairs.push([values[i], values[i + 1]]);
+  }
+
+  return pairs
+    .map((interval, index) =>
+      index % 2 == 1
+        ? {
+            type: "box",
+            backgroundColor: "rgba(0,0,0, 0.1)",
+            borderWidth: 0,
+            drawTime: "beforeDatasetsDraw",
+            xMax: interval[0],
+            xMin: interval[1],
+            xScaleID: "x",
+            yScaleID: "y",
+          }
+        : undefined
+    )
+    .filter((e) => e);
+};
+
+export const lineChartOptions = (settings: Settings, configuration: Configuration, split: boolean, index: number) =>
   ({
     responsive: true,
     plugins: {
       legend: lineChartLegendStyles(split),
       title: lineChartTitleStyles(),
       tooltip: {},
+      annotation: {
+        annotations: getAnnotations(settings, configuration, index),
+      },
     },
     scales: {
       x: lineChartAxisStyles(settings, configuration, "x"),

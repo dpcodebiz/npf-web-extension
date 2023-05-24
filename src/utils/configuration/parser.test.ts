@@ -97,8 +97,8 @@ test("resultsToConfiguration bar", () => {
           x: { enable: false, format: "", parameter: "", placement: "before" },
           y: { enable: false, format: "", parameter: "", placement: "before" },
         },
-        x: { parameter: "p1", title: "p1" },
-        y: { parameter: "m1", title: "m1" },
+        x: { parameter: "p1", title: "p1", scale: 1 },
+        y: { parameter: "m1", title: "m1", scale: 1 },
       },
     })
   ).toMatchObject({
@@ -146,8 +146,8 @@ test("resultsToConfiguration pie", () => {
           x: { enable: false, format: "", parameter: "", placement: "before" },
           y: { enable: false, format: "", parameter: "", placement: "before" },
         },
-        x: { parameter: "p1", title: "p1" },
-        y: { parameter: "m1", title: "m1" },
+        x: { parameter: "p1", title: "p1", scale: 1 },
+        y: { parameter: "m1", title: "m1", scale: 1 },
       },
     })
   ).toMatchObject({
@@ -193,8 +193,8 @@ test("resultsToConfiguration boxplot", () => {
           x: { enable: false, format: "", parameter: "", placement: "before" },
           y: { enable: false, format: "", parameter: "", placement: "before" },
         },
-        x: { parameter: "p1", title: "p1" },
-        y: { parameter: "m1", title: "m1" },
+        x: { parameter: "p1", title: "p1", scale: 1 },
+        y: { parameter: "m1", title: "m1", scale: 1 },
       },
     })
   ).toMatchObject({
@@ -243,8 +243,8 @@ test("resultsToConfiguration split", () => {
           x: { enable: true, format: "", parameter: "p3", placement: "before" },
           y: { enable: true, format: "", parameter: "p4", placement: "before" },
         },
-        x: { parameter: "p1", title: "p1" },
-        y: { parameter: "m1", title: "m1" },
+        x: { parameter: "p1", title: "p1", scale: 1 },
+        y: { parameter: "m1", title: "m1", scale: 1 },
       },
     })
   ).toMatchObject({

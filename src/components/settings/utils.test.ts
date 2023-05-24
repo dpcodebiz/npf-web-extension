@@ -29,10 +29,12 @@ const settings: Settings = {
     x: {
       parameter: "param1",
       title: "x axis",
+      scale: 1,
     },
     y: {
       parameter: "param2",
       title: "y axis",
+      scale: 1,
     },
     split: {
       x: {

@@ -10,10 +10,11 @@ type Props = {
   settings: Settings;
   configuration: Configuration;
   experiment: Experiment;
+  index: number;
 };
 
 export const BoxPlotChart: React.FC<Props> = (props: Props) => {
-  const { settings, configuration, experiment } = props;
+  const { settings, configuration, experiment, index } = props;
 
   const split = experiment.split_parameters != undefined;
 
@@ -25,7 +26,7 @@ export const BoxPlotChart: React.FC<Props> = (props: Props) => {
           datasets: getDatasets(experiment, settings, configuration, GRAPH_TYPES.BOXPLOT),
         } as ChartData<"boxplot", number[], string>
       }
-      options={boxplotChartOptions(settings, configuration, split)}
+      options={boxplotChartOptions(settings, configuration, split, index)}
     />
   );
 };

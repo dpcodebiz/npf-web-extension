@@ -17,18 +17,30 @@ import { Settings } from "../../../utils/settings/types";
 import { LineError } from "../../../utils/charts-wrapper/typedCharts";
 import { getSettingsErrorBars } from "../../settings/utils";
 import { PointWithErrorBar } from "chartjs-chart-error-bars";
+import Annotation from "chartjs-plugin-annotation";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, PointWithErrorBar);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointWithErrorBar,
+  Annotation
+);
 
 type Props = {
   settings: Settings;
   configuration: Configuration;
   experiment: Experiment;
+  index: number;
   split?: boolean;
 };
 
 export const LineChart = (props: Props) => {
-  const { settings, configuration, experiment, split = false } = props;
+  const { settings, configuration, experiment, index, split = false } = props;
 
   return (
     <>
@@ -40,7 +52,7 @@ export const LineChart = (props: Props) => {
               datasets: getDatasets(experiment, settings, configuration, GRAPH_TYPES.LINE, true),
             } as ChartData<"lineWithErrorBars", number[], string>
           }
-          options={lineChartOptions(settings, configuration, split)}
+          options={lineChartOptions(settings, configuration, split, index)}
         />
       ) : (
         <Line
@@ -50,7 +62,7 @@ export const LineChart = (props: Props) => {
               datasets: getDatasets(experiment, settings, configuration),
             } as ChartData<"line", number[], string>
           }
-          options={lineChartOptions(settings, configuration, split)}
+          options={lineChartOptions(settings, configuration, split, index)}
         />
       )}
     </>
