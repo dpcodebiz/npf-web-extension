@@ -30,7 +30,13 @@ export const ChartComponent = (props: Props) => {
       }
       case GRAPH_TYPES.BAR: {
         return (
-          <BarChart settings={settings} configuration={configuration} split={split} experiment={experiment}></BarChart>
+          <BarChart
+            settings={settings}
+            configuration={configuration}
+            split={split}
+            experiment={experiment}
+            index={index}
+          ></BarChart>
         );
       }
       case GRAPH_TYPES.PIE: {
@@ -39,7 +45,14 @@ export const ChartComponent = (props: Props) => {
         );
       }
       case GRAPH_TYPES.BOXPLOT: {
-        return <BoxPlotChart settings={settings} configuration={configuration} experiment={experiment}></BoxPlotChart>;
+        return (
+          <BoxPlotChart
+            settings={settings}
+            configuration={configuration}
+            experiment={experiment}
+            index={index}
+          ></BoxPlotChart>
+        );
       }
     }
   };

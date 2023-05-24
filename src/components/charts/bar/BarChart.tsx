@@ -14,10 +14,11 @@ type Props = {
   configuration: Configuration;
   split: boolean;
   experiment: Experiment;
+  index: number;
 };
 
 export const BarChart = (props: Props) => {
-  const { settings, configuration, experiment, split = false } = props;
+  const { settings, configuration, experiment, split = false, index } = props;
   return (
     <div className="bg-white p-6 rounded-xl">
       {getSettingsErrorBars(settings, configuration) ? (
@@ -28,7 +29,7 @@ export const BarChart = (props: Props) => {
               datasets: getDatasets(experiment, settings, configuration, GRAPH_TYPES.BAR, true),
             } as ChartData<"barWithErrorBars", number[], string>
           }
-          options={barChartOptions(settings, configuration, split)}
+          options={barChartOptions(settings, configuration, split, index)}
         />
       ) : (
         <Bar
@@ -38,7 +39,7 @@ export const BarChart = (props: Props) => {
               datasets: getDatasets(experiment, settings, configuration),
             } as ChartData<"bar", number[], string>
           }
-          options={barChartOptions(settings, configuration, split)}
+          options={barChartOptions(settings, configuration, split, index)}
         />
       )}
     </div>
