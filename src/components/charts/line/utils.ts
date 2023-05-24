@@ -15,11 +15,12 @@ import {
 } from "chart.js";
 import { Settings } from "../../../utils/settings/types";
 import {
+  getGraphAxisScale,
   getGraphAxisTitle,
   getSettingsDefaultParametersOptions,
   getSettingsParametersOptions,
 } from "../../settings/utils";
-import { range } from "radash";
+import { isString, range } from "radash";
 
 export const getLineChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {
@@ -48,6 +49,11 @@ export const lineChartAxisStyles = (settings: Settings, configuration: Configura
         size: 16,
       },
       padding: 10,
+      callback: function (value, index, ticks) {
+        const scale = getGraphAxisScale(axis, settings, configuration);
+        const valueScaled = parseFloat(value.toString()) / scale;
+        return `${valueScaled.toFixed(3).replace(/[.,]000$/, "")}`;
+      },
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
 

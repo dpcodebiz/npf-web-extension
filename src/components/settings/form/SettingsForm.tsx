@@ -2,6 +2,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Configuration, GRAPH_TYPES } from "../../../utils/configuration/types";
 import Select from "react-select";
 import {
+  getGraphAxisScale,
   getGraphAxisTitle,
   getSettingsDefaultParametersOptions,
   getSettingsDefaultSplitParametersOptions,
@@ -36,9 +37,11 @@ export const SettingsForm = (props: Props) => {
       title: getSettingsGraphTitle(settings, configuration),
       x: {
         title: getGraphAxisTitle("x", settings, configuration),
+        scale: getGraphAxisScale("x", settings, configuration),
       },
       y: {
         title: getGraphAxisTitle("y", settings, configuration),
+        scale: getGraphAxisScale("y", settings, configuration),
       },
       split: {
         x: {
@@ -162,6 +165,10 @@ export const SettingsForm = (props: Props) => {
                 <label htmlFor="x.title">Label</label>
                 <input className={styles.input} {...register("x.title")} id="x.title" type="text" />
               </div>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="x.scale">Scale</label>
+                <input className={styles.input} {...register("x.scale")} id="x.scale" type="text" />
+              </div>
             </div>
             <div className={_clsx(styles.group)}>
               <span className={_clsx(styles.heading)}>Y axis</span>
@@ -186,6 +193,10 @@ export const SettingsForm = (props: Props) => {
               <div className={_clsx(styles.group)}>
                 <label htmlFor="y.title">Label</label>
                 <input className={styles.input} {...register("y.title")} id="y.title" type="text" />
+              </div>
+              <div className={_clsx(styles.group)}>
+                <label htmlFor="y.scale">Scale</label>
+                <input className={styles.input} {...register("y.scale")} id="y.scale" type="text" />
               </div>
             </div>
           </>

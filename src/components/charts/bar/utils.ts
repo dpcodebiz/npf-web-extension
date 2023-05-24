@@ -14,7 +14,7 @@ import {
   TitleOptions,
 } from "chart.js";
 import { Settings } from "../../../utils/settings/types";
-import { getGraphAxisTitle } from "../../settings/utils";
+import { getGraphAxisScale, getGraphAxisTitle } from "../../settings/utils";
 
 export const getBarChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {
@@ -43,6 +43,11 @@ export const barChartAxisStyles = (settings: Settings, configuration: Configurat
         size: 16,
       },
       padding: 10,
+      callback: function (value, index, ticks) {
+        const scale = getGraphAxisScale(axis, settings, configuration);
+        const valueScaled = parseFloat(value.toString()) / scale;
+        return `${valueScaled.toFixed(3).replace(/[.,]000$/, "")}`;
+      },
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
 

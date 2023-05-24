@@ -231,8 +231,8 @@ test("getConfigurationDataByParameters only x", () => {
         title: "",
         type: GRAPH_TYPES.LINE,
         error_bars: false,
-        x: { title: "", parameter: "" },
-        y: { title: "", parameter: "" },
+        x: { title: "", parameter: "", scale: 1 },
+        y: { title: "", parameter: "", scale: 1 },
         split: {
           x: {
             enable: true,
@@ -301,8 +301,8 @@ test("getConfigurationDataByParameters only y", () => {
         title: "",
         type: GRAPH_TYPES.LINE,
         error_bars: false,
-        x: { title: "", parameter: "" },
-        y: { title: "", parameter: "" },
+        x: { title: "", parameter: "", scale: 1 },
+        y: { title: "", parameter: "", scale: 1 },
         split: {
           x: {
             enable: false,
