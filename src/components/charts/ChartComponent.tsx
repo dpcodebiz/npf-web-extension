@@ -8,10 +8,11 @@ type Props = {
   settings: Settings;
   configuration: Configuration;
   experiment: Experiment;
+  index: number;
 };
 
 export const ChartComponent = (props: Props) => {
-  const { settings, configuration, experiment } = props;
+  const { settings, configuration, experiment, index } = props;
   const split = experiment.split_parameters != undefined;
 
   const renderGraph = (experiment: Experiment) => {
@@ -19,6 +20,7 @@ export const ChartComponent = (props: Props) => {
       case GRAPH_TYPES.LINE: {
         return (
           <LineChart
+            index={index}
             settings={settings}
             configuration={configuration}
             split={split}

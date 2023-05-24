@@ -3500,7 +3500,7 @@
   "resolved" "https://registry.npmjs.org/charenc/-/charenc-0.0.2.tgz"
   "version" "0.0.2"
 
-"chart.js@^4.1.0", "chart.js@^4.1.1", "chart.js@^4.2.1":
+"chart.js@^4.1.0", "chart.js@^4.1.1", "chart.js@^4.2.1", "chart.js@>=4.0.0":
   "integrity" "sha512-6YbpQ0nt3NovAgOzbkSSeeAQu/3za1319dPUQTXn9WcOpywM8rGKxJHrhS8V8xEkAlk8YhEfjbuAPfUyp6jIsw=="
   "resolved" "https://registry.npmjs.org/chart.js/-/chart.js-4.2.1.tgz"
   "version" "4.2.1"
@@ -3511,6 +3511,11 @@
   "integrity" "sha512-2d9pV5oMZCdxCBga3fI6n71mIHJc3tMpdJPXPH84VzuzIzAhY5m8IvPJKDVzq54UZzzXciloF4kyHLYYx5rlaQ=="
   "resolved" "https://registry.npmjs.org/chartjs-chart-error-bars/-/chartjs-chart-error-bars-4.2.0.tgz"
   "version" "4.2.0"
+
+"chartjs-plugin-annotation@^3.0.1":
+  "integrity" "sha512-hlIrXXKqSDgb+ZjVYHefmlZUXK8KbkCPiynSVrTb/HjTMkT62cOInaT1NTQCKtxKKOm9oHp958DY3RTAFKtkHg=="
+  "resolved" "https://registry.npmjs.org/chartjs-plugin-annotation/-/chartjs-plugin-annotation-3.0.1.tgz"
+  "version" "3.0.1"
 
 "check-types@^11.1.1":
   "integrity" "sha512-HBiYvXvn9Z70Z88XKjz3AEKd4HJhBXsa3j7xFnITAzoS8+q6eIGi8qDB8FKPBAjtuxjI/zFpwuiCb8oDtKOYrA=="

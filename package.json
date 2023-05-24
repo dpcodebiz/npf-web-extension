@@ -15,6 +15,7 @@
     "@types/react-dom": "^18.0.10",
     "chart.js": "^4.2.1",
     "chartjs-chart-error-bars": "^4.2.0",
+    "chartjs-plugin-annotation": "^3.0.1",
     "copy-files-from-to": "^3.8.0",
     "eslint-config-prettier": "^8.6.0",
     "radash": "^10.8.1",
