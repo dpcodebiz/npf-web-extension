@@ -45,9 +45,10 @@ export const barChartAxisStyles = (settings: Settings, configuration: Configurat
       },
       padding: 10,
       callback: function (value, index, ticks) {
+        const label = this.getLabelForValue(value as number);
         const scale = getGraphAxisScale(axis, settings, configuration);
-        const valueScaled = parseFloat(value.toString()) / scale;
-        return `${valueScaled.toFixed(3).replace(/[.,]000$/, "")}`;
+        const valueScaled = parseFloat(label.toString().replace(",", ".")) / scale;
+        return `${valueScaled.toFixed(2).replace(/[.,]000$/, "")}`;
       },
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
