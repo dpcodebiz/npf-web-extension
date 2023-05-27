@@ -1,5 +1,5 @@
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
-import { Configuration, Experiment } from "../../../utils/configuration/types";
+import { Configuration } from "../../../utils/configuration/types";
 import {
   CartesianScaleTypeRegistry,
   Chart,
@@ -14,13 +14,8 @@ import {
   TitleOptions,
 } from "chart.js";
 import { Settings } from "../../../utils/settings/types";
-import {
-  getGraphAxisScale,
-  getGraphAxisTitle,
-  getSettingsDefaultParametersOptions,
-  getSettingsParametersOptions,
-} from "../../settings/utils";
-import { isString, range } from "radash";
+import { getGraphAxisScale, getGraphAxisTitle } from "../../settings/utils";
+import { range } from "radash";
 
 export const getLineChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {

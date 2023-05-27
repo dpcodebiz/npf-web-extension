@@ -14,7 +14,7 @@ import {
 } from "chart.js";
 import { Settings } from "../../../utils/settings/types";
 import { getGraphAxisScale, getGraphAxisTitle } from "../../settings/utils";
-import { range, set } from "radash";
+import { range } from "radash";
 
 export const getBoxplotChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {

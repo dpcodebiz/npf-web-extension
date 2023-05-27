@@ -1,5 +1,5 @@
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
-import { Configuration, Experiment } from "../../../utils/configuration/types";
+import { Configuration } from "../../../utils/configuration/types";
 import {
   CartesianScaleTypeRegistry,
   Chart,
