@@ -90,7 +90,7 @@ export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration:
  * @returns
  */
 export const getGraphAxisScale = (axis: Axis, settings: Settings, configuration: Configuration) => {
-  const value = settings[configuration.id][axis].scale;
+  const value = settings[configuration.id]?.[axis].scale;
   const default_value = 1;
 
   return value ?? default_value;
