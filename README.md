@@ -2,7 +2,9 @@
 
 This repository is an extension to NPF (<https://github.com/tbarbette/npf>). The architecture has been built based on npf's internal architecture. It should be used along as part of npf's workflow.
 
-For more advanced usage, it can be used as a standalone tool. In order to do so, the app has to be initialized by running the following javascript command:
+It can also be used as a standalone tool. It is recommended to install the python package via `pip install npf-web-extension`.
+
+For more advanced usage, the app can be built using the commands available below and then opening the `template.html` file inside a browser. After opening the file, the following command can be run inside the browser to display a configuration.
 
 ```js
 window.updateConfiguration(configurationData);
@@ -34,6 +36,17 @@ Builds the app for production, optimizes it then prepares it for deployment.
 
 ## Releases
 
+- V0.6.3
+  - Added settings override. It is now possible to override the default settings when exporting a configurationData.
+  - Added POS data to demo sets
+  - Updated readme
+  - Updated docs
+  - Fixed build errors
+  - Fixed graph axis scaling error due to wrong behaviour of chartjs
+  - Refactoring
+- V0.6.2
+  - Added background stripes to charts
+  - Added graph axis scaling
 - V0.6.1
   - Fixed app crash when no split parameter available
   - Fixed too many labels being created when too much variance in the data
