@@ -48,7 +48,7 @@ export const lineChartAxisStyles = (settings: Settings, configuration: Configura
         const label = this.getLabelForValue(value as number);
         const scale = getGraphAxisScale(axis, settings, configuration);
         const valueScaled = parseFloat(label.toString().replace(",", ".")) / scale;
-        return `${valueScaled.toFixed(2).replace(/[.,]000$/, "")}`;
+        return `${valueScaled.toFixed(2).replace(/[.,]00$/, "")}`;
       },
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
