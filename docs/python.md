@@ -26,10 +26,10 @@ interface ConfigurationData {
 }
 
 export enum GRAPH_TYPES {
-  LINE,
-  BAR,
-  PIE,
-  BOXPLOT,
+  LINE = 0,
+  BAR = 1,
+  PIE = 2,
+  BOXPLOT = 3,
 }
 
 interface ConfigurationSettings = {
