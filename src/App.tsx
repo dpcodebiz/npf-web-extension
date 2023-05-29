@@ -10,7 +10,9 @@ import { ConfigurationData } from "./utils/configuration/types";
 import { CPU_ALGORITHM_DATA } from "./utils/examples/cpu_algorithm";
 import { ChartPanelComponent } from "./components/charts/ChartPanelComponent";
 import { SettingsModal } from "./components/settings/SettingsModal";
-import { isArray, isEqual } from "radash";
+import { isEqual } from "radash";
+import { POS_DATA } from "./utils/examples/pos";
+import { updateConfigurationCallback } from "./utils/app";
 
 function App() {
   // States
@@ -22,35 +24,16 @@ function App() {
   // Configurations available
   const [configurations, setConfigurations] = useState<{ [index: string]: ConfigurationData }>();
   const [selectedConfiguration, setSelectedConfiguration] = useState("");
+  const callback = updateConfigurationCallback({ load, configurations, setConfigurations, setSettings, settings });
 
   // Callbacks
   const updateConfiguration = useCallback(
-    (configurationData: ConfigurationData | ConfigurationData[]) => {
-      if (isArray(configurationData)) {
-        load(configurationData[0]);
-        const newConfigurations: { [index: string]: ConfigurationData } = {};
-        configurationData.forEach((config) => {
-          newConfigurations[config.id] = config;
-        });
-        setConfigurations(Object.assign({ ...configurations }, newConfigurations));
-        return;
-      }
-
-      load(configurationData);
-      setConfigurations({ ...configurations, ...{ [configurationData.id]: configurationData } });
-    },
-    [configurations, load]
+    (configurationData: ConfigurationData | ConfigurationData[]) => callback({ configurationData }),
+    [callback]
   );
   const demo = useCallback(() => {
-    setConfigurations({
-      ...{
-        [CPU_ALGORITHM_DATA.id]: CPU_ALGORITHM_DATA,
-        [IPERF_DATA.id]: IPERF_DATA,
-        [MATH_DATA.id]: MATH_DATA,
-        [WORLD_POPULATION_DATA.id]: WORLD_POPULATION_DATA,
-      },
-    });
-  }, [setConfigurations]);
+    updateConfiguration([CPU_ALGORITHM_DATA, IPERF_DATA, MATH_DATA, WORLD_POPULATION_DATA, POS_DATA]);
+  }, [updateConfiguration]);
   const onConfigurationClick = useCallback(
     (id: string) => {
       if (!configurations) return;

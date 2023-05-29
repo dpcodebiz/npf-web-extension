@@ -1,4 +1,4 @@
-import { ConfigurationData } from "../configuration/types";
+import { ConfigurationData, GRAPH_TYPES } from "../configuration/types";
 
 export const POS_DATA: ConfigurationData = {
   id: "31557801-d410-49d2-851a-bd3da649cad6",
@@ -46,4 +46,23 @@ export const POS_DATA: ConfigurationData = {
   1-tx,1800000,0.820119354838709
   1-tx,1900000,0.820116923076923
   1-tx,2000000,0.820117391304348`,
+  settings: {
+    title: " ",
+    type: GRAPH_TYPES.LINE,
+    error_bars: false,
+    split: {
+      x: { enable: false, format: "", parameter: "", placement: "before" },
+      y: { enable: false, format: "", parameter: "", placement: "before" },
+    },
+    x: {
+      title: "pkt_rate [1e6]",
+      parameter: "pkt_rate",
+      scale: 1000000,
+    },
+    y: {
+      title: "Average Packet Rate [Mpps]",
+      parameter: "avg_pkt_rate",
+      scale: 1,
+    },
+  },
 };
