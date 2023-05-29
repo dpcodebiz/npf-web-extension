@@ -1,3 +1,5 @@
+import { ConfigurationSettings } from "../settings/types";
+
 /**
  * Configuration data that will be injected into the app
  */
@@ -7,6 +9,7 @@ export type ConfigurationData = {
   parameters: string[];
   measurements: string[];
   data: string;
+  settings?: ConfigurationSettings;
 };
 
 /**

@@ -14,7 +14,7 @@ import {
 } from "chart.js";
 import { Settings } from "../../../utils/settings/types";
 import { getGraphAxisScale, getGraphAxisTitle } from "../../settings/utils";
-import { range, set } from "radash";
+import { range } from "radash";
 
 export const getBoxplotChartAxisLabels = (settings: Settings, configuration: Configuration) => {
   return {
@@ -44,9 +44,10 @@ export const boxplotChartAxisStyles = (settings: Settings, configuration: Config
       },
       padding: 10,
       callback: function (value, index, ticks) {
+        const label = this.getLabelForValue(value as number);
         const scale = getGraphAxisScale(axis, settings, configuration);
-        const valueScaled = parseFloat(value.toString()) / scale;
-        return `${valueScaled.toFixed(3).replace(/[.,]000$/, "")}`;
+        const valueScaled = parseFloat(label.toString().replace(",", ".")) / scale;
+        return `${valueScaled.toFixed(2).replace(/[.,]000$/, "")}`;
       },
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
