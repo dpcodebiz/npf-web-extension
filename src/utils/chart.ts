@@ -1,6 +1,6 @@
 import { ChartDataset } from "chart.js";
-import { Configuration, DatasetsWithResults, Experiment, GRAPH_TYPES, ParameterizedRun } from "./configuration/types";
-import { getExperimentSplitParametersNames, joinParams, splitParams } from "./configuration/utils";
+import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "./configuration/types";
+import { splitParams } from "./configuration/utils";
 import { iqr, maxArray, mean, median, minArray } from "@basementuniverse/stats";
 import { getParameter } from "../components/settings/utils";
 import { Settings } from "./settings/types";
@@ -30,8 +30,6 @@ export const getLabel = (datasets: DatasetsWithResults, settings: Settings, conf
     ? uniqueLabelsValuesRaw.sort((a, b) => parseFloat(a) - parseFloat(b))
     : uniqueLabelsValuesRaw.sort();
 
-  // console.log("labels", datasets, hasNumberLabels, uniqueLabelsValuesRaw, uniqueLabels, uniqueLabelsSorted);
-
   return uniqueLabelsSorted;
 };
 
@@ -55,12 +53,7 @@ export const COLORS = {
  * @param error_bars
  * @returns
  */
-const getLineDatasets = (
-  datasets: DatasetsWithResults,
-  error_bars: boolean,
-  settings: Settings,
-  configuration: Configuration
-) => {
+const getLineDatasets = (datasets: DatasetsWithResults, error_bars: boolean) => {
   return [...datasets.entries()].map(
     ([dataset, results], index) =>
       ({
@@ -130,22 +123,15 @@ const getBoxPlotDatasets = (datasets: DatasetsWithResults) => {
  * @param experiment
  * @returns Datasets for the chart
  */
-export const getDatasets = (
-  data: DatasetsWithResults,
-  settings: Settings,
-  configuration: Configuration,
-  type: GRAPH_TYPES = GRAPH_TYPES.LINE,
-  error_bars = false
-) => {
+export const getDatasets = (data: DatasetsWithResults, type: GRAPH_TYPES = GRAPH_TYPES.LINE, error_bars = false) => {
   if (!data) return [];
 
   switch (type) {
     case GRAPH_TYPES.BAR:
     case GRAPH_TYPES.LINE: {
-      return getLineDatasets(data, error_bars, settings, configuration);
+      return getLineDatasets(data, error_bars);
     }
     case GRAPH_TYPES.PIE: {
-      console.log(getPieDatasets(data));
       return getPieDatasets(data);
     }
     case GRAPH_TYPES.BOXPLOT: {

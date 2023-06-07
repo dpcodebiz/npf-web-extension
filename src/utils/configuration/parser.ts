@@ -1,19 +1,10 @@
 import { ParseResult } from "papaparse";
 import { Configuration, ConfigurationData, DatasetsWithResults, GRAPH_TYPES, Results } from "./types";
-import { getRecommendedGraphSettings, getRecommendedGraphType } from "./data_analyzer";
-import { getLineChartConfiguration } from "./parser/line";
-import {
-  getConfigurationDataByParameters,
-  getParametersWithValues,
-  getSplitParameters,
-  joinParams,
-  splitParams,
-} from "./utils";
+import { getRecommendedGraphSettings } from "./data_analyzer";
+import { getParametersWithValues, joinParams, splitParams } from "./utils";
 import { Settings } from "../settings/types";
-import { getPieChartConfiguration } from "./parser/doughnut";
-import { getBoxPlotChartConfiguration } from "./parser/boxplot";
-import { flat, group, isEmpty, mapEntries, mapValues, omit } from "radash";
-import { getSettingsParametersOptions, getSplitParameter } from "../../components/settings/utils";
+import { flat, group, mapEntries, mapValues, omit } from "radash";
+import { getSplitParameter } from "../../components/settings/utils";
 import { getParameter } from "../../components/settings/utils";
 
 export type ParsedConfigurationData = { [index: string]: string };
@@ -166,15 +157,6 @@ export function resultsToConfiguration(
 
   // Final datasets
   const finalDatasets = splitDatasetsReduced.length > 0 ? splitDatasetsReduced : [groupByMainParameter(dataParsed)];
-
-  console.log(
-    "data",
-    dataByPrimaryOrSecondary,
-    splitDatasetsReduced,
-    finalDatasets,
-    // mainParameter,
-    secondarySplitValues
-  );
 
   return {
     id: configurationId,

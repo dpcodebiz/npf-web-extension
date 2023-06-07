@@ -23,7 +23,7 @@ export const BoxPlotChart: React.FC<Props> = (props: Props) => {
       data={
         {
           labels: getLabel(data, settings, configuration),
-          datasets: getDatasets(data, settings, configuration, GRAPH_TYPES.BOXPLOT),
+          datasets: getDatasets(data, GRAPH_TYPES.BOXPLOT),
         } as ChartData<"boxplot", number[], string>
       }
       options={boxplotChartOptions(settings, configuration, split, index)}

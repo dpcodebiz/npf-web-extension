@@ -1,6 +1,6 @@
 import { getParameter } from "../../components/settings/utils";
 import { Settings } from "../settings/types";
-import { ParsedConfigurationData } from "./parser-backup";
+import { ParsedConfigurationData } from "./parser";
 import { groupDataByParameters } from "./parser/line";
 import { ConfigurationData, GRAPH_TYPES } from "./types";
 

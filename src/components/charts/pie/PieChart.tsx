@@ -22,7 +22,7 @@ export const PieChart = (props: Props) => {
       data={
         {
           labels: getPieLabel(data),
-          datasets: getDatasets(data, settings, configuration, GRAPH_TYPES.PIE),
+          datasets: getDatasets(data, GRAPH_TYPES.PIE),
         } as ChartData<"pie", number[], string>
       }
       options={pieChartOptions(settings, configuration, data, split)}

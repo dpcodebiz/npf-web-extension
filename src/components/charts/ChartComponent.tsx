@@ -19,8 +19,6 @@ export const ChartComponent = (props: Props) => {
 
   const split = configuration.split != undefined;
 
-  console.log(data);
-
   switch (graph_type) {
     case GRAPH_TYPES.LINE: {
       return (

@@ -80,31 +80,31 @@ export const boxplotChartLegendStyles = (split: boolean) =>
     },
   } as _DeepPartialObject<LegendOptions<"boxplot">>);
 
-const getAnnotations = (settings: Settings, configuration: Configuration, index: number) => {
-  const values = Object.keys(Object.values(configuration.experiments[index].runs[0].results)[0]);
-  const pairs: string[][] = [];
+// const getAnnotations = (settings: Settings, configuration: Configuration, index: number) => {
+//   const values = Object.keys(Object.values(configuration.experiments[index].runs[0].results)[0]);
+//   const pairs: string[][] = [];
 
-  for (const i of range(values.length - 2)) {
-    pairs.push([values[i], values[i + 1]]);
-  }
+//   for (const i of range(values.length - 2)) {
+//     pairs.push([values[i], values[i + 1]]);
+//   }
 
-  return pairs
-    .map((interval, index) =>
-      index % 2 == 1
-        ? {
-            type: "box",
-            backgroundColor: "rgba(0,0,0, 0.1)",
-            borderWidth: 0,
-            drawTime: "beforeDatasetsDraw",
-            xMax: interval[0],
-            xMin: interval[1],
-            xScaleID: "x",
-            yScaleID: "y",
-          }
-        : undefined
-    )
-    .filter((e) => e);
-};
+//   return pairs
+//     .map((interval, index) =>
+//       index % 2 == 1
+//         ? {
+//             type: "box",
+//             backgroundColor: "rgba(0,0,0, 0.1)",
+//             borderWidth: 0,
+//             drawTime: "beforeDatasetsDraw",
+//             xMax: interval[0],
+//             xMin: interval[1],
+//             xScaleID: "x",
+//             yScaleID: "y",
+//           }
+//         : undefined
+//     )
+//     .filter((e) => e);
+// };
 
 export const boxplotChartOptions = (settings: Settings, configuration: Configuration, split: boolean, index: number) =>
   ({
