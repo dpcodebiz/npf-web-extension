@@ -1,4 +1,4 @@
-import { resultsToConfiguration } from "./parser-backup";
+import { resultsToConfiguration } from "./parser";
 import { ConfigurationData, GRAPH_TYPES } from "./types";
 
 // Mock
