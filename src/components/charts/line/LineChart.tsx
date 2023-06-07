@@ -11,11 +11,11 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { lineChartOptions } from "./utils";
-import { Configuration, Experiment, GRAPH_TYPES } from "../../../utils/configuration/types";
+import { Configuration, DatasetsWithResults, Experiment, GRAPH_TYPES } from "../../../utils/configuration/types";
 import { getDatasets, getLabel } from "../../../utils/chart";
 import { Settings } from "../../../utils/settings/types";
 import { LineError } from "../../../utils/charts-wrapper/typedCharts";
-import { getSettingsErrorBars } from "../../settings/utils";
+import { getParameter, getSettingsErrorBars } from "../../settings/utils";
 import { PointWithErrorBar } from "chartjs-chart-error-bars";
 import Annotation from "chartjs-plugin-annotation";
 
@@ -34,13 +34,31 @@ ChartJS.register(
 type Props = {
   settings: Settings;
   configuration: Configuration;
-  experiment: Experiment;
+  data: DatasetsWithResults;
   index: number;
   split?: boolean;
 };
 
 export const LineChart = (props: Props) => {
-  const { settings, configuration, experiment, index, split = false } = props;
+  const { settings, configuration, data, index, split = false } = props;
+
+  // Do not render if configuration has not been updated yet
+  // TODO store settings inside configuration instead
+  if (
+    configuration.x !=
+      getParameter("x", settings, {
+        id: configuration.id,
+        parameters: Object.keys(configuration.parameters),
+        measurements: configuration.measurements,
+      }) ||
+    configuration.y !=
+      getParameter("y", settings, {
+        id: configuration.id,
+        parameters: Object.keys(configuration.parameters),
+        measurements: configuration.measurements,
+      })
+  )
+    return <></>;
 
   return (
     <>
@@ -48,8 +66,8 @@ export const LineChart = (props: Props) => {
         <LineError
           data={
             {
-              labels: getLabel(experiment, settings, configuration),
-              datasets: getDatasets(experiment, settings, configuration, GRAPH_TYPES.LINE, true),
+              labels: getLabel(data, settings, configuration),
+              datasets: getDatasets(data, settings, configuration, GRAPH_TYPES.LINE, true),
             } as ChartData<"lineWithErrorBars", number[], string>
           }
           options={lineChartOptions(settings, configuration, split, index)}
@@ -58,8 +76,8 @@ export const LineChart = (props: Props) => {
         <Line
           data={
             {
-              labels: getLabel(experiment, settings, configuration),
-              datasets: getDatasets(experiment, settings, configuration),
+              labels: getLabel(data, settings, configuration),
+              datasets: getDatasets(data, settings, configuration),
             } as ChartData<"line", number[], string>
           }
           options={lineChartOptions(settings, configuration, split, index)}

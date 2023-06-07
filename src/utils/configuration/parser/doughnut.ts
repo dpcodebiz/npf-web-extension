@@ -1,7 +1,7 @@
 import { mapValues } from "radash";
 import { getParameter } from "../../../components/settings/utils";
 import { Settings } from "../../settings/types";
-import { ParsedConfigurationData } from "../parser";
+import { ParsedConfigurationData } from "../parser-backup";
 import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
 import { splitParams } from "../utils";
 import { aggregateAllResults, groupDataByParameters, sumDataAggregation, unfoldAggregatedData } from "./line";

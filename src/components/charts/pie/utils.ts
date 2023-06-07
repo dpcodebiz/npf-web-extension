@@ -1,5 +1,5 @@
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
-import { Configuration, Experiment } from "../../../utils/configuration/types";
+import { Configuration, DatasetsWithResults, Experiment } from "../../../utils/configuration/types";
 import {
   CoreChartOptions,
   DatasetChartOptions,
@@ -16,14 +16,14 @@ export const PieChartTitleStyles = () =>
     display: false,
   } as _DeepPartialObject<TitleOptions>);
 
-export const PieChartLegendStyles = (split: boolean, experiment: Experiment) =>
+export const PieChartLegendStyles = (split: boolean, data: DatasetsWithResults) =>
   ({
     position: split ? "top" : ("right" as const),
     align: split ? "end" : "center",
     display: true,
     labels: {
       generateLabels: function () {
-        return getPieLabel(experiment).map((label, index) => ({
+        return getPieLabel(data).map((label, index) => ({
           text: label,
           strokeStyle: COLORS.PIE_CHART[index],
           fillStyle: COLORS.PIE_CHART[index],
@@ -33,11 +33,11 @@ export const PieChartLegendStyles = (split: boolean, experiment: Experiment) =>
     },
   } as _DeepPartialObject<LegendOptions<"pie">>);
 
-export const pieChartOptions = (_: Settings, configuration: Configuration, split: boolean) =>
+export const pieChartOptions = (_: Settings, configuration: Configuration, data: DatasetsWithResults, split: boolean) =>
   ({
     responsive: true,
     plugins: {
-      legend: PieChartLegendStyles(split, configuration.experiments[0]),
+      legend: PieChartLegendStyles(split, data),
       title: PieChartTitleStyles(),
       tooltip: {},
     },

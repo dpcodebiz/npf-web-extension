@@ -1,10 +1,5 @@
 import { isEmpty } from "radash";
-import {
-  Configuration,
-  ConfigurationParameters,
-  ConfigurationSplit,
-  GRAPH_TYPES,
-} from "../../utils/configuration/types";
+import { Configuration, GRAPH_TYPES, ParametersWithValues, SplitParametersData } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 import { Settings } from "../../utils/settings/types";
 
@@ -41,7 +36,7 @@ export const getSettingsGraphOptions = () => {
  * @returns GRAPH_TYPES
  */
 export const getSettingsGraphType = (settings: Settings, configuration: Configuration) => {
-  return settings[configuration.id]?.type ?? configuration.experiments[0].metadata.type;
+  return settings[configuration.id]?.type ?? configuration.type;
 };
 
 /**
@@ -77,7 +72,7 @@ export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration:
     parameters: Object.keys(configuration.parameters),
     measurements: configuration.measurements,
   });
-  const default_value = axis == "x" ? configuration.experiments[0].main_parameter : measurement;
+  const default_value = axis == "x" ? Object.keys(configuration.parameters)[0] : measurement;
 
   return value ?? default_value;
 };
@@ -124,7 +119,7 @@ export const getSettingsSplitAxisFormat = (
   settings: Settings,
   configuration: Configuration
 ) => {
-  const split_parameters = getSplitParameters(configuration.experiments);
+  const split_parameters = getSplitParameters(configuration);
 
   let split_nb = 0;
   let parameter_name: string;
@@ -140,9 +135,9 @@ export const getSettingsSplitAxisFormat = (
     }
     case "y": {
       if (!split_parameters.y) return "undefined";
-      split_nb = split_parameters.y?.length;
+      split_nb = configuration.data.length / split_parameters.y?.length;
       parameter_name = split_parameters.y[0].name as string;
-      parameter_value = split_parameters.y[index % split_nb].value;
+      parameter_value = split_parameters.y[Math.floor(index / split_nb)].value;
       break;
     }
   }
@@ -174,7 +169,7 @@ export const getSettingsSplitAxis = (axis: Axis, settings: Settings, configurati
 export const getSplitParameter = (
   axis: Axis,
   settings: Settings,
-  configuration: { id: string; split: ConfigurationSplit }
+  configuration: { id: string; split: SplitParametersData }
 ) => {
   const settings_value = getSettingsSplitAxis(axis, settings, configuration.id)?.parameter;
   const default_value = configuration.split[axis];
@@ -192,7 +187,7 @@ export const getSplitParameter = (
 export const getSettingsSplitParametersOptions = (
   axis: Axis,
   settings: Settings,
-  configuration: { id: string; split: ConfigurationSplit; parameters: ConfigurationParameters }
+  configuration: { id: string; split: SplitParametersData; parameters: ParametersWithValues }
 ) => {
   const other_axis_value = getSplitParameter(axis == "x" ? "y" : "x", settings, configuration);
 
@@ -296,7 +291,7 @@ export const getSettingsPlacement = (axis: Axis, settings: Settings, configurati
  * @returns
  */
 export const getSettingsErrorBars = (settings: Settings, configuration: Configuration) => {
-  return settings[configuration.id]?.error_bars ?? false;
+  return settings[configuration.id]?.error_bars ?? configuration.recommended_error_bars;
 };
 
 /**

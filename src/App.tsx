@@ -74,6 +74,7 @@ function App() {
     // Dispatching event
     if (!configurations) {
       window.dispatchEvent(new Event(Events.APP_READY));
+      updateConfiguration([CPU_ALGORITHM_DATA, IPERF_DATA, MATH_DATA, WORLD_POPULATION_DATA, POS_DATA]);
     }
   }, [updateConfiguration, demo, configurations]);
 
@@ -118,9 +119,9 @@ function App() {
               ))}
           </div>
         </div>
-        {!loading && configuration && fullScreen && (
+        {/* {!loading && configuration && fullScreen && (
           <ChartPanelComponent fullScreen={true} settings={settings} configuration={configuration} />
-        )}
+        )} */}
         <div className="p-6 w-full space-y-6 grid pt-12" style={{ gridTemplateRows: "min-content repeat(1, 1fr)" }}>
           <div className="w-max px-4 space-x-4 fixed top-4 right-4">
             <button

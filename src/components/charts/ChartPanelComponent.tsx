@@ -27,13 +27,13 @@ export const ChartPanelComponent = (props: Props) => {
             {getSettingsGraphTitle(settings, configuration)}
           </span>
           <ChartSplitterComponent configuration={configuration} settings={settings}>
-            {configuration.experiments.map((experiment, index) => (
+            {configuration.data.map((datasetsWithResults, index) => (
               <div key={index}>
                 <div className="p-2 xl:p-4">
                   <ChartComponent
                     settings={settings}
                     configuration={configuration}
-                    experiment={experiment}
+                    data={datasetsWithResults}
                     index={index}
                   />
                 </div>

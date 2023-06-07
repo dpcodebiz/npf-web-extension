@@ -14,7 +14,7 @@ type Props = {
 export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
   const { settings, configuration } = props;
 
-  const split_parameters = getSplitParameters(configuration.experiments);
+  const split_parameters = getSplitParameters(configuration);
   const split_cols = split_parameters.x?.length ?? 1;
   const split_rows = split_parameters.y?.length ?? 0;
   const split_x_placement = getSettingsPlacement("x", settings, configuration);
@@ -30,7 +30,7 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
       {split_parameters.x && split_x_placement == "before" && (
         <>
           {split_rows > 0 && split_y_placement == "before" && <span></span>}
-          {configuration.experiments.map((_, index) => (
+          {configuration.data.map((_, index) => (
             <Fragment key={index}>
               {split_parameters.x && Math.floor(index / split_cols) == 0 && (
                 <div className="text-center px-4 pb-4 border-b-2">
@@ -61,7 +61,7 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
       {split_parameters.x && split_x_placement == "after" && (
         <>
           {split_rows > 0 && split_y_placement == "before" && <span></span>}
-          {configuration.experiments.map((_, index) => (
+          {configuration.data.map((_, index) => (
             <Fragment key={index}>
               {split_parameters.x && Math.floor(index / split_cols) == 0 && (
                 <div className="text-center px-4 pt-4 mt-4 border-t-2">

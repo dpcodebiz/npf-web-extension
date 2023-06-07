@@ -12,12 +12,8 @@ export const SettingsComponent = (props: SettingsProps) => {
           The recommended graph type for this data is:
           <span className="font-bold">
             {" "}
-            {
-              getSettingsGraphOptions().find(
-                (option) => option.value == configuration.experiments[0].metadata.recommended_type
-              )?.label
-            }
-            {configuration.experiments[0].metadata.recommended_error_bars ?? "with error bars"}
+            {getSettingsGraphOptions().find((option) => option.value == configuration.recommended_type)?.label}
+            {configuration.recommended_error_bars ?? "with error bars"}
           </span>
         </span>
         <SettingsForm configuration={configuration} settings={settings} setSettings={setSettings}></SettingsForm>

@@ -1,5 +1,5 @@
 import { Settings } from "../settings/types";
-import { ParsedConfigurationData } from "./parser";
+import { ParsedConfigurationData } from "./parser-backup";
 import { ConfigurationData, Experiment, GRAPH_TYPES } from "./types";
 import {
   getConfigurationDataByParameters,

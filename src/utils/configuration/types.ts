@@ -18,19 +18,22 @@ export type ConfigurationData = {
 export type Configuration = {
   id: string;
   name: string;
-  parameters: ConfigurationParameters;
+  parameters: ParametersWithValues;
   measurements: string[];
-  split: ConfigurationSplit;
-  experiments: Experiment[]; // Maybe this should be tied only to one experiment
+  split: SplitParametersData;
+  data: DatasetsWithResults[];
+  type: GRAPH_TYPES;
+  recommended_type: GRAPH_TYPES;
+  recommended_error_bars?: boolean;
+  x: string;
+  y: string;
 };
 
-export type ConfigurationParameters = {
+export type DatasetsWithResults = Map<string, Results>;
+export type Results = Map<string, number[]>;
+
+export type ParametersWithValues = {
   [index: string]: string[];
-};
-
-export type ConfigurationSplit = {
-  x?: string;
-  y?: string;
 };
 
 export type Experiment = {
@@ -71,9 +74,5 @@ export type RunParameters = {
 };
 
 export type ParameterizedResults = {
-  [index: string]: Results;
-};
-
-export type Results = {
-  [index: string]: number[];
+  [index: string]: { [index: string]: number[] };
 };

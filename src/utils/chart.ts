@@ -1,40 +1,44 @@
 import { ChartDataset } from "chart.js";
-import { Configuration, Experiment, GRAPH_TYPES, ParameterizedRun } from "./configuration/types";
-import { getExperimentSplitParametersNames, joinParams } from "./configuration/utils";
+import { Configuration, DatasetsWithResults, Experiment, GRAPH_TYPES, ParameterizedRun } from "./configuration/types";
+import { getExperimentSplitParametersNames, joinParams, splitParams } from "./configuration/utils";
 import { iqr, maxArray, mean, median, minArray } from "@basementuniverse/stats";
 import { getParameter } from "../components/settings/utils";
 import { Settings } from "./settings/types";
+import { flat } from "radash";
 
 /**
  * @param experiment
  * @returns Labels for the chart
  */
-export const getLabel = (experiment: Experiment, settings: Settings, configuration: Configuration) => {
-  if (!experiment) return [];
+export const getLabel = (datasets: DatasetsWithResults, settings: Settings, configuration: Configuration) => {
+  if (!datasets) return [];
 
-  const results = experiment.runs[0].results;
-  const param = getParameter("y", settings, {
+  const mainParameter = getParameter("x", settings, {
     id: configuration.id,
     parameters: Object.keys(configuration.parameters),
     measurements: configuration.measurements,
   });
 
-  return Object.keys(results[param]);
+  const uniqueLabels = new Set();
+  [...datasets.values()].forEach((results) => {
+    [...results.keys()].forEach((key) => uniqueLabels.add(splitParams(key)[mainParameter]));
+  });
+  const uniqueLabelsValuesRaw = [...uniqueLabels.values()] as string[];
+  const hasNumberLabels = !isNaN(parseInt(uniqueLabelsValuesRaw[0] as string));
+
+  const uniqueLabelsSorted = hasNumberLabels
+    ? uniqueLabelsValuesRaw.sort((a, b) => parseFloat(a) - parseFloat(b))
+    : uniqueLabelsValuesRaw.sort();
+
+  // console.log("labels", datasets, hasNumberLabels, uniqueLabelsValuesRaw, uniqueLabels, uniqueLabelsSorted);
+
+  return uniqueLabelsSorted;
 };
 
-export const getPieLabel = (experiment: Experiment) => {
-  if (!experiment) return [];
+export const getPieLabel = (data: DatasetsWithResults) => {
+  if (!data) return [];
 
-  const splitParameters = getExperimentSplitParametersNames(experiment);
-  const parametersWithoutSplitParametersPerRun = experiment.runs.map((run) => {
-    const parametersWithoutSplitParameters = Object.keys(run.parameters).filter(
-      (parameter) => !splitParameters.includes(parameter)
-    );
-
-    return joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", " ");
-  });
-
-  return parametersWithoutSplitParametersPerRun;
+  return [...data.keys()];
 };
 
 export const COLORS = {
@@ -51,38 +55,29 @@ export const COLORS = {
  * @param error_bars
  * @returns
  */
-const runToLineDataset = (
-  run: ParameterizedRun,
-  experiment: Experiment,
-  index: number,
+const getLineDatasets = (
+  datasets: DatasetsWithResults,
   error_bars: boolean,
   settings: Settings,
   configuration: Configuration
 ) => {
-  const splitParameters = getExperimentSplitParametersNames(experiment);
-  const parametersWithoutSplitParameters = Object.keys(run.parameters).filter(
-    (parameter) => !splitParameters.includes(parameter)
+  return [...datasets.entries()].map(
+    ([dataset, results], index) =>
+      ({
+        label: dataset.replaceAll(",", " "),
+        data: [...results.values()].map((values) =>
+          error_bars
+            ? {
+                y: mean(values),
+                yMin: [minArray(values)],
+                yMax: [maxArray(values)],
+              }
+            : mean(values)
+        ),
+        backgroundColor: COLORS.LINE_CHART[index],
+        borderColor: COLORS.LINE_CHART[index],
+      } as ChartDataset<"line", number[]>)
   );
-  const param = getParameter("y", settings, {
-    id: configuration.id,
-    parameters: Object.keys(configuration.parameters),
-    measurements: configuration.measurements,
-  });
-
-  return {
-    label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", " "),
-    data: Object.values(run.results[param]).map((values) =>
-      error_bars
-        ? {
-            y: mean(values),
-            yMin: [minArray(values)],
-            yMax: [maxArray(values)],
-          }
-        : mean(values)
-    ),
-    backgroundColor: COLORS.LINE_CHART[index],
-    borderColor: COLORS.LINE_CHART[index],
-  } as ChartDataset<"line", number[]>;
 };
 
 /**
@@ -90,9 +85,9 @@ const runToLineDataset = (
  * @param run
  * @returns
  */
-const runToPieDataset = (experiment: Experiment) => {
+const getPieDatasets = (data: DatasetsWithResults) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const results = experiment.runs.map((run) => Object.values(run.results)[0]) as any;
+  const results = [...data.values()].map((run) => mean(flat([...run.values()])));
 
   return [
     {
@@ -108,29 +103,26 @@ const runToPieDataset = (experiment: Experiment) => {
  * @param run
  * @returns
  */
-const runToBoxPlotDataset = (run: ParameterizedRun, experiment: Experiment, index: number) => {
-  const splitParameters = getExperimentSplitParametersNames(experiment);
-  const parametersWithoutSplitParameters = Object.keys(run.parameters).filter(
-    (parameter) => !splitParameters.includes(parameter)
-  );
+const getBoxPlotDatasets = (datasets: DatasetsWithResults) => {
+  const getStatsFromValues = (values: number[]) => {
+    return {
+      min: minArray(values),
+      max: maxArray(values),
+      mean: mean(values),
+      median: median(values),
+      items: values,
+      ...iqr(values),
+    };
+  };
 
-  const getStatsFromValues = (values: number[]) => ({
-    min: minArray(values),
-    max: maxArray(values),
-    mean: mean(values),
-    median: median(values),
-    items: values,
-    ...iqr(values),
-  });
-
-  return {
-    label: joinParams(parametersWithoutSplitParameters, run.parameters).replaceAll(",", " "),
-    data: (Object.values(Object.values(run.results)[0]) as unknown as number[][]).map((values) => {
+  return [...datasets.entries()].map(([dataset, results], index) => ({
+    label: dataset,
+    data: [...results.values()].map((values) => {
       return getStatsFromValues(values);
     }),
     backgroundColor: COLORS.LINE_CHART[index],
     borderColor: COLORS.LINE_CHART[index],
-  };
+  }));
 };
 
 /**
@@ -139,26 +131,25 @@ const runToBoxPlotDataset = (run: ParameterizedRun, experiment: Experiment, inde
  * @returns Datasets for the chart
  */
 export const getDatasets = (
-  experiment: Experiment,
+  data: DatasetsWithResults,
   settings: Settings,
   configuration: Configuration,
   type: GRAPH_TYPES = GRAPH_TYPES.LINE,
   error_bars = false
 ) => {
-  if (!experiment) return [];
+  if (!data) return [];
 
   switch (type) {
     case GRAPH_TYPES.BAR:
     case GRAPH_TYPES.LINE: {
-      return experiment.runs.map((run, index) =>
-        runToLineDataset(run, experiment, index, error_bars, settings, configuration)
-      );
+      return getLineDatasets(data, error_bars, settings, configuration);
     }
     case GRAPH_TYPES.PIE: {
-      return runToPieDataset(experiment);
+      console.log(getPieDatasets(data));
+      return getPieDatasets(data);
     }
     case GRAPH_TYPES.BOXPLOT: {
-      return experiment.runs.map((run, index) => runToBoxPlotDataset(run, experiment, index));
+      return getBoxPlotDatasets(data);
     }
   }
 };

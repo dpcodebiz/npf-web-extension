@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
 import { group, isNumber, mapValues, objectify } from "radash";
-import { ExperimentData, ParsedConfigurationData } from "../parser";
+import { ExperimentData, ParsedConfigurationData } from "../parser-backup";
 import { joinParams, splitParams } from "../utils";
 import { getParameter } from "../../../components/settings/utils";
 import { Settings } from "../../settings/types";

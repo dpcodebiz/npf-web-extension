@@ -14,7 +14,7 @@ export const SplitGraphsSettingsComponent = (props: SettingsProps) => {
           {getSettingsGraphTitle(settings, configuration)}
         </span>
         <ChartSplitterComponent configuration={configuration} settings={settings}>
-          {configuration.experiments.map((_, index) => (
+          {configuration.data.map((_, index) => (
             <Fragment key={index}>
               <div>
                 <div className="xl:p-4 m-2 bg-gray-100 h-full">

@@ -1,7 +1,7 @@
 import { getParameter } from "../../../components/settings/utils";
 import { Settings } from "../../settings/types";
 import { getRecommendedGroupByOtherParams } from "../data_analyzer";
-import { ParsedConfigurationData } from "../parser";
+import { ParsedConfigurationData } from "../parser-backup";
 import { ConfigurationData, Experiment, GRAPH_TYPES } from "../types";
 import {
   aggregateAllResults,

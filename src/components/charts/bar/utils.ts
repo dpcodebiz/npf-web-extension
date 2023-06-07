@@ -47,8 +47,9 @@ export const barChartAxisStyles = (settings: Settings, configuration: Configurat
       callback: function (value, index, ticks) {
         const label = this.getLabelForValue(value as number);
         const scale = getGraphAxisScale(axis, settings, configuration);
+        const applyScale = !isNaN(parseFloat(label.toString().replace(",", ".")));
         const valueScaled = parseFloat(label.toString().replace(",", ".")) / scale;
-        return `${valueScaled.toFixed(2).replace(/[.,]000$/, "")}`;
+        return applyScale ? `${valueScaled.toFixed(2).replace(/[.,]000$/, "")}` : label;
       },
     },
   } as ScaleOptionsByType<keyof CartesianScaleTypeRegistry>);
@@ -80,31 +81,31 @@ export const barChartLegendStyles = (split: boolean) =>
     },
   } as _DeepPartialObject<LegendOptions<"bar">>);
 
-const getAnnotations = (settings: Settings, configuration: Configuration, index: number) => {
-  const values = Object.keys(Object.values(configuration.experiments[index].runs[0].results)[0]);
-  const pairs: string[][] = [];
+// const getAnnotations = (settings: Settings, configuration: Configuration, index: number) => {
+//   const values = Object.keys(Object.values(configuration.data.runs[0].results)[0]);
+//   const pairs: string[][] = [];
 
-  for (const i of range(values.length - 2)) {
-    pairs.push([values[i], values[i + 1]]);
-  }
+//   for (const i of range(values.length - 2)) {
+//     pairs.push([values[i], values[i + 1]]);
+//   }
 
-  return pairs
-    .map((interval, index) =>
-      index % 2 == 1
-        ? {
-            type: "box",
-            backgroundColor: "rgba(0,0,0, 0.1)",
-            borderWidth: 0,
-            drawTime: "beforeDatasetsDraw",
-            xMax: interval[0],
-            xMin: interval[1],
-            xScaleID: "x",
-            yScaleID: "y",
-          }
-        : undefined
-    )
-    .filter((e) => e);
-};
+//   return pairs
+//     .map((interval, index) =>
+//       index % 2 == 1
+//         ? {
+//             type: "box",
+//             backgroundColor: "rgba(0,0,0, 0.1)",
+//             borderWidth: 0,
+//             drawTime: "beforeDatasetsDraw",
+//             xMax: interval[0],
+//             xMin: interval[1],
+//             xScaleID: "x",
+//             yScaleID: "y",
+//           }
+//         : undefined
+//     )
+//     .filter((e) => e);
+// };
 
 export const barChartOptions = (settings: Settings, configuration: Configuration, split: boolean, index: number) =>
   ({
@@ -113,9 +114,9 @@ export const barChartOptions = (settings: Settings, configuration: Configuration
       legend: barChartLegendStyles(split),
       title: barChartTitleStyles(),
       tooltip: {},
-      annotation: {
-        annotations: getAnnotations(settings, configuration, index),
-      },
+      // annotation: {
+      //   annotations: getAnnotations(settings, configuration, index),
+      // },
     },
     scales: {
       x: barChartAxisStyles(settings, configuration, "x"),

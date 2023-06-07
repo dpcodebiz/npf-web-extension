@@ -1,7 +1,7 @@
 import { mapValues, unique } from "radash";
-import { ParsedConfigurationData } from "./parser";
+import { ParsedConfigurationData } from "./parser-backup";
 import { groupDataByParameters } from "./parser/line";
-import { ConfigurationData, Experiment, SplitParametersData } from "./types";
+import { Configuration, ConfigurationData, Experiment, SplitParametersData } from "./types";
 import { Settings } from "../settings/types";
 import {
   getParameter,
@@ -17,7 +17,7 @@ import {
  * @returns
  */
 export const joinParams = (params_to_join: string[], params: ParsedConfigurationData) => {
-  return params_to_join.reduce((acc, param) => `${acc}${param}=${params[param]},`, "");
+  return params_to_join.reduce((acc, param) => `${acc}${param}=${params[param]},`, "").slice(0,-1);
 };
 
 /**
@@ -51,13 +51,13 @@ export const getExperimentSplitParametersNames = (experiment: Experiment) =>
  * @param experiments
  * @returns
  */
-export const getSplitParameters = (experiments: Experiment[]) => ({
-  x: experiments[0].split_parameters?.x?.values.map((value) => ({
-    name: experiments[0].split_parameters?.x?.name,
+export const getSplitParameters = (configuration: Configuration) => ({
+  x: configuration.split?.x?.values.map((value) => ({
+    name: configuration.split?.x?.name,
     value,
   })),
-  y: experiments[0].split_parameters?.y?.values.map((value) => ({
-    name: experiments[0].split_parameters?.y?.name,
+  y: configuration.split?.y?.values.map((value) => ({
+    name: configuration.split?.y?.name,
     value,
   })),
 });

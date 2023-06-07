@@ -113,9 +113,9 @@ export const boxplotChartOptions = (settings: Settings, configuration: Configura
       legend: boxplotChartLegendStyles(split),
       title: boxplotChartTitleStyles(),
       tooltip: {},
-      annotation: {
-        annotations: getAnnotations(settings, configuration, index),
-      },
+      // annotation: {
+      //   annotations: getAnnotations(settings, configuration, index),
+      // },
     },
     scales: {
       x: boxplotChartAxisStyles(settings, configuration, "x"),
