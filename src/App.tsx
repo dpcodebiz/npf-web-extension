@@ -74,7 +74,6 @@ function App() {
     // Dispatching event
     if (!configurations) {
       window.dispatchEvent(new Event(Events.APP_READY));
-      updateConfiguration([CPU_ALGORITHM_DATA, IPERF_DATA, MATH_DATA, WORLD_POPULATION_DATA, POS_DATA]);
     }
   }, [updateConfiguration, demo, configurations]);
 
