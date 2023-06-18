@@ -36,6 +36,13 @@ Builds the app for production, optimizes it then prepares it for deployment.
 
 ## Releases
 
+- V0.6.4
+  - Complete rewriting of the internal architecture
+  - Added download button to download chart as pdf
+  - Added infobox when toggling fullscreen
+  - Fixed pie charts not resizing properly
+  - Fixed graphs not being splitted properly
+  - Improved rendering performance. Settings are now saved per configuration.
 - V0.6.3
   - Added settings override. It is now possible to override the default settings when exporting a configurationData.
   - Added POS data to demo sets
