@@ -126,9 +126,11 @@ export function resultsToConfiguration(
         groupByParameter(dataParsed as ParsedConfigurationData[], primarySplitParameter as string)
       )
     : dataByPrimaryOrSecondary;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const datasetsBySplitParameter = mapValues(dataNested as any, (dataParsedOrObject) =>
     secondarySplitParameter
-      ? mapEntries(dataParsedOrObject as any, (key, dataParsed) => [
+      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        mapEntries(dataParsedOrObject as any, (key, dataParsed) => [
           key,
           groupByMainParameter(dataParsed as unknown as ParsedConfigurationData[]),
         ])

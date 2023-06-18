@@ -73,6 +73,7 @@ export const COLORS = {
 
 export const backgroundPlugin = {
   id: "custom_canvas_background_color",
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   beforeDraw: (chart: any) => {
     const { ctx } = chart;
     ctx.save();
@@ -113,6 +114,7 @@ const getLineDatasets = (datasets: DatasetsWithResults, error_bars: boolean) => 
 };
 
 // Todo refactor this properly
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const exportChartPdf = (canvas: any, index: number, configuration: Configuration) => {
   const split_x = getSettingsSplitAxisFormat("x", index, configuration);
   const split_y = getSettingsSplitAxisFormat("y", index, configuration);
