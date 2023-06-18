@@ -83,6 +83,7 @@ export const LineChart = (props: Props) => {
               } as ChartData<"line", number[], string>
             }
             options={lineChartOptions(configuration, split, index)}
+            plugins={[backgroundPlugin]}
           />
         </div>
       )}
