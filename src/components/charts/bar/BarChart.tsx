@@ -3,8 +3,7 @@ import { Bar } from "react-chartjs-2";
 import { barChartOptions } from "./utils";
 import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "../../../utils/configuration/types";
 import { backgroundPlugin, exportChartPdf, getDatasets, getLabel } from "../../../utils/chart";
-import { Settings } from "../../../utils/settings/types";
-import { getParameter, getSettingsErrorBars } from "../../settings/utils";
+import { getSettingsErrorBars } from "../../settings/utils";
 import { BarError } from "../../../utils/charts-wrapper/typedCharts";
 import { useRef } from "react";
 

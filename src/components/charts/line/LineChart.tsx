@@ -11,19 +11,12 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { lineChartOptions } from "./utils";
-import { Configuration, DatasetsWithResults, Experiment, GRAPH_TYPES } from "../../../utils/configuration/types";
+import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "../../../utils/configuration/types";
 import { backgroundPlugin, exportChartPdf, getDatasets, getLabel } from "../../../utils/chart";
-import { Settings } from "../../../utils/settings/types";
 import { LineError } from "../../../utils/charts-wrapper/typedCharts";
-import {
-  getParameter,
-  getSettingsErrorBars,
-  getSettingsGraphTitle,
-  getSettingsSplitAxisFormat,
-} from "../../settings/utils";
+import { getSettingsErrorBars } from "../../settings/utils";
 import { PointWithErrorBar } from "chartjs-chart-error-bars";
 import Annotation from "chartjs-plugin-annotation";
-import { jsPDF } from "jspdf";
 import { useRef } from "react";
 
 ChartJS.register(

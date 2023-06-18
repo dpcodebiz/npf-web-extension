@@ -1,4 +1,4 @@
-import { ConfigurationSettings, Settings } from "../settings/types";
+import { ConfigurationSettings } from "../settings/types";
 
 /**
  * Configuration data that will be injected into the app

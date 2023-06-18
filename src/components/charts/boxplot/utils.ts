@@ -12,9 +12,7 @@ import {
   ScaleOptionsByType,
   TitleOptions,
 } from "chart.js";
-import { Settings } from "../../../utils/settings/types";
 import { getGraphAxisScale, getGraphAxisTitle } from "../../settings/utils";
-import { range } from "radash";
 
 export const getBoxplotChartAxisLabels = (configuration: Configuration) => {
   return {

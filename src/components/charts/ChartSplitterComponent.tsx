@@ -1,6 +1,5 @@
 import { _clsx } from "../../utils/misc";
 import styles from "../../styles/grid.module.scss";
-import { Settings } from "../../utils/settings/types";
 import { Configuration } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
 import { getSettingsPlacement, getSettingsSplitAxisFormat } from "../settings/utils";

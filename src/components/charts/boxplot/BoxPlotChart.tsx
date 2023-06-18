@@ -1,9 +1,8 @@
 import React, { useRef } from "react";
-import { ChartData, ChartOptions, plugins } from "chart.js";
+import { ChartData } from "chart.js";
 import { BoxPlot } from "../../../utils/charts-wrapper/typedCharts";
 import { boxplotChartOptions } from "./utils";
-import { Configuration, DatasetsWithResults, Experiment, GRAPH_TYPES } from "../../../utils/configuration/types";
-import { Settings } from "../../../utils/settings/types";
+import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "../../../utils/configuration/types";
 import { backgroundPlugin, exportChartPdf, getDatasets, getLabel } from "../../../utils/chart";
 
 type Props = {

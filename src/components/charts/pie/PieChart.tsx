@@ -1,7 +1,7 @@
-import { Chart as ChartJS, Tooltip, Legend, Title, ChartData, ArcElement } from "chart.js";
+import { Chart as ChartJS, Tooltip, Legend, ChartData, ArcElement } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { pieChartOptions } from "./utils";
-import { Configuration, DatasetsWithResults, Experiment, GRAPH_TYPES } from "../../../utils/configuration/types";
+import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "../../../utils/configuration/types";
 import { backgroundPlugin, exportChartPdf, getDatasets, getPieLabel } from "../../../utils/chart";
 import { useRef } from "react";
 
