@@ -25,7 +25,7 @@ export const ChartComponent = (props: Props) => {
       return <BarChart configuration={configuration} split={split} data={data} index={index}></BarChart>;
     }
     case GRAPH_TYPES.PIE: {
-      return <PieChart configuration={configuration} split={split} data={data}></PieChart>;
+      return <PieChart configuration={configuration} split={split} data={data} index={index}></PieChart>;
     }
     case GRAPH_TYPES.BOXPLOT: {
       return <BoxPlotChart configuration={configuration} data={data} index={index}></BoxPlotChart>;

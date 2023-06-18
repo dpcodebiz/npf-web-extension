@@ -2,8 +2,9 @@ import { ChartDataset } from "chart.js";
 import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "./configuration/types";
 import { splitParams } from "./configuration/utils";
 import { iqr, maxArray, mean, median, minArray } from "@basementuniverse/stats";
-import { getParameter } from "../components/settings/utils";
+import { getParameter, getSettingsGraphTitle, getSettingsSplitAxisFormat } from "../components/settings/utils";
 import { flat } from "radash";
+import jsPDF from "jspdf";
 
 /**
  * @param experiment
@@ -70,6 +71,18 @@ export const COLORS = {
   PIE_CHART: ["#10094e", "#56005b", "#8f005c", "#bf1354", "#e34343", "#f9732c", "#ffa600"],
 };
 
+export const backgroundPlugin = {
+  id: "custom_canvas_background_color",
+  beforeDraw: (chart: any) => {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = "destination-over";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  },
+};
+
 /**
  * Returns a chart dataset for a given run
  * @param run
@@ -97,6 +110,24 @@ const getLineDatasets = (datasets: DatasetsWithResults, error_bars: boolean) => 
       borderColor: COLORS.LINE_CHART[index],
     } as ChartDataset<"line", number[]>;
   });
+};
+
+// Todo refactor this properly
+export const exportChartPdf = (canvas: any, index: number, configuration: Configuration) => {
+  const split_x = getSettingsSplitAxisFormat("x", index, configuration);
+  const split_y = getSettingsSplitAxisFormat("y", index, configuration);
+  const title = `${getSettingsGraphTitle(configuration)}${split_x != "undefined" ? "_" + split_x : ""}${
+    split_y != "undefined" ? "_" + split_y : ""
+  }`;
+  const canvasImage = canvas.toDataURL("image/jpeg", 1.0);
+  const pdf = new jsPDF({
+    orientation: "landscape",
+  });
+  pdf.setFontSize(10);
+  pdf.setFillColor(204, 204, 204, 0);
+  pdf.rect(10, 10, 150, 160, "F");
+  pdf.addImage(canvasImage, "jpeg", 15, 15, 280, 150);
+  pdf.save(title);
 };
 
 /**
