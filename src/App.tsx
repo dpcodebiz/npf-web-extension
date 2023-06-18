@@ -118,9 +118,9 @@ function App() {
               ))}
           </div>
         </div>
-        {/* {!loading && configuration && fullScreen && (
-          <ChartPanelComponent fullScreen={true} settings={settings} configuration={configuration} />
-        )} */}
+        {!loading && configuration && fullScreen && (
+          <ChartPanelComponent fullScreen={true} configuration={configuration} />
+        )}
         <div className="p-6 w-full space-y-6 grid pt-12" style={{ gridTemplateRows: "min-content repeat(1, 1fr)" }}>
           <div className="w-max px-4 space-x-4 fixed top-4 right-4">
             <button
