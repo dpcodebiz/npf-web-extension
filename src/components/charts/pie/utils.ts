@@ -35,6 +35,7 @@ export const PieChartLegendStyles = (split: boolean, data: DatasetsWithResults) 
 export const pieChartOptions = (data: DatasetsWithResults, split: boolean) =>
   ({
     responsive: true,
+    aspectRatio: 2,
     plugins: {
       legend: PieChartLegendStyles(split, data),
       title: PieChartTitleStyles(),
