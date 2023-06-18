@@ -32,7 +32,6 @@ ChartJS.register(
 );
 
 type Props = {
-  settings: Settings;
   configuration: Configuration;
   data: DatasetsWithResults;
   index: number;
@@ -40,47 +39,29 @@ type Props = {
 };
 
 export const LineChart = (props: Props) => {
-  const { settings, configuration, data, index, split = false } = props;
-
-  // Do not render if configuration has not been updated yet
-  // TODO store settings inside configuration instead
-  if (
-    configuration.x !=
-      getParameter("x", settings, {
-        id: configuration.id,
-        parameters: Object.keys(configuration.parameters),
-        measurements: configuration.measurements,
-      }) ||
-    configuration.y !=
-      getParameter("y", settings, {
-        id: configuration.id,
-        parameters: Object.keys(configuration.parameters),
-        measurements: configuration.measurements,
-      })
-  )
-    return <></>;
+  const { configuration, data, index, split = false } = props;
 
   return (
     <>
-      {getSettingsErrorBars(settings, configuration) ? (
+      {getSettingsErrorBars(configuration) ? (
         <LineError
           data={
             {
-              labels: getLabel(data, settings, configuration),
+              labels: getLabel(data, configuration),
               datasets: getDatasets(data, GRAPH_TYPES.LINE, true),
             } as ChartData<"lineWithErrorBars", number[], string>
           }
-          options={lineChartOptions(settings, configuration, split, index)}
+          options={lineChartOptions(configuration, split, index)}
         />
       ) : (
         <Line
           data={
             {
-              labels: getLabel(data, settings, configuration),
+              labels: getLabel(data, configuration),
               datasets: getDatasets(data),
             } as ChartData<"line", number[], string>
           }
-          options={lineChartOptions(settings, configuration, split, index)}
+          options={lineChartOptions(configuration, split, index)}
         />
       )}
     </>

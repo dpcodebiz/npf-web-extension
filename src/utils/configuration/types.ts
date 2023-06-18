@@ -1,4 +1,4 @@
-import { ConfigurationSettings } from "../settings/types";
+import { ConfigurationSettings, Settings } from "../settings/types";
 
 /**
  * Configuration data that will be injected into the app
@@ -27,6 +27,7 @@ export type Configuration = {
   recommended_error_bars?: boolean;
   x: string;
   y: string;
+  settings: ConfigurationSettings;
 };
 
 export type DatasetsWithResults = Map<string, Results>;

@@ -13,21 +13,20 @@ import {
   ScaleOptionsByType,
   TitleOptions,
 } from "chart.js";
-import { Settings } from "../../../utils/settings/types";
 import { getGraphAxisScale, getGraphAxisTitle } from "../../settings/utils";
 import { isNumber } from "radash";
 
-export const getLineChartAxisLabels = (settings: Settings, configuration: Configuration) => {
+export const getLineChartAxisLabels = (configuration: Configuration) => {
   return {
-    x: getGraphAxisTitle("x", settings, configuration),
-    y: getGraphAxisTitle("y", settings, configuration),
+    x: getGraphAxisTitle("x", configuration),
+    y: getGraphAxisTitle("y", configuration),
   };
 };
 
-export const lineChartAxisStyles = (settings: Settings, configuration: Configuration, axis: "x" | "y") =>
+export const lineChartAxisStyles = (configuration: Configuration, axis: "x" | "y") =>
   ({
     title: {
-      text: getLineChartAxisLabels(settings, configuration)[axis],
+      text: getLineChartAxisLabels(configuration)[axis],
       color: "#000",
       font: {
         size: 16,
@@ -46,7 +45,7 @@ export const lineChartAxisStyles = (settings: Settings, configuration: Configura
       padding: 10,
       callback: function (value, index, ticks) {
         const label = isNumber(value) ? this.getLabelForValue(value) : value;
-        const scale = getGraphAxisScale(axis, settings, configuration);
+        const scale = getGraphAxisScale(axis, configuration);
         const applyScale = !isNaN(parseFloat(label.toString().replace(",", ".")));
         const valueScaled = parseFloat(label.toString().replace(",", ".")) / scale;
         return applyScale ? `${valueScaled.toFixed(2).replace(/[.,]00$/, "")}` : label;
@@ -108,7 +107,7 @@ export const lineChartLegendStyles = (split: boolean) =>
 //     .filter((e) => e);
 // };
 
-export const lineChartOptions = (settings: Settings, configuration: Configuration, split: boolean, index: number) =>
+export const lineChartOptions = (configuration: Configuration, split: boolean, index: number) =>
   ({
     responsive: true,
     plugins: {
@@ -120,8 +119,8 @@ export const lineChartOptions = (settings: Settings, configuration: Configuratio
       // },
     },
     scales: {
-      x: lineChartAxisStyles(settings, configuration, "x"),
-      y: lineChartAxisStyles(settings, configuration, "y"),
+      x: lineChartAxisStyles(configuration, "x"),
+      y: lineChartAxisStyles(configuration, "y"),
     },
   } as _DeepPartialObject<
     CoreChartOptions<"line" | "lineWithErrorBars"> &

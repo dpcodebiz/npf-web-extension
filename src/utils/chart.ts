@@ -3,20 +3,20 @@ import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "./configuration
 import { splitParams } from "./configuration/utils";
 import { iqr, maxArray, mean, median, minArray } from "@basementuniverse/stats";
 import { getParameter } from "../components/settings/utils";
-import { Settings } from "./settings/types";
 import { flat } from "radash";
 
 /**
  * @param experiment
  * @returns Labels for the chart
  */
-export const getLabel = (datasets: DatasetsWithResults, settings: Settings, configuration: Configuration) => {
+export const getLabel = (datasets: DatasetsWithResults, configuration: Configuration) => {
   if (!datasets) return [];
 
-  const mainParameter = getParameter("x", settings, {
+  const mainParameter = getParameter("x", {
     id: configuration.id,
     parameters: Object.keys(configuration.parameters),
     measurements: configuration.measurements,
+    settings: configuration.settings,
   });
 
   const uniqueLabels = new Set();
@@ -41,7 +41,32 @@ export const getPieLabel = (data: DatasetsWithResults) => {
 
 export const COLORS = {
   BARS_CHART: ["#10094e", "#56005b", "#8f005c", "#bf1354", "#e34343", "#f9732c", "#ffa600"],
-  LINE_CHART: ["#10094e", "#56005b", "#8f005c", "#bf1354", "#e34343", "#f9732c", "#ffa600"],
+  LINE_CHART: [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#393b79",
+    "#637939",
+    "#8c6d31",
+    "#843c39",
+    "#7b4173",
+    "#5254a3",
+    "#bd9e39",
+    "#ad494a",
+    "#ad494a",
+    "#637939",
+    "#6b6ecf",
+    "#b5cf6b",
+    "#cfa6ce",
+    "#ce6bcb",
+  ],
   PIE_CHART: ["#10094e", "#56005b", "#8f005c", "#bf1354", "#e34343", "#f9732c", "#ffa600"],
 };
 
@@ -54,23 +79,24 @@ export const COLORS = {
  * @returns
  */
 const getLineDatasets = (datasets: DatasetsWithResults, error_bars: boolean) => {
-  return [...datasets.entries()].map(
-    ([dataset, results], index) =>
-      ({
-        label: dataset.replaceAll(",", " "),
-        data: [...results.values()].map((values) =>
-          error_bars
-            ? {
-                y: mean(values),
-                yMin: [minArray(values)],
-                yMax: [maxArray(values)],
-              }
-            : mean(values)
-        ),
-        backgroundColor: COLORS.LINE_CHART[index],
-        borderColor: COLORS.LINE_CHART[index],
-      } as ChartDataset<"line", number[]>)
-  );
+  return [...datasets.entries()].map(([dataset, results], index) => {
+    console.log(index);
+
+    return {
+      label: dataset.replaceAll(",", " "),
+      data: [...results.values()].map((values) =>
+        error_bars
+          ? {
+              y: mean(values),
+              yMin: [minArray(values)],
+              yMax: [maxArray(values)],
+            }
+          : mean(values)
+      ),
+      backgroundColor: COLORS.LINE_CHART[index],
+      borderColor: COLORS.LINE_CHART[index],
+    } as ChartDataset<"line", number[]>;
+  });
 };
 
 /**

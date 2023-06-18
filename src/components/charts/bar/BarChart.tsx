@@ -10,7 +10,6 @@ import { BarError } from "../../../utils/charts-wrapper/typedCharts";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 type Props = {
-  settings: Settings;
   configuration: Configuration;
   split: boolean;
   data: DatasetsWithResults;
@@ -18,47 +17,29 @@ type Props = {
 };
 
 export const BarChart = (props: Props) => {
-  const { settings, configuration, data, split = false, index } = props;
-
-  // Do not render if configuration has not been updated yet
-  // TODO store settings inside configuration instead
-  if (
-    configuration.x !=
-      getParameter("x", settings, {
-        id: configuration.id,
-        parameters: Object.keys(configuration.parameters),
-        measurements: configuration.measurements,
-      }) ||
-    configuration.y !=
-      getParameter("y", settings, {
-        id: configuration.id,
-        parameters: Object.keys(configuration.parameters),
-        measurements: configuration.measurements,
-      })
-  )
-    return <></>;
+  const { configuration, data, split = false, index } = props;
 
   return (
     <div className="bg-white p-6 rounded-xl">
-      {getSettingsErrorBars(settings, configuration) ? (
+      {getSettingsErrorBars(configuration) ? (
         <BarError
           data={
             {
-              labels: getLabel(data, settings, configuration),
+              labels: getLabel(data, configuration),
               datasets: getDatasets(data, GRAPH_TYPES.BAR, true),
             } as ChartData<"barWithErrorBars", number[], string>
           }
-          options={barChartOptions(settings, configuration, split, index)}
+          options={barChartOptions(configuration, split, index)}
         />
       ) : (
         <Bar
           data={
             {
-              labels: getLabel(data, settings, configuration),
+              labels: getLabel(data, configuration),
               datasets: getDatasets(data),
             } as ChartData<"bar", number[], string>
           }
-          options={barChartOptions(settings, configuration, split, index)}
+          options={barChartOptions(configuration, split, index)}
         />
       )}
     </div>

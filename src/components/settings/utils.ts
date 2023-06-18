@@ -1,13 +1,12 @@
 import { isEmpty } from "radash";
 import { Configuration, GRAPH_TYPES, ParametersWithValues, SplitParametersData } from "../../utils/configuration/types";
 import { getSplitParameters } from "../../utils/configuration/utils";
-import { Settings } from "../../utils/settings/types";
+import { ConfigurationSettings, Settings } from "../../utils/settings/types";
 
 const MAXIMUM_AXIS_PARAMETER_VALUES = 6;
 export type Axis = "x" | "y";
 
 export type SettingsProps = {
-  settings: Settings;
   setSettings: (settings: Settings) => void;
   configuration: Configuration;
 };
@@ -35,8 +34,8 @@ export const getSettingsGraphOptions = () => {
  * @param configuration
  * @returns GRAPH_TYPES
  */
-export const getSettingsGraphType = (settings: Settings, configuration: Configuration) => {
-  return settings[configuration.id]?.type ?? configuration.type;
+export const getSettingsGraphType = (configuration: Configuration) => {
+  return configuration.settings?.type ?? configuration.type;
 };
 
 /**
@@ -48,10 +47,9 @@ export const getSettingsGraphType = (settings: Settings, configuration: Configur
  */
 export const getParameter = (
   axis: Axis,
-  settings: Settings,
-  configuration: { id: string; parameters: string[]; measurements: string[] }
+  configuration: { id: string; parameters: string[]; measurements: string[]; settings?: ConfigurationSettings }
 ) => {
-  const value = settings[configuration.id]?.[axis].parameter;
+  const value = configuration.settings?.[axis].parameter;
   const default_value = axis == "x" ? configuration.parameters[0] : configuration.measurements[0];
 
   return value ?? default_value;
@@ -65,12 +63,13 @@ export const getParameter = (
  * @param configuration
  * @returns
  */
-export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration: Configuration) => {
-  const value = settings[configuration.id]?.[axis].title;
-  const measurement = getParameter("y", settings, {
+export const getGraphAxisTitle = (axis: Axis, configuration: Configuration) => {
+  const value = configuration.settings?.[axis]?.title;
+  const measurement = getParameter("y", {
     id: configuration.id,
     parameters: Object.keys(configuration.parameters),
     measurements: configuration.measurements,
+    settings: configuration.settings,
   });
   const default_value = axis == "x" ? Object.keys(configuration.parameters)[0] : measurement;
 
@@ -84,8 +83,8 @@ export const getGraphAxisTitle = (axis: Axis, settings: Settings, configuration:
  * @param configuration
  * @returns
  */
-export const getGraphAxisScale = (axis: Axis, settings: Settings, configuration: Configuration) => {
-  const value = settings[configuration.id]?.[axis].scale;
+export const getGraphAxisScale = (axis: Axis, configuration: Configuration) => {
+  const value = configuration.settings?.[axis]?.scale;
   const default_value = 1;
 
   return value ?? default_value;
@@ -98,8 +97,8 @@ export const getGraphAxisScale = (axis: Axis, settings: Settings, configuration:
  * @param configuration
  * @returns
  */
-export const getSettingsGraphTitle = (settings: Settings, configuration: Configuration) => {
-  const settings_title = settings[configuration.id]?.title;
+export const getSettingsGraphTitle = (configuration: Configuration) => {
+  const settings_title = configuration.settings?.title;
 
   return (settings_title && !isEmpty(settings_title) ? settings_title : undefined) ?? configuration.name ?? "";
 };
@@ -113,12 +112,7 @@ export const getSettingsGraphTitle = (settings: Settings, configuration: Configu
  * @param configuration
  * @returns
  */
-export const getSettingsSplitAxisFormat = (
-  axis: Axis,
-  index: number,
-  settings: Settings,
-  configuration: Configuration
-) => {
+export const getSettingsSplitAxisFormat = (axis: Axis, index: number, configuration: Configuration) => {
   const split_parameters = getSplitParameters(configuration);
 
   let split_nb = 0;
@@ -142,7 +136,7 @@ export const getSettingsSplitAxisFormat = (
     }
   }
 
-  const settingsFormat = settings[configuration.id]?.split?.[axis]?.format;
+  const settingsFormat = configuration.settings?.split?.[axis]?.format;
   const formatted_str =
     settingsFormat &&
     `${settingsFormat
@@ -163,16 +157,14 @@ export const getSettingsSplitAxisFormat = (
  * @param configuration_id
  * @returns
  */
-export const getSettingsSplitAxis = (axis: Axis, settings: Settings, configuration_id: string) =>
-  settings[configuration_id]?.split?.[axis];
+export const getSettingsSplitAxis = (axis: Axis, settings: ConfigurationSettings) => settings?.split?.[axis];
 
 export const getSplitParameter = (
   axis: Axis,
-  settings: Settings,
-  configuration: { id: string; split: SplitParametersData }
+  configuration: { id: string; split: SplitParametersData; settings?: ConfigurationSettings }
 ) => {
-  const settings_value = getSettingsSplitAxis(axis, settings, configuration.id)?.parameter;
-  const default_value = configuration.split[axis];
+  const settings_value = configuration.settings ? getSettingsSplitAxis(axis, configuration.settings)?.parameter : null;
+  const default_value = configuration.split[axis]?.name;
   return settings_value ?? default_value;
 };
 
@@ -186,10 +178,14 @@ export const getSplitParameter = (
  */
 export const getSettingsSplitParametersOptions = (
   axis: Axis,
-  settings: Settings,
-  configuration: { id: string; split: SplitParametersData; parameters: ParametersWithValues }
+  configuration: {
+    id: string;
+    split: SplitParametersData;
+    parameters: ParametersWithValues;
+    settings: ConfigurationSettings;
+  }
 ) => {
-  const other_axis_value = getSplitParameter(axis == "x" ? "y" : "x", settings, configuration);
+  const other_axis_value = getSplitParameter(axis == "x" ? "y" : "x", configuration);
 
   return [{ label: "None", value: "undefined" }].concat(
     Object.entries(configuration.parameters)
@@ -208,13 +204,9 @@ export const getSettingsSplitParametersOptions = (
  * @param configuration
  * @returns
  */
-export const getSettingsDefaultSplitParametersOptions = (
-  axis: Axis,
-  settings: Settings,
-  configuration: Configuration
-) => {
-  const parametersOptions = getSettingsSplitParametersOptions(axis, settings, configuration);
-  const value = getSplitParameter(axis, settings, configuration);
+export const getSettingsDefaultSplitParametersOptions = (axis: Axis, configuration: Configuration) => {
+  const parametersOptions = getSettingsSplitParametersOptions(axis, configuration);
+  const value = getSplitParameter(axis, configuration);
 
   return parametersOptions.find((option) => option.value === value);
 };
@@ -226,7 +218,7 @@ export const getSettingsDefaultSplitParametersOptions = (
  * @param configuration
  * @returns
  */
-export const getSettingsParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
+export const getSettingsParametersOptions = (axis: Axis, configuration: Configuration) => {
   return axis == "x"
     ? Object.keys(configuration.parameters).map((parameter) => ({ label: parameter, value: parameter }))
     : configuration.measurements.map((measurement) => ({ label: measurement, value: measurement }));
@@ -239,12 +231,13 @@ export const getSettingsParametersOptions = (axis: Axis, settings: Settings, con
  * @param configuration
  * @returns
  */
-export const getSettingsDefaultParametersOptions = (axis: Axis, settings: Settings, configuration: Configuration) => {
-  const parametersOptions = getSettingsParametersOptions(axis, settings, configuration);
-  const value = getParameter(axis, settings, {
+export const getSettingsDefaultParametersOptions = (axis: Axis, configuration: Configuration) => {
+  const parametersOptions = getSettingsParametersOptions(axis, configuration);
+  const value = getParameter(axis, {
     id: configuration.id,
     parameters: Object.keys(configuration.parameters),
     measurements: configuration.measurements,
+    settings: configuration.settings,
   });
 
   return parametersOptions.find((option) => option.value === value);
@@ -276,8 +269,8 @@ export const getSettingsPlacementOptions = (axis: Axis) => {
  * @param configuration
  * @returns
  */
-export const getSettingsPlacement = (axis: Axis, settings: Settings, configuration: Configuration) => {
-  const value = settings[configuration.id]?.split?.[axis].placement;
+export const getSettingsPlacement = (axis: Axis, configuration: Configuration) => {
+  const value = configuration.settings?.split?.[axis].placement;
   const default_value = axis == "x" ? "before" : "after";
 
   return value ?? default_value;
@@ -290,8 +283,8 @@ export const getSettingsPlacement = (axis: Axis, settings: Settings, configurati
  * @param configuration
  * @returns
  */
-export const getSettingsErrorBars = (settings: Settings, configuration: Configuration) => {
-  return settings[configuration.id]?.error_bars ?? configuration.recommended_error_bars;
+export const getSettingsErrorBars = (configuration: Configuration) => {
+  return configuration.settings?.error_bars ?? configuration.recommended_error_bars;
 };
 
 /**

@@ -5,15 +5,15 @@ import { ChartSplitterComponent } from "../charts/ChartSplitterComponent";
 import { Fragment } from "react";
 
 export const SplitGraphsSettingsComponent = (props: SettingsProps) => {
-  const { configuration, settings } = props;
+  const { configuration } = props;
 
   return (
     <div className="w-full h-full">
       <div className="p-4 flex flex-col h-full">
         <span className="text-center block pb-4 text-lg xl:text-xl font-semibold">
-          {getSettingsGraphTitle(settings, configuration)}
+          {getSettingsGraphTitle(configuration)}
         </span>
-        <ChartSplitterComponent configuration={configuration} settings={settings}>
+        <ChartSplitterComponent configuration={configuration}>
           {configuration.data.map((_, index) => (
             <Fragment key={index}>
               <div>

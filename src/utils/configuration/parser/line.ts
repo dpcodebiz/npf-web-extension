@@ -123,7 +123,7 @@ export const getLineChartConfiguration = (
   // Grouping all the data by parameter value
   const parameters = configurationData.parameters;
   const measurements = configurationData.measurements;
-  const main_param = getParameter("x", settings, configurationData);
+  const main_param = getParameter("x", configurationData);
   const second_param = parameters.filter((param) => param != main_param)[0];
   const group_by_other_params = getRecommendedGroupByOtherParams(configurationData, results, settings);
 

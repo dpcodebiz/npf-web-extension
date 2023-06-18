@@ -93,7 +93,6 @@ function App() {
         <SettingsModal
           open={settingsModalOpen}
           setOpen={(open: boolean) => setSettingsModalOpen(open)}
-          settings={settings}
           configuration={configuration}
           setSettings={setSettings}
         />
@@ -135,12 +134,7 @@ function App() {
             </button>
           </div>
           {configuration && !fullScreen && (
-            <ChartPanelComponent
-              loading={loading}
-              fullScreen={false}
-              settings={settings}
-              configuration={configuration}
-            />
+            <ChartPanelComponent loading={loading} fullScreen={false} configuration={configuration} />
           )}
         </div>
       </div>

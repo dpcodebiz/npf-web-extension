@@ -7,18 +7,17 @@ import { getSettingsPlacement, getSettingsSplitAxisFormat } from "../settings/ut
 import React, { Fragment, PropsWithChildren } from "react";
 
 type Props = {
-  settings: Settings;
   configuration: Configuration;
 };
 
 export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
-  const { settings, configuration } = props;
+  const { configuration } = props;
 
   const split_parameters = getSplitParameters(configuration);
   const split_cols = split_parameters.x?.length ?? 1;
   const split_rows = split_parameters.y?.length ?? 0;
-  const split_x_placement = getSettingsPlacement("x", settings, configuration);
-  const split_y_placement = getSettingsPlacement("y", settings, configuration);
+  const split_x_placement = getSettingsPlacement("x", configuration);
+  const split_y_placement = getSettingsPlacement("y", configuration);
 
   return (
     <div
@@ -34,7 +33,7 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
             <Fragment key={index}>
               {split_parameters.x && Math.floor(index / split_cols) == 0 && (
                 <div className="text-center px-4 pb-4 border-b-2">
-                  {getSettingsSplitAxisFormat("x", index, settings, configuration)}
+                  {getSettingsSplitAxisFormat("x", index, configuration)}
                 </div>
               )}
             </Fragment>
@@ -47,13 +46,13 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
           <>
             {split_parameters.y && split_y_placement == "before" && index % split_cols == 0 && (
               <div className="border-r-2 px-4 inline-grid place-content-center">
-                {getSettingsSplitAxisFormat("y", index, settings, configuration)}
+                {getSettingsSplitAxisFormat("y", index, configuration)}
               </div>
             )}
             {child}
             {split_parameters.y && split_y_placement == "after" && index % split_cols == split_cols - 1 && (
               <div className="border-l-2 w-max px-4 inline-grid place-content-center">
-                {getSettingsSplitAxisFormat("y", index, settings, configuration)}
+                {getSettingsSplitAxisFormat("y", index, configuration)}
               </div>
             )}
           </>
@@ -65,7 +64,7 @@ export const ChartSplitterComponent = (props: PropsWithChildren<Props>) => {
             <Fragment key={index}>
               {split_parameters.x && Math.floor(index / split_cols) == 0 && (
                 <div className="text-center px-4 pt-4 mt-4 border-t-2">
-                  {getSettingsSplitAxisFormat("x", index, settings, configuration)}
+                  {getSettingsSplitAxisFormat("x", index, configuration)}
                 </div>
               )}
             </Fragment>

@@ -1,5 +1,5 @@
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
-import { Configuration, DatasetsWithResults, Experiment } from "../../../utils/configuration/types";
+import { DatasetsWithResults } from "../../../utils/configuration/types";
 import {
   CoreChartOptions,
   DatasetChartOptions,
@@ -8,7 +8,6 @@ import {
   PluginChartOptions,
   TitleOptions,
 } from "chart.js";
-import { Settings } from "../../../utils/settings/types";
 import { COLORS, getPieLabel } from "../../../utils/chart";
 
 export const PieChartTitleStyles = () =>
@@ -33,7 +32,7 @@ export const PieChartLegendStyles = (split: boolean, data: DatasetsWithResults) 
     },
   } as _DeepPartialObject<LegendOptions<"pie">>);
 
-export const pieChartOptions = (_: Settings, configuration: Configuration, data: DatasetsWithResults, split: boolean) =>
+export const pieChartOptions = (data: DatasetsWithResults, split: boolean) =>
   ({
     responsive: true,
     plugins: {

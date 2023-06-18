@@ -16,17 +16,17 @@ import { Settings } from "../../../utils/settings/types";
 import { getGraphAxisScale, getGraphAxisTitle } from "../../settings/utils";
 import { range } from "radash";
 
-export const getBoxplotChartAxisLabels = (settings: Settings, configuration: Configuration) => {
+export const getBoxplotChartAxisLabels = (configuration: Configuration) => {
   return {
-    x: getGraphAxisTitle("x", settings, configuration),
-    y: getGraphAxisTitle("y", settings, configuration),
+    x: getGraphAxisTitle("x", configuration),
+    y: getGraphAxisTitle("y", configuration),
   };
 };
 
-export const boxplotChartAxisStyles = (settings: Settings, configuration: Configuration, axis: "x" | "y") =>
+export const boxplotChartAxisStyles = (configuration: Configuration, axis: "x" | "y") =>
   ({
     title: {
-      text: getBoxplotChartAxisLabels(settings, configuration)[axis],
+      text: getBoxplotChartAxisLabels(configuration)[axis],
       color: "#000",
       font: {
         size: 16,
@@ -45,7 +45,7 @@ export const boxplotChartAxisStyles = (settings: Settings, configuration: Config
       padding: 10,
       callback: function (value, index, ticks) {
         const label = this.getLabelForValue(value as number);
-        const scale = getGraphAxisScale(axis, settings, configuration);
+        const scale = getGraphAxisScale(axis, configuration);
         const valueScaled = parseFloat(label.toString().replace(",", ".")) / scale;
         return `${valueScaled.toFixed(2).replace(/[.,]000$/, "")}`;
       },
@@ -106,7 +106,7 @@ export const boxplotChartLegendStyles = (split: boolean) =>
 //     .filter((e) => e);
 // };
 
-export const boxplotChartOptions = (settings: Settings, configuration: Configuration, split: boolean, index: number) =>
+export const boxplotChartOptions = (configuration: Configuration, split: boolean, index: number) =>
   ({
     responsive: true,
     plugins: {
@@ -118,8 +118,8 @@ export const boxplotChartOptions = (settings: Settings, configuration: Configura
       // },
     },
     scales: {
-      x: boxplotChartAxisStyles(settings, configuration, "x"),
-      y: boxplotChartAxisStyles(settings, configuration, "y"),
+      x: boxplotChartAxisStyles(configuration, "x"),
+      y: boxplotChartAxisStyles(configuration, "y"),
     },
   } as _DeepPartialObject<
     CoreChartOptions<"boxplot"> &

@@ -13,21 +13,19 @@ import {
   ScaleOptionsByType,
   TitleOptions,
 } from "chart.js";
-import { Settings } from "../../../utils/settings/types";
 import { getGraphAxisScale, getGraphAxisTitle } from "../../settings/utils";
-import { range } from "radash";
 
-export const getBarChartAxisLabels = (settings: Settings, configuration: Configuration) => {
+export const getBarChartAxisLabels = (configuration: Configuration) => {
   return {
-    x: getGraphAxisTitle("x", settings, configuration),
-    y: getGraphAxisTitle("y", settings, configuration),
+    x: getGraphAxisTitle("x", configuration),
+    y: getGraphAxisTitle("y", configuration),
   };
 };
 
-export const barChartAxisStyles = (settings: Settings, configuration: Configuration, axis: "x" | "y") =>
+export const barChartAxisStyles = (configuration: Configuration, axis: "x" | "y") =>
   ({
     title: {
-      text: getBarChartAxisLabels(settings, configuration)[axis],
+      text: getBarChartAxisLabels(configuration)[axis],
       color: "#000",
       font: {
         size: 16,
@@ -46,7 +44,7 @@ export const barChartAxisStyles = (settings: Settings, configuration: Configurat
       padding: 10,
       callback: function (value, index, ticks) {
         const label = this.getLabelForValue(value as number);
-        const scale = getGraphAxisScale(axis, settings, configuration);
+        const scale = getGraphAxisScale(axis, configuration);
         const applyScale = !isNaN(parseFloat(label.toString().replace(",", ".")));
         const valueScaled = parseFloat(label.toString().replace(",", ".")) / scale;
         return applyScale ? `${valueScaled.toFixed(2).replace(/[.,]000$/, "")}` : label;
@@ -107,7 +105,7 @@ export const barChartLegendStyles = (split: boolean) =>
 //     .filter((e) => e);
 // };
 
-export const barChartOptions = (settings: Settings, configuration: Configuration, split: boolean, index: number) =>
+export const barChartOptions = (configuration: Configuration, split: boolean, index: number) =>
   ({
     responsive: true,
     plugins: {
@@ -119,8 +117,8 @@ export const barChartOptions = (settings: Settings, configuration: Configuration
       // },
     },
     scales: {
-      x: barChartAxisStyles(settings, configuration, "x"),
-      y: barChartAxisStyles(settings, configuration, "y"),
+      x: barChartAxisStyles(configuration, "x"),
+      y: barChartAxisStyles(configuration, "y"),
     },
   } as _DeepPartialObject<
     CoreChartOptions<"bar" | "barWithErrorBars"> &

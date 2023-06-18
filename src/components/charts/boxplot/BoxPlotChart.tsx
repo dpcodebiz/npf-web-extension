@@ -7,14 +7,13 @@ import { Settings } from "../../../utils/settings/types";
 import { getDatasets, getLabel } from "../../../utils/chart";
 
 type Props = {
-  settings: Settings;
   configuration: Configuration;
   index: number;
   data: DatasetsWithResults;
 };
 
 export const BoxPlotChart: React.FC<Props> = (props: Props) => {
-  const { settings, configuration, index, data } = props;
+  const { configuration, index, data } = props;
 
   const split = configuration.split != undefined;
 
@@ -22,11 +21,11 @@ export const BoxPlotChart: React.FC<Props> = (props: Props) => {
     <BoxPlot
       data={
         {
-          labels: getLabel(data, settings, configuration),
+          labels: getLabel(data, configuration),
           datasets: getDatasets(data, GRAPH_TYPES.BOXPLOT),
         } as ChartData<"boxplot", number[], string>
       }
-      options={boxplotChartOptions(settings, configuration, split, index)}
+      options={boxplotChartOptions(configuration, split, index)}
     />
   );
 };

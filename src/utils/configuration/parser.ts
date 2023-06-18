@@ -36,14 +36,16 @@ export function resultsToConfiguration(
   const measurements = configurationData.measurements;
   const configurationId = configurationData.id;
 
+  const defaultSettings = settings[configurationId] ?? configurationData.settings;
+
   // Main parameters
-  const mainParameter = getParameter("x", settings, configurationData);
-  const mainMeasurement = getParameter("y", settings, configurationData);
+  const mainParameter = getParameter("x", { ...configurationData, settings: defaultSettings });
+  const mainMeasurement = getParameter("y", { ...configurationData, settings: defaultSettings });
 
   // Retrieving split
   const splitParameters = [
-    getSplitParameter("x", settings, { id: configurationId, split: {} }),
-    getSplitParameter("y", settings, { id: configurationId, split: {} }),
+    getSplitParameter("x", { id: configurationId, split: {}, settings: defaultSettings }),
+    getSplitParameter("y", { id: configurationId, split: {}, settings: defaultSettings }),
   ];
   const splitX = splitParameters[0] != "undefined" && splitParameters[0] != undefined;
   const [primarySplitParameter, secondarySplitParameter] = [
@@ -121,7 +123,7 @@ export function resultsToConfiguration(
     : {};
   const dataNested = secondarySplitParameter
     ? mapValues(dataByPrimaryOrSecondary, (dataParsed) =>
-        groupByParameter(dataParsed as ParsedConfigurationData[], primarySplitParameter)
+        groupByParameter(dataParsed as ParsedConfigurationData[], primarySplitParameter as string)
       )
     : dataByPrimaryOrSecondary;
   const datasetsBySplitParameter = mapValues(dataNested as any, (dataParsedOrObject) =>
@@ -144,19 +146,39 @@ export function resultsToConfiguration(
         secondarySplitValues.add(secondarySplitValue);
 
         Object.keys(primaryOrSecondaryValues)
-          .map((key) => splitParams(key)[primarySplitParameter])
+          .map((key) => splitParams(key)[primarySplitParameter as string])
           .forEach((primarySplitValue) => primarySplitValues.add(primarySplitValue));
 
         return;
       }
 
-      const primarySplitValue = splitParams(primaryOrSecondaryKey)[primarySplitParameter];
+      const primarySplitValue = splitParams(primaryOrSecondaryKey)[primarySplitParameter as string];
       primarySplitValues.add(primarySplitValue);
     }
   );
 
   // Final datasets
   const finalDatasets = splitDatasetsReduced.length > 0 ? splitDatasetsReduced : [groupByMainParameter(dataParsed)];
+
+  console.log(settings, mainParameter, {
+    id: configurationId,
+    data: finalDatasets,
+    type: GRAPH_TYPES.LINE,
+    parameters: parametersWithValues,
+    measurements: measurements,
+    x: mainParameter,
+    y: mainMeasurement,
+    split: {
+      ...(primarySplitParameter
+        ? { [splitX ? "x" : "y"]: { name: primarySplitParameter, values: [...primarySplitValues.values()] } }
+        : {}),
+      ...(secondarySplitParameter
+        ? { y: { name: secondarySplitParameter, values: [...secondarySplitValues.values()] } }
+        : {}),
+    },
+    ...recommendedGraphSettings,
+    settings: settings[configurationId],
+  });
 
   return {
     id: configurationId,
@@ -175,5 +197,6 @@ export function resultsToConfiguration(
         : {}),
     },
     ...recommendedGraphSettings,
+    settings: defaultSettings,
   } as Configuration;
 }

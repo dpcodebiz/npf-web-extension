@@ -2,18 +2,16 @@ import { Configuration } from "../../utils/configuration/types";
 import { _clsx } from "../../utils/misc";
 import { getSettingsGraphTitle } from "../settings/utils";
 import { ChartComponent } from "./ChartComponent";
-import { Settings } from "../../utils/settings/types";
 import { ChartSplitterComponent } from "./ChartSplitterComponent";
 
 type Props = {
   loading?: boolean;
   fullScreen: boolean;
-  settings: Settings;
   configuration: Configuration;
 };
 
 export const ChartPanelComponent = (props: Props) => {
-  const { fullScreen, settings, configuration, loading = false } = props;
+  const { fullScreen, configuration, loading = false } = props;
 
   return (
     <div
@@ -24,18 +22,13 @@ export const ChartPanelComponent = (props: Props) => {
       ) : (
         <>
           <span className="text-3xl xl:text-5xl font-semibold block text-center pb-12">
-            {getSettingsGraphTitle(settings, configuration)}
+            {getSettingsGraphTitle(configuration)}
           </span>
-          <ChartSplitterComponent configuration={configuration} settings={settings}>
+          <ChartSplitterComponent configuration={configuration}>
             {configuration.data.map((datasetsWithResults, index) => (
               <div key={index}>
                 <div className="p-2 xl:p-4">
-                  <ChartComponent
-                    settings={settings}
-                    configuration={configuration}
-                    data={datasetsWithResults}
-                    index={index}
-                  />
+                  <ChartComponent configuration={configuration} data={datasetsWithResults} index={index} />
                 </div>
               </div>
             ))}
