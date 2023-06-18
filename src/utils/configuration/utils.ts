@@ -1,14 +1,7 @@
 import { mapValues, unique } from "radash";
 import { ParsedConfigurationData } from "./parser";
 import { groupDataByParameters } from "./parser/line";
-import { ConfigurationData, Experiment, SplitParametersData } from "./types";
-import { Settings } from "../settings/types";
-import {
-  getParameter,
-  getSettingsParametersOptions,
-  getSettingsSplitAxis,
-  getSettingsSplitParametersOptions,
-} from "../../components/settings/utils";
+import { Configuration } from "./types";
 
 /**
  * Joins all parameters
@@ -17,7 +10,7 @@ import {
  * @returns
  */
 export const joinParams = (params_to_join: string[], params: ParsedConfigurationData) => {
-  return params_to_join.reduce((acc, param) => `${acc}${param}=${params[param]},`, "");
+  return params_to_join.reduce((acc, param) => `${acc}${param}=${params[param]},`, "").slice(0, -1);
 };
 
 /**
@@ -38,26 +31,18 @@ export const splitParams = (joined_params: string) => {
 };
 
 /**
- * Returns the name of each split parameter
- * @param experiment
- * @returns
- */
-export const getExperimentSplitParametersNames = (experiment: Experiment) =>
-  Object.values(experiment.split_parameters ?? {}).map((split_parameter) => split_parameter.name);
-
-/**
  * Returns the split parameters for each axis (columns/rows)
  * along with their values
  * @param experiments
  * @returns
  */
-export const getSplitParameters = (experiments: Experiment[]) => ({
-  x: experiments[0].split_parameters?.x?.values.map((value) => ({
-    name: experiments[0].split_parameters?.x?.name,
+export const getSplitParameters = (configuration: Configuration) => ({
+  x: configuration.split?.x?.values.map((value) => ({
+    name: configuration.split?.x?.name,
     value,
   })),
-  y: experiments[0].split_parameters?.y?.values.map((value) => ({
-    name: experiments[0].split_parameters?.y?.name,
+  y: configuration.split?.y?.values.map((value) => ({
+    name: configuration.split?.y?.name,
     value,
   })),
 });
@@ -97,132 +82,4 @@ export const getParametersWithValues = (parameters: string[], parsedConfiguratio
   const valuesForEachParameter = getParametersValues(dataGrouped);
 
   return valuesForEachParameter;
-};
-
-/**
- * Returns subsets of ParsedConfigurationData[] where each subset has a specific combination of parameters values.
- * @param parameters
- * @param parsedConfigurationData
- * @returns
- */
-export const getConfigurationDataByParameters = (
-  configurationData: ConfigurationData,
-  parsedConfigurationData: ParsedConfigurationData[],
-  settings: Settings
-) => {
-  // Getting all parameters with their values
-  const parameters = configurationData.parameters;
-  const main_parameter = getParameter("x", settings, {
-    id: configurationData.id,
-    parameters,
-    measurements: configurationData.measurements,
-  });
-  const parametersWithValues = getParametersWithValues(parameters, parsedConfigurationData);
-  const nParameters = Object.keys(parametersWithValues).length;
-
-  const splitParsedConfigurationData: {
-    split_parameters?: SplitParametersData;
-    data: ParsedConfigurationData[];
-  }[] = [];
-
-  // Split along X axis
-  const availableSplitParameters = getSettingsSplitParametersOptions("x", settings, {
-    id: configurationData.id,
-    split: {},
-    parameters: parametersWithValues,
-  })
-    .map((option) => option.value)
-    .filter((parameter) => !["undefined", main_parameter].includes(parameter));
-  const availableSplitParameterX =
-    availableSplitParameters.length > 1
-      ? [availableSplitParameters[1], parametersWithValues[availableSplitParameters[1]]]
-      : undefined;
-  const availableSplitParameterY =
-    availableSplitParameters.length > 2
-      ? [availableSplitParameters[2], parametersWithValues[availableSplitParameters[2]]]
-      : undefined;
-  const parameterXEntry =
-    nParameters > 2 && (getSettingsSplitAxis("x", settings, configurationData.id)?.enable ?? true)
-      ? Object.entries(parametersWithValues).find(
-          (entry) => entry[0] === getSettingsSplitAxis("x", settings, configurationData.id)?.parameter
-        ) ?? availableSplitParameterX
-      : undefined;
-  const parameterYEntry =
-    nParameters > 3 && (getSettingsSplitAxis("y", settings, configurationData.id)?.enable ?? true)
-      ? Object.entries(parametersWithValues).find(
-          (entry) => entry[0] === getSettingsSplitAxis("y", settings, configurationData.id)?.parameter
-        ) ?? availableSplitParameterY
-      : undefined;
-
-  if (parameterXEntry || parameterYEntry) {
-    const [parameterX, valuesX] = parameterXEntry ?? [];
-    const [parameterY, valuesY] = parameterYEntry ?? [];
-
-    // Filtering data by parameters
-    const configurationDataByParameters = parameterXEntry
-      ? (valuesX as string[]).map((valueX) =>
-          parameterYEntry
-            ? (valuesY as string[]).map((valueY) =>
-                parsedConfigurationData.filter(
-                  (data) => data[parameterX as string] == valueX && data[parameterY as string] == valueY
-                )
-              )
-            : parsedConfigurationData.filter((data) => data[parameterX as string] == valueX)
-        )
-      : (valuesY as string[]).map((valueY) =>
-          parsedConfigurationData.filter((data) => data[parameterY as string] == valueY)
-        );
-
-    // Iterating through all possible combinations
-    configurationDataByParameters.forEach((subResultsXorY) => {
-      // We have both x and y
-      if (parameterXEntry && parameterYEntry) {
-        (subResultsXorY as ParsedConfigurationData[][]).forEach((subResultsXY) => {
-          splitParsedConfigurationData.push({
-            split_parameters: {
-              x: {
-                name: parameterX as string,
-                values: valuesX as string[],
-              },
-              y: {
-                name: parameterY as string,
-                values: valuesY as string[],
-              },
-            },
-            data: subResultsXY,
-          });
-        });
-        return;
-      }
-
-      splitParsedConfigurationData.push({
-        split_parameters: {
-          ...(parameterXEntry
-            ? {
-                x: {
-                  name: parameterX as string,
-                  values: valuesX as string[],
-                },
-              }
-            : {}),
-          ...(parameterYEntry
-            ? {
-                y: {
-                  name: parameterY as string,
-                  values: valuesY as string[],
-                },
-              }
-            : {}),
-        },
-        data: subResultsXorY as ParsedConfigurationData[],
-      });
-    });
-  } else {
-    // No need to split the data so just pushing the data
-    splitParsedConfigurationData.push({
-      data: parsedConfigurationData,
-    });
-  }
-
-  return splitParsedConfigurationData;
 };

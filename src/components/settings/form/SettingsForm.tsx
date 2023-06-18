@@ -23,7 +23,6 @@ import { ConfigurationSettings, Settings } from "../../../utils/settings/types";
 import { SplitGraphsSettingsComponent } from "../SplitGraphsSettingsComponent";
 
 type Props = {
-  settings: Settings;
   configuration: Configuration;
   setSettings: (_: Settings) => void;
 };
@@ -31,47 +30,47 @@ type Props = {
 type FormData = ConfigurationSettings;
 
 export const SettingsForm = (props: Props) => {
-  const { settings, setSettings, configuration } = props;
+  const { setSettings, configuration } = props;
   const { control, handleSubmit, watch, register } = useForm<FormData>({
     defaultValues: {
-      title: getSettingsGraphTitle(settings, configuration),
+      title: getSettingsGraphTitle(configuration),
       x: {
-        title: getGraphAxisTitle("x", settings, configuration),
-        scale: getGraphAxisScale("x", settings, configuration),
+        title: getGraphAxisTitle("x", configuration),
+        scale: getGraphAxisScale("x", configuration),
       },
       y: {
-        title: getGraphAxisTitle("y", settings, configuration),
-        scale: getGraphAxisScale("y", settings, configuration),
+        title: getGraphAxisTitle("y", configuration),
+        scale: getGraphAxisScale("y", configuration),
       },
       split: {
         x: {
-          format: getSettingsSplitAxis("x", settings, configuration.id)?.format ?? "{{parameter}}={{value}}",
-          placement: getSettingsPlacement("x", settings, configuration) ?? "before",
+          format: getSettingsSplitAxis("x", configuration.settings)?.format ?? "{{parameter}}={{value}}",
+          placement: getSettingsPlacement("x", configuration) ?? "before",
         },
         y: {
-          format: getSettingsSplitAxis("y", settings, configuration.id)?.format ?? "{{parameter}}={{value}}",
-          placement: getSettingsPlacement("y", settings, configuration) ?? "after",
+          format: getSettingsSplitAxis("y", configuration.settings)?.format ?? "{{parameter}}={{value}}",
+          placement: getSettingsPlacement("y", configuration) ?? "after",
         },
       },
-      error_bars: getSettingsErrorBars(settings, configuration),
+      error_bars: getSettingsErrorBars(configuration),
     },
   });
   const splitParametersOptions = {
-    x: getSettingsSplitParametersOptions("x", settings, configuration),
-    y: getSettingsSplitParametersOptions("y", settings, configuration),
+    x: getSettingsSplitParametersOptions("x", configuration),
+    y: getSettingsSplitParametersOptions("y", configuration),
   };
   const parametersOptions = {
-    x: getSettingsParametersOptions("x", settings, configuration),
-    y: getSettingsParametersOptions("y", settings, configuration),
+    x: getSettingsParametersOptions("x", configuration),
+    y: getSettingsParametersOptions("y", configuration),
   };
-  const graph_type = getSettingsGraphType(settings, configuration);
+  const graph_type = getSettingsGraphType(configuration);
   const nbParameters = Object.keys(configuration.parameters).length;
 
   const onSubmit = useCallback(
     (data: FormData) => {
       setSettings(
         Object.assign(
-          { ...settings },
+          { ...configuration.settings },
           {
             [configuration.id]: {
               title: data.title,
@@ -94,7 +93,7 @@ export const SettingsForm = (props: Props) => {
         )
       );
     },
-    [configuration, setSettings, settings]
+    [configuration, setSettings]
   );
 
   useEffect(() => {
@@ -115,7 +114,7 @@ export const SettingsForm = (props: Props) => {
             <label htmlFor="y_format">Chart type</label>
             <Controller
               name="type"
-              defaultValue={getSettingsGraphType(settings, configuration)}
+              defaultValue={getSettingsGraphType(configuration)}
               control={control}
               render={({ field: { value, onChange } }) => (
                 <Select
@@ -135,11 +134,11 @@ export const SettingsForm = (props: Props) => {
             </div>
           )}
         </div>
-        <SplitGraphsSettingsComponent setSettings={setSettings} settings={settings} configuration={configuration} />
+        <SplitGraphsSettingsComponent setSettings={setSettings} configuration={configuration} />
       </div>
 
       <div className="grid grid-cols-2 gap-4 xl:gap-12">
-        {getSettingsGraphType(settings, configuration) != GRAPH_TYPES.PIE && (
+        {getSettingsGraphType(configuration) != GRAPH_TYPES.PIE && (
           <>
             <div className={_clsx(styles.group)}>
               <span className={_clsx(styles.heading)}>X axis</span>
@@ -147,13 +146,13 @@ export const SettingsForm = (props: Props) => {
                 <label htmlFor="x.parameter">Variable</label>
                 <Controller
                   name="x.parameter"
-                  defaultValue={getSettingsDefaultParametersOptions("x", settings, configuration)?.value}
+                  defaultValue={getSettingsDefaultParametersOptions("x", configuration)?.value}
                   control={control}
                   render={({ field: { value, onChange } }) => (
                     <Select
                       value={
                         parametersOptions.x.find((c) => c.value === value) ??
-                        getSettingsDefaultParametersOptions("x", settings, configuration)
+                        getSettingsDefaultParametersOptions("x", configuration)
                       }
                       options={parametersOptions.x}
                       onChange={(val) => onChange((val ?? parametersOptions.x[0]).value)}
@@ -176,13 +175,13 @@ export const SettingsForm = (props: Props) => {
                 <label htmlFor="y.parameter">Variable</label>
                 <Controller
                   name="y.parameter"
-                  defaultValue={getSettingsDefaultParametersOptions("y", settings, configuration)?.value}
+                  defaultValue={getSettingsDefaultParametersOptions("y", configuration)?.value}
                   control={control}
                   render={({ field: { value, onChange } }) => (
                     <Select
                       value={
                         parametersOptions.y.find((c) => c.value === value) ??
-                        getSettingsDefaultParametersOptions("y", settings, configuration)
+                        getSettingsDefaultParametersOptions("y", configuration)
                       }
                       options={parametersOptions.y}
                       onChange={(val) => onChange((val ?? parametersOptions.y[0]).value)}
@@ -209,13 +208,13 @@ export const SettingsForm = (props: Props) => {
                 <label htmlFor="split.x.parameter">Variable</label>
                 <Controller
                   name="split.x.parameter"
-                  defaultValue={getSettingsDefaultSplitParametersOptions("x", settings, configuration)?.value}
+                  defaultValue={getSettingsDefaultSplitParametersOptions("x", configuration)?.value}
                   control={control}
                   render={({ field: { value, onChange } }) => (
                     <Select
                       value={
                         splitParametersOptions.x.find((c) => c.value === value) ??
-                        getSettingsDefaultSplitParametersOptions("x", settings, configuration)
+                        getSettingsDefaultSplitParametersOptions("x", configuration)
                       }
                       options={splitParametersOptions.x}
                       onChange={(val) => onChange((val ?? splitParametersOptions.x[0]).value)}
@@ -231,7 +230,7 @@ export const SettingsForm = (props: Props) => {
                 <label htmlFor="split.x.placement">Placement</label>
                 <Controller
                   name="split.x.placement"
-                  defaultValue={getSettingsPlacement("x", settings, configuration)}
+                  defaultValue={getSettingsPlacement("x", configuration)}
                   control={control}
                   render={({ field: { value, onChange } }) => (
                     <Select
@@ -254,13 +253,13 @@ export const SettingsForm = (props: Props) => {
                 <label htmlFor="split.y.parameter">Variable</label>
                 <Controller
                   name="split.y.parameter"
-                  defaultValue={getSettingsDefaultSplitParametersOptions("y", settings, configuration)?.value}
+                  defaultValue={getSettingsDefaultSplitParametersOptions("y", configuration)?.value}
                   control={control}
                   render={({ field: { value, onChange } }) => (
                     <Select
                       value={
                         splitParametersOptions.y.find((c) => c.value === value) ??
-                        getSettingsDefaultSplitParametersOptions("y", settings, configuration)
+                        getSettingsDefaultSplitParametersOptions("y", configuration)
                       }
                       options={splitParametersOptions.y}
                       onChange={(val) => onChange((val ?? splitParametersOptions.y[0]).value)}
@@ -276,7 +275,7 @@ export const SettingsForm = (props: Props) => {
                 <label htmlFor="split.y.placement">Placement</label>
                 <Controller
                   name="split.y.placement"
-                  defaultValue={getSettingsPlacement("y", settings, configuration)}
+                  defaultValue={getSettingsPlacement("y", configuration)}
                   control={control}
                   render={({ field: { value, onChange } }) => (
                     <Select

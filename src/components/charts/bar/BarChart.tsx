@@ -1,46 +1,68 @@
 import { Chart as ChartJS, Tooltip, Legend, CategoryScale, LinearScale, Title, ChartData, BarElement } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { barChartOptions } from "./utils";
-import { Configuration, Experiment, GRAPH_TYPES } from "../../../utils/configuration/types";
-import { getDatasets, getLabel } from "../../../utils/chart";
-import { Settings } from "../../../utils/settings/types";
+import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "../../../utils/configuration/types";
+import { backgroundPlugin, exportChartPdf, getDatasets, getLabel } from "../../../utils/chart";
 import { getSettingsErrorBars } from "../../settings/utils";
 import { BarError } from "../../../utils/charts-wrapper/typedCharts";
+import { useRef } from "react";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 type Props = {
-  settings: Settings;
   configuration: Configuration;
   split: boolean;
-  experiment: Experiment;
+  data: DatasetsWithResults;
   index: number;
 };
 
 export const BarChart = (props: Props) => {
-  const { settings, configuration, experiment, split = false, index } = props;
+  const { configuration, data, split = false, index } = props;
+  const chartRef = useRef(null);
+
   return (
     <div className="bg-white p-6 rounded-xl">
-      {getSettingsErrorBars(settings, configuration) ? (
-        <BarError
-          data={
-            {
-              labels: getLabel(experiment, settings, configuration),
-              datasets: getDatasets(experiment, settings, configuration, GRAPH_TYPES.BAR, true),
-            } as ChartData<"barWithErrorBars", number[], string>
-          }
-          options={barChartOptions(settings, configuration, split, index)}
-        />
+      <button
+        className="w-max ml-auto block mb-2 bg-uclouvain-1 text-white py-1 px-2 rounded"
+        onClick={() => {
+          exportChartPdf(
+            //@ts-expect-error type
+            chartRef.current.canvas,
+            index,
+            configuration
+          );
+        }}
+      >
+        Download
+      </button>
+      {getSettingsErrorBars(configuration) ? (
+        <div>
+          <BarError
+            ref={chartRef}
+            data={
+              {
+                labels: getLabel(data, configuration),
+                datasets: getDatasets(data, GRAPH_TYPES.BAR, true),
+              } as ChartData<"barWithErrorBars", number[], string>
+            }
+            options={barChartOptions(configuration, split, index)}
+            plugins={[backgroundPlugin]}
+          />
+        </div>
       ) : (
-        <Bar
-          data={
-            {
-              labels: getLabel(experiment, settings, configuration),
-              datasets: getDatasets(experiment, settings, configuration),
-            } as ChartData<"bar", number[], string>
-          }
-          options={barChartOptions(settings, configuration, split, index)}
-        />
+        <div>
+          <Bar
+            ref={chartRef}
+            data={
+              {
+                labels: getLabel(data, configuration),
+                datasets: getDatasets(data),
+              } as ChartData<"bar", number[], string>
+            }
+            options={barChartOptions(configuration, split, index)}
+            plugins={[backgroundPlugin]}
+          />
+        </div>
       )}
     </div>
   );

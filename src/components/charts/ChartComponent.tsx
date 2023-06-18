@@ -1,61 +1,35 @@
-import { Configuration, Experiment, GRAPH_TYPES } from "../../utils/configuration/types";
-import { Settings } from "../../utils/settings/types";
+import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "../../utils/configuration/types";
+import { getSettingsGraphType } from "../settings/utils";
 import { BarChart } from "./bar/BarChart";
 import { BoxPlotChart } from "./boxplot/BoxPlotChart";
 import { LineChart } from "./line/LineChart";
 import { PieChart } from "./pie/PieChart";
 type Props = {
-  settings: Settings;
   configuration: Configuration;
-  experiment: Experiment;
+  data: DatasetsWithResults;
   index: number;
 };
 
 export const ChartComponent = (props: Props) => {
-  const { settings, configuration, experiment, index } = props;
-  const split = experiment.split_parameters != undefined;
+  const { configuration, data, index } = props;
 
-  const renderGraph = (experiment: Experiment) => {
-    switch (experiment.metadata.type) {
-      case GRAPH_TYPES.LINE: {
-        return (
-          <LineChart
-            index={index}
-            settings={settings}
-            configuration={configuration}
-            split={split}
-            experiment={experiment}
-          ></LineChart>
-        );
-      }
-      case GRAPH_TYPES.BAR: {
-        return (
-          <BarChart
-            settings={settings}
-            configuration={configuration}
-            split={split}
-            experiment={experiment}
-            index={index}
-          ></BarChart>
-        );
-      }
-      case GRAPH_TYPES.PIE: {
-        return (
-          <PieChart settings={settings} configuration={configuration} split={split} experiment={experiment}></PieChart>
-        );
-      }
-      case GRAPH_TYPES.BOXPLOT: {
-        return (
-          <BoxPlotChart
-            settings={settings}
-            configuration={configuration}
-            experiment={experiment}
-            index={index}
-          ></BoxPlotChart>
-        );
-      }
+  const graph_type = getSettingsGraphType(configuration);
+
+  const split = configuration.split != undefined;
+
+  switch (graph_type) {
+    case GRAPH_TYPES.LINE: {
+      return <LineChart index={index} configuration={configuration} split={split} data={data}></LineChart>;
     }
-  };
-
-  return <>{renderGraph(experiment)}</>;
+    case GRAPH_TYPES.BAR: {
+      return <BarChart configuration={configuration} split={split} data={data} index={index}></BarChart>;
+    }
+    case GRAPH_TYPES.PIE: {
+      return <PieChart configuration={configuration} split={split} data={data} index={index}></PieChart>;
+    }
+    case GRAPH_TYPES.BOXPLOT: {
+      return <BoxPlotChart configuration={configuration} data={data} index={index}></BoxPlotChart>;
+    }
+  }
+  return <></>;
 };

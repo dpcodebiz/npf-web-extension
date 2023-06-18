@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigurationData, Experiment, GRAPH_TYPES, ParameterizedRun } from "../types";
-import { group, isNumber, mapValues, objectify } from "radash";
+import { group, mapValues, objectify } from "radash";
 import { ExperimentData, ParsedConfigurationData } from "../parser";
 import { joinParams, splitParams } from "../utils";
 import { getParameter } from "../../../components/settings/utils";
@@ -123,7 +123,7 @@ export const getLineChartConfiguration = (
   // Grouping all the data by parameter value
   const parameters = configurationData.parameters;
   const measurements = configurationData.measurements;
-  const main_param = getParameter("x", settings, configurationData);
+  const main_param = getParameter("x", configurationData);
   const second_param = parameters.filter((param) => param != main_param)[0];
   const group_by_other_params = getRecommendedGroupByOtherParams(configurationData, results, settings);
 

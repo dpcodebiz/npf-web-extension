@@ -2,7 +2,7 @@ import { SettingsForm } from "./form/SettingsForm";
 import { SettingsProps, getSettingsGraphOptions } from "./utils";
 
 export const SettingsComponent = (props: SettingsProps) => {
-  const { setSettings, configuration, settings } = props;
+  const { setSettings, configuration } = props;
 
   return (
     <div className="bg-white rounded-xl xl:min-w-[1200px]">
@@ -12,15 +12,11 @@ export const SettingsComponent = (props: SettingsProps) => {
           The recommended graph type for this data is:
           <span className="font-bold">
             {" "}
-            {
-              getSettingsGraphOptions().find(
-                (option) => option.value == configuration.experiments[0].metadata.recommended_type
-              )?.label
-            }
-            {configuration.experiments[0].metadata.recommended_error_bars ?? "with error bars"}
+            {getSettingsGraphOptions().find((option) => option.value == configuration.recommended_type)?.label}
+            {configuration.recommended_error_bars ?? "with error bars"}
           </span>
         </span>
-        <SettingsForm configuration={configuration} settings={settings} setSettings={setSettings}></SettingsForm>
+        <SettingsForm configuration={configuration} setSettings={setSettings}></SettingsForm>
       </div>
     </div>
   );

@@ -18,10 +18,11 @@ export const getRecommendedGraphType = (
   settings: Settings
 ) => {
   // Grouping by main parameter and other parameters
-  const main_parameter = getParameter("x", settings, {
+  const main_parameter = getParameter("x", {
     id: configurationData.id,
     parameters: configurationData.parameters,
     measurements: configurationData.measurements,
+    settings: configurationData.settings,
   });
   const second_parameter = configurationData.parameters.filter((param) => param != main_parameter)[0];
   const relevantParameters = [main_parameter, second_parameter];
@@ -58,10 +59,11 @@ export const getRecommendedGroupByOtherParams = (
   settings: Settings
 ) => {
   // Grouping by main parameter and other parameters
-  const main_parameter = getParameter("x", settings, {
+  const main_parameter = getParameter("x", {
     id: configurationData.id,
     parameters: configurationData.parameters,
     measurements: configurationData.measurements,
+    settings: configurationData.settings,
   });
   const second_parameter = configurationData.parameters.filter((param) => param != main_parameter)[0];
   const groupedData = groupDataByParameters(second_parameter ? [second_parameter] : [], results);

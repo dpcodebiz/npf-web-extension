@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.scss";
 import { Events } from "./utils/events";
 import { WebsiteLoader } from "./components/WebsiteLoader";
@@ -92,7 +92,6 @@ function App() {
         <SettingsModal
           open={settingsModalOpen}
           setOpen={(open: boolean) => setSettingsModalOpen(open)}
-          settings={settings}
           configuration={configuration}
           setSettings={setSettings}
         />
@@ -119,7 +118,7 @@ function App() {
           </div>
         </div>
         {!loading && configuration && fullScreen && (
-          <ChartPanelComponent fullScreen={true} settings={settings} configuration={configuration} />
+          <ChartPanelComponent fullScreen={true} configuration={configuration} />
         )}
         <div className="p-6 w-full space-y-6 grid pt-12" style={{ gridTemplateRows: "min-content repeat(1, 1fr)" }}>
           <div className="w-max px-4 space-x-4 fixed top-4 right-4">
@@ -134,12 +133,7 @@ function App() {
             </button>
           </div>
           {configuration && !fullScreen && (
-            <ChartPanelComponent
-              loading={loading}
-              fullScreen={false}
-              settings={settings}
-              configuration={configuration}
-            />
+            <ChartPanelComponent loading={loading} fullScreen={false} configuration={configuration} />
           )}
         </div>
       </div>

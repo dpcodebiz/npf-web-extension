@@ -11,13 +11,13 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { lineChartOptions } from "./utils";
-import { Configuration, Experiment, GRAPH_TYPES } from "../../../utils/configuration/types";
-import { getDatasets, getLabel } from "../../../utils/chart";
-import { Settings } from "../../../utils/settings/types";
+import { Configuration, DatasetsWithResults, GRAPH_TYPES } from "../../../utils/configuration/types";
+import { backgroundPlugin, exportChartPdf, getDatasets, getLabel } from "../../../utils/chart";
 import { LineError } from "../../../utils/charts-wrapper/typedCharts";
 import { getSettingsErrorBars } from "../../settings/utils";
 import { PointWithErrorBar } from "chartjs-chart-error-bars";
 import Annotation from "chartjs-plugin-annotation";
+import { useRef } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -32,38 +32,60 @@ ChartJS.register(
 );
 
 type Props = {
-  settings: Settings;
   configuration: Configuration;
-  experiment: Experiment;
+  data: DatasetsWithResults;
   index: number;
   split?: boolean;
 };
 
 export const LineChart = (props: Props) => {
-  const { settings, configuration, experiment, index, split = false } = props;
+  const { configuration, data, index, split = false } = props;
+
+  const chartRef = useRef(null);
 
   return (
     <>
-      {getSettingsErrorBars(settings, configuration) ? (
-        <LineError
-          data={
-            {
-              labels: getLabel(experiment, settings, configuration),
-              datasets: getDatasets(experiment, settings, configuration, GRAPH_TYPES.LINE, true),
-            } as ChartData<"lineWithErrorBars", number[], string>
-          }
-          options={lineChartOptions(settings, configuration, split, index)}
-        />
+      <button
+        className="w-max ml-auto block mb-2 bg-uclouvain-1 text-white py-1 px-2 rounded"
+        onClick={() => {
+          exportChartPdf(
+            //@ts-expect-error type
+            chartRef.current.canvas,
+            index,
+            configuration
+          );
+        }}
+      >
+        Download
+      </button>
+      {getSettingsErrorBars(configuration) ? (
+        <div>
+          <LineError
+            ref={chartRef}
+            data={
+              {
+                labels: getLabel(data, configuration),
+                datasets: getDatasets(data, GRAPH_TYPES.LINE, true),
+              } as ChartData<"lineWithErrorBars", number[], string>
+            }
+            options={lineChartOptions(configuration, split, index)}
+            plugins={[backgroundPlugin]}
+          />
+        </div>
       ) : (
-        <Line
-          data={
-            {
-              labels: getLabel(experiment, settings, configuration),
-              datasets: getDatasets(experiment, settings, configuration),
-            } as ChartData<"line", number[], string>
-          }
-          options={lineChartOptions(settings, configuration, split, index)}
-        />
+        <div>
+          <Line
+            ref={chartRef}
+            data={
+              {
+                labels: getLabel(data, configuration),
+                datasets: getDatasets(data),
+              } as ChartData<"line", number[], string>
+            }
+            options={lineChartOptions(configuration, split, index)}
+            plugins={[backgroundPlugin]}
+          />
+        </div>
       )}
     </>
   );
